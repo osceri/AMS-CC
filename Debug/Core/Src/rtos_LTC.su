@@ -1,0 +1,11 @@
+rtos_LTC.c:63:10:pec15_calc	24	static
+rtos_LTC.c:82:6:initialize_LTC	16	static
+rtos_LTC.c:90:6:LTC_CS_select	8	static
+rtos_LTC.c:98:6:LTC_CS_deselect	8	static
+rtos_LTC.c:106:9:LTC_wake	16	static
+rtos_LTC.c:133:9:LTC_command	24	static
+rtos_LTC.c:161:9:LTC_read_command	24	static
+rtos_LTC.c:200:9:LTC_write_command	24	static
+rtos_LTC.c:235:9:LTC_acquire_data	48	static
+rtos_LTC.c:302:9:LTC_make_voltages	24	static
+rtos_LTC.c:321:9:LTC_make_temperatures	48	static

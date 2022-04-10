@@ -1,0 +1,7 @@
+COM.c:26:13:inc_res	16	static
+COM.c:41:9:COM_voltages_ok	32	static
+COM.c:69:9:COM_voltages_ok_d	40	static
+COM.c:97:9:COM_temperatures_ok	32	static
+COM.c:127:9:COM_temperatures_ok_d	40	static
+COM.c:158:9:COM_current_ok	24	static
+COM.c:184:9:COM_current_ok_d	32	static

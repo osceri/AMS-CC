@@ -1,26 +1,27 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file    adc.c
-  * @brief   This file provides code for the configuration
-  *          of the ADC instances.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    adc.c
+ * @brief   This file provides code for the configuration
+ *          of the ADC instances.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2022 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
+#include "rtos_CAN.h"
 
 /* USER CODE END 0 */
 
@@ -180,5 +181,65 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 }
 
 /* USER CODE BEGIN 1 */
+
+uint16_t ADC_FLAG = 1;
+
+void interpret_ADC_buffer(struct ams_temperatures_t *ams_temperatures,
+		uint16_t *adcBuffer) {
+	uint16_t i, j;
+	float adcAverageBuffer[4];
+
+	float beta = 3500;
+	float temp = 25 + 273.15;
+	float R0 = 10000 * exp(-beta / temp);
+	float R = 10000;
+	float resolution = pow(2, 12) - 1;
+
+	for (i = 0; i < 4; i++) {
+		adcAverageBuffer[i] = 0;
+		for (j = 0; j < ADC_AVERAGING_SIZE; j++) {
+			adcAverageBuffer[i] += adcBuffer[4 * j + i];
+		}
+		adcAverageBuffer[i] /= ADC_AVERAGING_SIZE;
+
+		/* The adc value shouldn't be negative, nor should it be 0 */
+		if (adcAverageBuffer[i] < 0.25) {
+			adcAverageBuffer[i] = 1;
+		}
+	}
+	/* temperature = beta / (log(R0 * ( resolution / adcAverageBuffer[i] - 1) ) - log(R)); */
+	/* v/vt = ((2^n - 1)*v/vref)/((2^n - 1)*vt/vref) = ((2^n - 1)*v/vref)/adcAverageBuffer[i] */
+	/* Assume v = vref, n = 12 */
+	ams_temperatures->pre_charge_resistor_temperature = beta
+			/ (log(R0 * (resolution / adcAverageBuffer[0] - 1)) - log(R))
+			- 273.15;
+	ams_temperatures->fuse_resistor_temperature = beta
+			/ (log(R0 * (resolution / adcAverageBuffer[1] - 1)) - log(R))
+			- 273.15;
+	ams_temperatures->aux_1_temperature = beta
+			/ (log(R0 * (resolution / adcAverageBuffer[2] - 1)) - log(R))
+			- 273.15;
+	ams_temperatures->aux_2_temperature = beta
+			/ (log(R0 * (resolution / adcAverageBuffer[3] - 1)) - log(R))
+			- 273.15;
+
+}
+
+void ADC_initialize() {
+	ADC_FLAG = 1;
+}
+
+void ADC_step(uint32_t* buf, uint16_t len) {
+	if(ADC_FLAG == 1) {
+		ADC_FLAG = 0;
+		HAL_ADC_Start_DMA(&hadc1, buf, len);
+	}
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
+	ADC_FLAG = 1;
+
+}
+
 
 /* USER CODE END 1 */

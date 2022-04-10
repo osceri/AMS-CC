@@ -1,0 +1,5 @@
+rt_nonfinite.c:14:6:rt_InitInfAndNaN	16	static
+rt_nonfinite.c:25:11:rtIsInf	16	static
+rt_nonfinite.c:30:11:rtIsInfF	16	static
+rt_nonfinite.c:35:11:rtIsNaN	32	static
+rt_nonfinite.c:56:11:rtIsNaNF	24	static
