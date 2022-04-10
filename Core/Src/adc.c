@@ -21,7 +21,9 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
-#include "rtos_CAN.h"
+#include "programme_data.h"
+#include "programme_queues.h"
+
 
 /* USER CODE END 0 */
 
@@ -184,8 +186,8 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 
 uint16_t ADC_FLAG = 1;
 
-void interpret_ADC_buffer(struct ams_temperatures_t *ams_temperatures,
-		uint16_t *adcBuffer) {
+void interpret_ADC_buffer(ams_temperatures_t *ams_temperatures,
+		uint16_t *adcBuffer, uint8_t L) {
 	uint16_t i, j;
 	float adcAverageBuffer[4];
 
@@ -197,10 +199,10 @@ void interpret_ADC_buffer(struct ams_temperatures_t *ams_temperatures,
 
 	for (i = 0; i < 4; i++) {
 		adcAverageBuffer[i] = 0;
-		for (j = 0; j < ADC_AVERAGING_SIZE; j++) {
+		for (j = 0; j < L; j++) {
 			adcAverageBuffer[i] += adcBuffer[4 * j + i];
 		}
-		adcAverageBuffer[i] /= ADC_AVERAGING_SIZE;
+		adcAverageBuffer[i] /= L;
 
 		/* The adc value shouldn't be negative, nor should it be 0 */
 		if (adcAverageBuffer[i] < 0.25) {
@@ -225,12 +227,14 @@ void interpret_ADC_buffer(struct ams_temperatures_t *ams_temperatures,
 
 }
 
-void ADC_initialize() {
+void ADC_initialize(TIM_HandleTypeDef* htim) {
+	htim->Instance->ARR = 65535 / 1000; // 100 Hz sample rate
+	HAL_TIM_Base_Start(htim);
 	ADC_FLAG = 1;
 }
 
-void ADC_step(uint32_t* buf, uint16_t len) {
-	if(ADC_FLAG == 1) {
+void ADC_step(uint32_t *buf, uint16_t len) {
+	if (ADC_FLAG == 1) {
 		ADC_FLAG = 0;
 		HAL_ADC_Start_DMA(&hadc1, buf, len);
 	}
@@ -240,6 +244,5 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 	ADC_FLAG = 1;
 
 }
-
 
 /* USER CODE END 1 */

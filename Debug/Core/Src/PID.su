@@ -1,0 +1,6 @@
+PID.c:19:9:PID_progress	32	static
+PID.c:47:9:PID_initialize	40	static
+PID.c:77:9:PID_set_bounds	24	static
+PID.c:97:9:PID_set_parameters	24	static
+PID.c:116:9:PID_set_reference	16	static
+PID.c:127:9:PID_wind_up	16	static

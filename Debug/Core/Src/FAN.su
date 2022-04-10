@@ -1,0 +1,2 @@
+FAN.c:16:6:FAN_initialize	24	static
+FAN.c:26:6:FAN_duty_cycle	16	static

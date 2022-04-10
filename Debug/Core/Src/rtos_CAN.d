@@ -54,7 +54,8 @@ Core/Src/rtos_CAN.o: ../Core/Src/rtos_CAN.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/CAN/lib/can1.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/CAN/lib/can2.h \
- ../Core/Inc/RTOS_can.h
+ ../Core/Inc/RTOS_can.h ../Core/Inc/programme_data.h \
+ ../Core/Inc/programme_queues.h ../Core/Inc/main.h
 
 ../Core/Inc/main.h:
 
@@ -169,3 +170,9 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/CAN/lib/can1.h:
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/CAN/lib/can2.h:
 
 ../Core/Inc/RTOS_can.h:
+
+../Core/Inc/programme_data.h:
+
+../Core/Inc/programme_queues.h:
+
+../Core/Inc/main.h:

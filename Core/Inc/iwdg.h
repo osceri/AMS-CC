@@ -42,6 +42,8 @@ void MX_IWDG_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 
+void initialize_IWDG(IWDG_HandleTypeDef* hiwdg, float periodicity);
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

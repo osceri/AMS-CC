@@ -58,7 +58,7 @@ uint8_t COM_temperatures_ok_d(double *temperatures, uint8_t valid,
  * @Param	The sample constraint. How many consecutive samples may be wrong before an error is triggered
  * @retval	1 if there is no error
  */
-uint8_t COM_temperatures_ok(float *current, uint8_t valid,
+uint8_t COM_current_ok(float *current, uint8_t valid,
 		uint16_t sample_constraint);
 
 
@@ -69,7 +69,7 @@ uint8_t COM_temperatures_ok(float *current, uint8_t valid,
  * @Param	The sample constraint. How many consecutive samples may be wrong before an error is triggered
  * @retval	1 if there is no error
  */
-uint8_t COM_temperatures_ok_d(double *current, uint8_t valid,
+uint8_t COM_current_ok_d(double *current, uint8_t valid,
 		uint16_t sample_constraint);
 
 

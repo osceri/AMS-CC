@@ -29,11 +29,16 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "programme_structure.h"
+#include "programme_tasks.h"
+#include "programme_queues.h"
+#include "programme_data.h"
+#include "queue.h"
 
-#include "rtos_CAN.h"
 #include "rtos_LTC.h"
 #include "COM.h"
+#include "PID.h"
+#include "FAN.h"
+#include "IMD.h"
 
 #include "SEGGER_SYSVIEW.h"
 #include "Accumulator.h"
@@ -65,7 +70,92 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+const osThreadAttr_t SM_task_attributes = { .name = "SM_task", .stack_size = 1024
+		* 4, .priority = (osPriority_t) osPriorityNormal, };
+const task_info SM_task_info = { .periodicity = 1.0, .offset = 0.000,
+		.execution_time = 0.010, };
 
+const osThreadAttr_t SIM_task_attributes = { .name = "SIM_task", .stack_size =
+		2048 * 4, .priority = (osPriority_t) osPriorityBelowNormal, };
+const task_info SIM_task_info = { .periodicity = 1.0, .offset = 0.230,
+		.execution_time = 0.1, };
+
+const osThreadAttr_t COOL_task_attributes = { .name = "COOL_task", .stack_size =
+		128 * 4, .priority = (osPriority_t) osPriorityNormal6, };
+const task_info COOL_task_info = { .periodicity = 1.0, .offset = 0.220,
+		.execution_time = 0.001, };
+
+const osThreadAttr_t CSE_task_attributes = { .name = "CSE_task", .stack_size =
+		1024 * 4, .priority = (osPriority_t) osPriorityNormal5, };
+const task_info CSE_task_info = { .periodicity = 1.0, .offset = 0.170,
+		.execution_time = 0.035, };
+
+const osThreadAttr_t CAN_tx_task_attributes =
+		{ .name = "CAN_tx_task", .stack_size = 512 * 4, .priority =
+				(osPriority_t) osPriorityBelowNormal2, };
+const task_info CAN_tx_task_info = { .periodicity = 1.0, .offset = 0.140,
+		.execution_time = 0.020, };
+
+const osThreadAttr_t CAN_rx_task_attributes =
+		{ .name = "CAN_rx_task", .stack_size = 512 * 4, .priority =
+				(osPriority_t) osPriorityBelowNormal1, };
+const task_info CAN_rx_task_info = { .periodicity = 1.0, .offset = 0.110,
+		.execution_time = 0.020, };
+
+const osThreadAttr_t COM_task_attributes = { .name = "COM_task", .stack_size =
+		2048 * 4, .priority = (osPriority_t) osPriorityLow4, };
+const task_info COM_task_info = { .periodicity = 1.0, .offset = 0.060,
+		.execution_time = 0.040, };
+
+const osThreadAttr_t ADC_task_attributes = { .name = "ADC_task", .stack_size =
+		128 * 4, .priority = (osPriority_t) osPriorityNormal3, };
+const task_info ADC_task_info = { .periodicity = 1.0, .offset = 0.050,
+		.execution_time = 0.001, };
+
+const osThreadAttr_t GPIO_task_attributes = { .name = "GPIO_task", .stack_size =
+		128 * 4, .priority = (osPriority_t) osPriorityNormal2, };
+const task_info GPIO_task_info = { .periodicity = 1.0, .offset = 0.040,
+		.execution_time = 0.001, };
+
+const osThreadAttr_t IMD_task_attributes = { .name = "IMD_task", .stack_size =
+		128 * 4, .priority = (osPriority_t) osPriorityNormal1, };
+const task_info IMD_task_info = { .periodicity = 1.0, .offset = 0.030,
+		.execution_time = 0.001, };
+
+const osThreadAttr_t event_handler_task_attributes = { .name = "event_handler_task",
+		.stack_size = 128 * 4, .priority = (osPriority_t) osPriorityHigh, };
+const task_info event_handler_task_info = { .periodicity = 1.0, .offset =
+		0.020, .execution_time = 0.001, };
+
+const osThreadAttr_t IWDG_task_attributes = { .name = "IWDG_task", .stack_size =
+		128 * 4, .priority = (osPriority_t) osPriorityLow, };
+const task_info IWDG_task_info = { .periodicity = 1.0, .offset = 0.010,
+		.execution_time = 0.001, };
+
+const queue_info GPIO_queue_info = {
+		.element_count = 1,
+		.element_size = sizeof(GPIO_t),
+};
+const queue_info IMD_queue_info = {
+		.element_count = 1,
+		.element_size = sizeof(IMD_t),
+};
+const queue_info can_rx_queue_info = {
+		.element_count = 8,
+		.element_size = sizeof(can_queue_element_t),
+};
+const queue_info can1_tx_queue_info = {
+		.element_count = 72,
+		.element_size = sizeof(can_queue_element_t),
+};
+const queue_info can2_tx_queue_info = {
+		.element_count = 72,
+		.element_size = sizeof(can_queue_element_t),
+};
+const queue_info ams_temperatures_queue_info = {
+		.element_count = 1,
+		.element_size = sizeof(ams_temperatures_t),
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -79,16 +169,16 @@ void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN 0 */
 
 int main() {
-
+	/* INSTRUMENTATE */
 	SEGGER_SYSVIEW_Conf();
 
-	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	/* RESET PERIPHERALS, ETC. */
 	HAL_Init();
 
-	/* Configure the system clock */
+	/* CONFIGURE SYSTEM CLOCK */
 	SystemClock_Config();
 
-	/* Initialize all configured peripherals  - in the correct order*/
+	/* INITIALZE PERIPHERALS */
 	MX_GPIO_Init();
 	MX_SPI2_Init();
 	MX_CAN1_Init();
@@ -99,13 +189,33 @@ int main() {
 	MX_TIM2_Init();
 	MX_ADC1_Init();
 
-	/* Initialize peripherals */
 	//initialize_can(&hcan1, &hcan2);
 	initialize_LTC(&hspi2);
 	/* Initialize kernel */
 	osKernelInitialize();
 
-	/* Start threads */
+	/* INITIALIZE QUEUES */
+
+	GPIO_queue = xQueueCreate(GPIO_queue_info.element_count,
+			GPIO_queue_info.element_size);
+
+	IMD_queue = xQueueCreate(IMD_queue_info.element_count,
+				IMD_queue_info.element_size);
+
+	ams_temperatures_queue = xQueueCreate(
+			ams_temperatures_queue_info.element_count,
+			ams_temperatures_queue_info.element_size);
+
+	can_rx_queue = xQueueCreate(can_rx_queue_info.element_count,
+			can_rx_queue_info.element_size);
+
+	can1_tx_queue = xQueueCreate(can1_tx_queue_info.element_count,
+			can1_tx_queue_info.element_size);
+
+	can2_tx_queue = xQueueCreate(can2_tx_queue_info.element_count,
+			can2_tx_queue_info.element_size);
+
+	/* INITIALIZE TASKS */
 
 	first_tick = 0.25 * TICK2HZ + osKernelGetTickCount(); // Wait for segger, etc
 
@@ -201,14 +311,14 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 /* ENTER TASKS */
-
 void start_SM_task(void *argument) {
+	SEGGER_SYSVIEW_Start();
+
 	/* Set up task-specific timing parameters */
 	uint32_t next_tick = first_tick;
 	uint32_t tick_increment = TICK2HZ * SM_task_info.periodicity;
 
 	/* Make task-specific structures */
-	SEGGER_SYSVIEW_Start();
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * SM_task_info.offset;
@@ -234,8 +344,11 @@ void start_IWDG_task(void *argument) {
 	next_tick += TICK2HZ * IWDG_task_info.offset;
 	osDelayUntil(next_tick);
 
+	initialize_IWDG(&hiwdg, IWDG_task_info.periodicity);
+
 	for (;;) {
 		/* Enter periodic behaviour */
+		HAL_IWDG_Refresh(&hiwdg);
 
 		/* Wait until next period */
 		next_tick += tick_increment;
@@ -254,8 +367,8 @@ void start_event_handler_task(void *argument) {
 	next_tick += TICK2HZ * event_handler_task_info.offset;
 	osDelayUntil(next_tick);
 
-	/* Enter periodic behaviour */
 	for (;;) {
+		/* Enter periodic behaviour */
 
 		/* Wait until next period */
 		next_tick += tick_increment;
@@ -263,19 +376,27 @@ void start_event_handler_task(void *argument) {
 	}
 }
 
+IMD_t IMD;
 void start_IMD_task(void *argument) {
 	/* Set up task-specific timing parameters */
 	uint32_t next_tick = first_tick;
 	uint32_t tick_increment = TICK2HZ * IMD_task_info.periodicity;
 
 	/* Make task-specific structures */
+	initialize_IMD(&htim2);
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * IMD_task_info.offset;
 	osDelayUntil(next_tick);
 
-	/* Enter periodic behaviour */
 	for (;;) {
+		/* Enter periodic behaviour */
+
+
+		if (xQueueReceive(IMD_queue, &IMD, 0)) {
+			uint8_t frequency_range = (uint8_t) (IMD.frequency / 10);
+		}
+
 
 		/* Wait until next period */
 		next_tick += tick_increment;
@@ -289,6 +410,7 @@ void start_GPIO_task(void *argument) {
 	uint32_t tick_increment = TICK2HZ * GPIO_task_info.periodicity;
 
 	/* Make task-specific structures */
+	GPIO_t GPIO;
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * GPIO_task_info.offset;
@@ -296,6 +418,20 @@ void start_GPIO_task(void *argument) {
 
 	for (;;) {
 		/* Enter periodic behaviour */
+		GPIO.AMS_error_latched = HAL_GPIO_ReadPin(AMS_error_latched_GPIO_Port,
+		AMS_error_latched_Pin);
+		GPIO.IMD_error_latched = HAL_GPIO_ReadPin(IMD_error_latched_GPIO_Port,
+		IMD_error_latched_Pin);
+		GPIO.SC_probe = HAL_GPIO_ReadPin(SC_probe_GPIO_Port, SC_probe_Pin);
+		GPIO.IMD_ok = HAL_GPIO_ReadPin(IMD_ok_GPIO_Port, IMD_ok_Pin);
+		GPIO.AIR_plus_closed = HAL_GPIO_ReadPin(AIR_plus_closed_GPIO_Port,
+		AIR_plus_closed_Pin);
+		GPIO.AIR_minus_closed = HAL_GPIO_ReadPin(AIR_minus_closed_GPIO_Port,
+		AIR_minus_closed_Pin);
+		GPIO.precharge_closed = HAL_GPIO_ReadPin(precharge_closed_GPIO_Port,
+		precharge_closed_Pin);
+
+		xQueueOverwrite(GPIO_queue, &GPIO);
 
 		/* Wait until next period */
 		next_tick += tick_increment;
@@ -303,18 +439,15 @@ void start_GPIO_task(void *argument) {
 	}
 }
 
-struct ams_temperatures_t ams_temperatures;
-uint16_t adcBuffer[4 * ADC_AVERAGING_SIZE];
 void start_ADC_task(void *argument) {
 	/* Set up task-specific timing parameters */
 	uint32_t next_tick = first_tick;
 	uint32_t tick_increment = TICK2HZ * ADC_task_info.periodicity;
 
 	/* Make task-specific structures */
-	//htim3.Instance->ARR = 65535 / 1000; // 100 Hz sample rate
-	//HAL_TIM_Base_Start(&htim3);
-	//ADC_initialize();
-
+	ADC_initialize(&htim3);
+	uint16_t adc_readings[4 * 16];
+	ams_temperatures_t ams_temperatures;
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * ADC_task_info.offset;
@@ -322,14 +455,19 @@ void start_ADC_task(void *argument) {
 
 	for (;;) {
 		/* Enter periodic behaviour */
-		//ADC_step(&adcBuffer, sizeof(adcBuffer));
-		//interpret_ADC_buffer(&ams_temperatures, adcBuffer);
+		ADC_step((uint32_t*) &adc_readings, sizeof((uint32_t*) adc_readings));
+		interpret_ADC_buffer(&ams_temperatures, adc_readings, 16);
 
+		xQueueOverwrite(ams_temperatures_queue, &ams_temperatures);
 
 		/* Wait until next period */
 		next_tick += tick_increment;
 		osDelayUntil(next_tick);
 	}
+}
+
+void error() {
+
 }
 
 void start_COM_task(void *argument) {
@@ -339,8 +477,30 @@ void start_COM_task(void *argument) {
 
 	/* Make task-specific structures */
 	const float voltage_time_constraint = 0.5;
-	const float current_time_constraint = 0.5;
 	const float temperature_time_constraint = 1.0;
+	const float current_time_constraint = 0.5;
+
+	uint16_t voltage_sample_constraint = (voltage_time_constraint
+			/ COM_task_info.periodicity);
+	if (voltage_sample_constraint < 1) {
+		voltage_sample_constraint = 1;
+	}
+
+	uint16_t temperature_sample_constraint = (temperature_time_constraint
+			/ COM_task_info.periodicity);
+	if (temperature_sample_constraint < 1) {
+		temperature_sample_constraint = 1;
+	}
+
+	uint16_t current_sample_constraint = (current_time_constraint
+			/ COM_task_info.periodicity);
+	if (current_sample_constraint < 1) {
+		current_sample_constraint = 1;
+	}
+
+	double *voltage = Accumulator_Y.Voltages;
+	double *temperature = Accumulator_Y.Temperature;
+	double *current = &Accumulator_Y.Current;
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * COM_task_info.offset;
@@ -350,12 +510,18 @@ void start_COM_task(void *argument) {
 		/* Enter periodic behaviour */
 
 		//LTC_acquire_data(1);
-		COM_voltages_ok_d(Accumulator_Y.Voltages, 1,
-				1 + (voltage_time_constraint / COM_task_info.periodicity));
-		COM_temperatures_ok_d(Accumulator_Y.Temperature, 1,
-				1 + (temperature_time_constraint / COM_task_info.periodicity));
-		COM_current_ok_d(&Accumulator_Y.Current, 1,
-				1 + (current_time_constraint / COM_task_info.periodicity));
+		if (!COM_voltages_ok_d(voltage, 1, voltage_sample_constraint)) {
+			error();
+		}
+
+		if (!COM_temperatures_ok_d(temperature, 1,
+				temperature_sample_constraint)) {
+			error();
+		}
+
+		if (!COM_current_ok_d(current, 1, current_sample_constraint)) {
+			error();
+		}
 
 		/* Wait until next period */
 		next_tick += tick_increment;
@@ -472,6 +638,18 @@ void start_COOL_task(void *argument) {
 	uint32_t tick_increment = TICK2HZ * COOL_task_info.periodicity;
 
 	/* Make task-specific structures */
+	PID_t PID;
+	float temperature = 20;
+
+	PID_initialize(&PID, // *ptr
+			20,	// Reference temperature (sought)
+			1, 	// Proportionate gain
+			0,	// Proportionate gain
+			0,	// Proportionate gain
+			20,	// Lower PID output bound
+			100	// Upper PID output bound
+			);
+	FAN_initialize(&htim1);
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * COOL_task_info.offset;
@@ -479,6 +657,10 @@ void start_COOL_task(void *argument) {
 
 	for (;;) {
 		/* Enter periodic behaviour */
+		temperature = Accumulator_Y.Temperature[0];
+
+		PID_progress(&PID, temperature);
+		FAN_duty_cycle(&htim1, PID.output);
 
 		/* Wait until next period */
 		next_tick += tick_increment;
@@ -493,6 +675,7 @@ void start_SIM_task(void *argument) {
 
 	/* Make task-specific structures */
 	Accumulator_initialize();
+	uint16_t K = 0;
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * SIM_task_info.offset;
@@ -500,8 +683,11 @@ void start_SIM_task(void *argument) {
 
 	for (;;) {
 		/* Enter periodic behaviour */
-		Accumulator_U.SimCurrent = -20;
+		Accumulator_U.SimCurrent = 10;
 		Accumulator_step();
+
+		K = (1 + K) % 999;
+		Accumulator_Y.Temperature[0] = 40 + 30 * sin(0.001 * K);
 
 		/* Wait until next period */
 		next_tick += tick_increment;
