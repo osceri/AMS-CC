@@ -11,8 +11,9 @@
 #include "programme_data.h"
 #include "programme_queues.h"
 
+static IMD_t IMD;
+
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
-	IMD_t IMD;
 	float ante = 0;
 	float conq = 0;
 

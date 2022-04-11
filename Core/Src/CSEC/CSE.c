@@ -156,16 +156,16 @@ void CSE_step(void)
   int32_T coffset;
   int32_T iAcol;
   int32_T iAcol_0;
-  static const real_T Wmean[2] = { 1.0, -0.1736111111111111 };
+  static const real_T Wmean[2] = { 1.0, -0.1666668333335 };
 
-  static const real_T Wcov[2] = { 0.87666666666666659, -0.1736111111111111 };
+  static const real_T Wcov[2] = { 0.999996999998, -0.1666668333335 };
 
   if (CSE_P.Enable1_Value) {
     boolean_T errorCondition;
     boolean_T guard1 = false;
     CSE_M_x(CSE_DW.x, &s_0);
-    UKFCorrectorAdditive_getPredict(CSE_P.R1_Value, CSE_DW.x, CSE_DW.P, 0.2, 2.0,
-      0.0, &s_0, tempY, &temp);
+    UKFCorrectorAdditive_getPredict(CSE_P.R1_Value, CSE_DW.x, CSE_DW.P, 0.001,
+      2.0, 0.0, &s_0, tempY, &temp);
     s_0 = CSE_U.y - s_0;
     iAcol_0 = 0;
     for (iAcol = 0; iAcol < 3; iAcol++) {
@@ -383,7 +383,7 @@ void CSE_step(void)
   CSE_Y.C = CSE_DW.x[2];
   CSE_S_x(CSE_DW.x, tempY);
   for (iAcol_0 = 0; iAcol_0 < 9; iAcol_0++) {
-    s_0 = 0.34641016151377552 * CSE_DW.P[iAcol_0];
+    s_0 = 0.0017320508075688774 * CSE_DW.P[iAcol_0];
     X2state[iAcol_0] = s_0;
     X2state[iAcol_0 + 9] = -s_0;
   }
@@ -407,8 +407,8 @@ void CSE_step(void)
     C[iAcol_0] = CSE_DW.x[iAcol_0];
   }
 
-  UTMeanCovSqrt_C2vgLQ4W(Wmean, Wcov, -23.999999999999996, tempY, Y2, C, X2state,
-    CSE_DW.x, Ss, R);
+  UTMeanCovSqrt_C2vgLQ4W(Wmean, Wcov, -999999.0, tempY, Y2, C, X2state, CSE_DW.x,
+    Ss, R);
   memset(&R[0], 0, 9U * sizeof(real_T));
   R[0] = 1.0;
   R[4] = 1.0;

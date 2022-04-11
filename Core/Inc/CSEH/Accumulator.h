@@ -21,31 +21,20 @@ typedef struct {
   real_T Memory_PreviousInput[126];
   real_T Memory2_PreviousInput[126];
   real_T Memory1_PreviousInput;
-  real_T Memory_PreviousInput_b;
-  uint32_T method;
-  uint32_T state;
-  uint32_T state_c[2];
-  uint32_T state_g[625];
-  boolean_T state_not_empty;
 } DW_Accumulator_T;
 
 typedef struct {
-  real_T SimCurrent;
-  real_T CC_true;
-  real_T CC_level;
-  real_T CV_true;
-  real_T CV_level;
+  real_T Current;
   real_T Balances[126];
-  real_T Overtemperature;
-  real_T Undertemperature;
 } ExtU_Accumulator_T;
 
 typedef struct {
+  real_T VoltageSum;
   real_T Voltages[126];
   real_T SOCs[126];
   real_T Capacities[126];
-  real_T Current;
-  real_T Temperature[60];
+  real_T DisplayCurrent;
+  real_T Temperatures[60];
 } ExtY_Accumulator_T;
 
 struct P_Accumulator_T_ {
@@ -58,7 +47,6 @@ struct P_Accumulator_T_ {
   real_T cCap[126];
   real_T cQur[126];
   real_T cTmp[60];
-  real_T cell_count;
   real_T ocv[13];
   real_T soc[13];
   real_T tau[13];
@@ -67,7 +55,6 @@ struct P_Accumulator_T_ {
   real_T Gain_Gain;
   real_T Memory1_InitialCondition;
   real_T Constant1_Value;
-  real_T Memory_InitialCondition;
 };
 
 struct tag_RTM_Accumulator_T {

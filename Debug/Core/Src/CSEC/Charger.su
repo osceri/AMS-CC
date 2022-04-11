@@ -1,0 +1,3 @@
+Charger.c:7:6:Charger_step	16	static
+Charger.c:14:6:Charger_initialize	4	static
+Charger.c:18:6:Charger_terminate	4	static

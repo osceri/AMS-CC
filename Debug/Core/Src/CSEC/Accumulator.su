@@ -1,4 +1,3 @@
-Accumulator.c:13:15:Accumulator_rand	72	static
-Accumulator.c:201:6:Accumulator_step	4120	static
-Accumulator.c:298:6:Accumulator_initialize	8	static
-Accumulator.c:315:6:Accumulator_terminate	4	static
+Accumulator.c:12:6:Accumulator_step	5120	static
+Accumulator.c:92:6:Accumulator_initialize	8	static
+Accumulator.c:104:6:Accumulator_terminate	4	static

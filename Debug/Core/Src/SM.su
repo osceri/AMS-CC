@@ -1,0 +1,8 @@
+SM.c:29:6:state_machine_step	8	static
+SM.c:69:9:state_error_step	4	static,ignoring_inline_asm
+SM.c:83:9:state_entry_step	4	static
+SM.c:96:9:state_idle_step	8	static
+SM.c:111:9:state_precharge_drive_step	4	static
+SM.c:121:9:state_drive_step	8	static
+SM.c:135:9:state_precharge_charge_step	4	static
+SM.c:144:9:state_charge_step	4	static,ignoring_inline_asm
