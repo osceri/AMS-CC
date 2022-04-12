@@ -43,12 +43,10 @@
 #include "FAN.h"
 #include "IMD.h"
 #include "SM.h"
-#include "SIM.h"
 #include "CSE.h"
 #include "queue.h"
 #include "stdlib.h"
-
-#include "Accumulator.h"
+#include "SIM0.h"
 
 #define ARM_MATH_CM4
 #include "arm_math.h"
@@ -98,9 +96,9 @@ const osThreadAttr_t IMD_task_attributes = { .name = "IMD_task", .stack_size =
 const osThreadAttr_t event_handler_task_attributes = { .name =
 		"event_handler_task", .stack_size = 128 * 4, .priority =
 		(osPriority_t) osPriorityHigh, };
-
 const osThreadAttr_t IWDG_task_attributes = { .name = "IWDG_task", .stack_size =
 		160 * 4, .priority = (osPriority_t) osPriorityLow, };
+
 const task_info SM_task_info = { .periodicity = 0.8, .offset = 0 * 0.000,
 		.execution_time = 0.010, };
 const task_info SIM_task_info = { .periodicity = 0.8, .offset = 0 * 0.230,
@@ -150,6 +148,14 @@ const queue_info ivt_msg_result_u1_queue_info = { .element_count = 1,
 		.element_size = sizeof(ivt_msg_result_u1_t), };
 const queue_info ivt_msg_result_u3_queue_info = { .element_count = 1,
 		.element_size = sizeof(ivt_msg_result_u3_t), };
+const queue_info voltages_queue_info = { .element_count = 1, .element_size =
+		sizeof(float*), };
+const queue_info voltages_d_queue_info = { .element_count = 1, .element_size =
+		sizeof(double*), };
+const queue_info temperatures_queue_info = { .element_count = 1, .element_size =
+		sizeof(float*), };
+const queue_info temperatures_d_queue_info = { .element_count = 1,
+		.element_size = sizeof(double*), };
 
 /* USER CODE END PV */
 
@@ -186,6 +192,7 @@ int main() {
 
 	//initialize_can(&hcan1, &hcan2);
 	initialize_LTC(&hspi2);
+
 	/* Initialize kernel */
 	osKernelInitialize();
 
@@ -202,6 +209,15 @@ int main() {
 
 	IMD_queue = xQueueCreate(IMD_queue_info.element_count,
 			IMD_queue_info.element_size);
+
+	can_rx_queue = xQueueCreate(can_rx_queue_info.element_count,
+			can_rx_queue_info.element_size);
+
+	can1_tx_queue = xQueueCreate(can1_tx_queue_info.element_count,
+			can1_tx_queue_info.element_size);
+
+	can2_tx_queue = xQueueCreate(can2_tx_queue_info.element_count,
+			can2_tx_queue_info.element_size);
 
 	ams_temperatures_queue = xQueueCreate(
 			ams_temperatures_queue_info.element_count,
@@ -222,14 +238,14 @@ int main() {
 			ivt_msg_result_u3_queue_info.element_count,
 			ivt_msg_result_u3_queue_info.element_size);
 
-	can_rx_queue = xQueueCreate(can_rx_queue_info.element_count,
-			can_rx_queue_info.element_size);
-
-	can1_tx_queue = xQueueCreate(can1_tx_queue_info.element_count,
-			can1_tx_queue_info.element_size);
-
-	can2_tx_queue = xQueueCreate(can2_tx_queue_info.element_count,
-			can2_tx_queue_info.element_size);
+	voltages_queue = xQueueCreate(voltages_queue_info.element_count,
+			voltages_queue_info.element_size);
+	voltages_d_queue = xQueueCreate(voltages_d_queue_info.element_count,
+			voltages_d_queue_info.element_size);
+	temperatures_queue = xQueueCreate(temperatures_queue_info.element_count,
+			temperatures_queue_info.element_size);
+	temperatures_d_queue = xQueueCreate(temperatures_d_queue_info.element_count,
+			temperatures_d_queue_info.element_size);
 
 	/* INITIALIZE TASKS */
 
@@ -409,6 +425,7 @@ void start_IMD_task(void *argument) {
 
 		if (xQueueReceive(IMD_queue, &IMD, 0)) {
 			uint8_t frequency_range = (uint8_t) (IMD.frequency / 10);
+
 		}
 
 		/* Wait until next period */
@@ -431,18 +448,13 @@ void start_GPIO_task(void *argument) {
 
 	for (;;) {
 		/* Enter periodic behaviour */
-		GPIO.AMS_error_latched = HAL_GPIO_ReadPin(AMS_error_latched_GPIO_Port,
-		AMS_error_latched_Pin);
-		GPIO.IMD_error_latched = HAL_GPIO_ReadPin(IMD_error_latched_GPIO_Port,
-		IMD_error_latched_Pin);
-		GPIO.SC_probe = HAL_GPIO_ReadPin(SC_probe_GPIO_Port, SC_probe_Pin);
-		GPIO.IMD_ok = HAL_GPIO_ReadPin(IMD_ok_GPIO_Port, IMD_ok_Pin);
-		GPIO.AIR_plus_closed = HAL_GPIO_ReadPin(AIR_plus_closed_GPIO_Port,
-		AIR_plus_closed_Pin);
-		GPIO.AIR_minus_closed = HAL_GPIO_ReadPin(AIR_minus_closed_GPIO_Port,
-		AIR_minus_closed_Pin);
-		GPIO.precharge_closed = HAL_GPIO_ReadPin(precharge_closed_GPIO_Port,
-		precharge_closed_Pin);
+		GPIO.AMS_error_latched = get_ams_error_latched_ext();
+		GPIO.IMD_error_latched = get_imd_error_latched_ext();
+		GPIO.SC_probe = get_sc_probe_ext();
+		GPIO.IMD_ok = get_imd_ok_ext();
+		GPIO.AIR_plus_closed = get_air_plus_ext();
+		GPIO.AIR_minus_closed = get_air_minus_ext();
+		GPIO.precharge_closed = get_precharge_ext();
 
 		xQueueOverwrite(GPIO_queue, &GPIO);
 
@@ -507,8 +519,8 @@ void start_COM_task(void *argument) {
 		current_sample_constraint = 1;
 	}
 
-	double *voltage;
-	double *temperature;
+	double *cell_voltages;
+	double *cell_temperatures;
 	double *current;
 
 	/* Wait until offset */
@@ -519,15 +531,15 @@ void start_COM_task(void *argument) {
 		/* Enter periodic behaviour */
 
 		//LTC_acquire_data(1);
-		voltage = Accumulator_Y.Voltages;
-		temperature = Accumulator_Y.Temperatures;
-		current = &Accumulator_Y.DisplayCurrent;
+		cell_voltages = &SIM0_Y.cell_voltages;
+		cell_temperatures = &SIM0_Y.cell_temperatures;
+		current = &SIM0_Y.current;
 
-		if (!COM_voltages_ok_d(voltage, 1, voltage_sample_constraint)) {
+		if (!COM_voltages_ok_d(cell_voltages, 1, voltage_sample_constraint)) {
 			//Error_Handler();
 		}
 
-		if (!COM_temperatures_ok_d(temperature, 1,
+		if (!COM_temperatures_ok_d(cell_temperatures, 1,
 				temperature_sample_constraint)) {
 			//Error_Handler();
 		}
@@ -535,6 +547,9 @@ void start_COM_task(void *argument) {
 		if (!COM_current_ok_d(current, 1, current_sample_constraint)) {
 			//Error_Handler();
 		}
+
+		xQueueOverwrite(voltages_d_queue, &cell_voltages);
+		xQueueOverwrite(temperatures_d_queue, &cell_temperatures);
 
 		/* Wait until next period */
 		next_tick += tick_increment;
@@ -596,6 +611,9 @@ void start_CSE_task(void *argument) {
 
 	for (;;) {
 		/* Enter periodic behaviour */
+		CSE_U.current = SIM0_Y.current;
+		CSE_U.y = SIM0_Y.cell_voltages[0];
+
 		CSE_step();
 
 		/* Wait until next period */
@@ -623,12 +641,18 @@ void start_COOL_task(void *argument) {
 			);
 	FAN_initialize(&htim1);
 
+	double *temperatures;
+
 	/* Wait until offset */
 	next_tick += TICK2HZ * COOL_task_info.offset;
 	osDelayUntil(next_tick);
 
 	for (;;) {
 		/* Enter periodic behaviour */
+
+		if(xQueuePeek(temperatures_d_queue, &temperatures, 0)) {
+			temperature = temperatures[0];
+		}
 
 		PID_progress(&PID, temperature);
 		FAN_duty_cycle(&htim1, PID.output);
@@ -645,8 +669,14 @@ void start_SIM_task(void *argument) {
 	uint32_t tick_increment = TICK2HZ * SIM_task_info.periodicity;
 
 	/* Make task-specific structures */
-	initialize_SIM();
-	uint16_t K = 0;
+	SIM0_initialize();
+	ivt_msg_result_u1_t U1;
+	ivt_msg_result_u3_t U3;
+
+	SIM0_U.SC = 0;
+	SIM0_U.drive = 1;
+	SIM0_U.charge = 1;
+	SIM0_U.drive_current = -100;
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * SIM_task_info.offset;
@@ -654,7 +684,13 @@ void start_SIM_task(void *argument) {
 
 	for (;;) {
 		/* Enter periodic behaviour */
-		SIM_step();
+		SIM0_step();
+
+		U1.u_cells = SIM0_Y.accumulator_voltage;
+		U3.u_vehicle = SIM0_Y.vehicle_voltage;
+
+		xQueueOverwrite(ivt_msg_result_u1_queue, &U1);
+		xQueueOverwrite(ivt_msg_result_u3_queue, &U3);
 
 		/* Wait until next period */
 		next_tick += tick_increment;

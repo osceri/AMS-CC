@@ -1,0 +1,15 @@
+programme_functions - Copy.c:13:6:set_air_plus_state_ext	16	static
+programme_functions - Copy.c:18:9:get_air_plus_state_ext	4	static
+programme_functions - Copy.c:22:6:set_air_minus_state_ext	16	static
+programme_functions - Copy.c:27:9:get_air_minus_state_ext	4	static
+programme_functions - Copy.c:31:6:set_precharge_state_ext	16	static
+programme_functions - Copy.c:36:9:get_precharge_state_ext	4	static
+programme_functions - Copy.c:40:6:set_ams_error_ext	16	static
+programme_functions - Copy.c:44:9:get_ams_error_latched_ext	4	static
+programme_functions - Copy.c:48:6:set_imd_error_ext	16	static
+programme_functions - Copy.c:52:9:get_imd_error_latched_ext	4	static
+programme_functions - Copy.c:56:9:get_sc_probe_ext	4	static
+programme_functions - Copy.c:60:9:get_imd_ok_ext	4	static
+programme_functions - Copy.c:64:6:set_charger_voltage_ext	16	static
+programme_functions - Copy.c:68:6:set_charger_current_ext	16	static
+programme_functions - Copy.c:72:6:set_balance_ext	24	static

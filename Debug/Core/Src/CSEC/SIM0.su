@@ -1,0 +1,3 @@
+SIM0.c:12:6:SIM0_step	5184	static
+SIM0.c:206:6:SIM0_initialize	16	static
+SIM0.c:247:6:SIM0_terminate	4	static

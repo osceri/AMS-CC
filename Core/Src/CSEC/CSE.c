@@ -29,9 +29,9 @@ void CSE_S_x(const real_T rtu_x[3], real_T rty_x_next[3])
   real_T tmp;
   rtb_Divide = rtu_x[1] / rtu_x[2];
   tmp = exp(-CSE_P.Ts / look1_binlxpw(rtb_Divide, CSE_P.soc, CSE_P.tau, 12U));
-  rty_x_next[0] = (1.0 - tmp) * CSE_U.u * look1_binlxpw(rtb_Divide, CSE_P.soc,
-    CSE_P.Rp, 12U) + tmp * rtu_x[0];
-  rty_x_next[1] = CSE_U.u * CSE_P.Ts + rtu_x[1];
+  rty_x_next[0] = (1.0 - tmp) * CSE_U.current * look1_binlxpw(rtb_Divide,
+    CSE_P.soc, CSE_P.Rp, 12U) + tmp * rtu_x[0];
+  rty_x_next[1] = CSE_U.current * CSE_P.Ts + rtu_x[1];
   rty_x_next[2] = rtu_x[2];
 }
 
@@ -39,8 +39,8 @@ void CSE_M_x(const real_T rtu_x[3], real_T *rty_y)
 {
   real_T rtb_Divide;
   rtb_Divide = rtu_x[1] / rtu_x[2];
-  *rty_y = (CSE_U.u * look1_binlxpw(rtb_Divide, CSE_P.soc, CSE_P.Rs, 12U) +
-            look1_binlxpw(rtb_Divide, CSE_P.soc, CSE_P.ocv, 12U)) + rtu_x[0];
+  *rty_y = (CSE_U.current * look1_binlxpw(rtb_Divide, CSE_P.soc, CSE_P.Rs, 12U)
+            + look1_binlxpw(rtb_Divide, CSE_P.soc, CSE_P.ocv, 12U)) + rtu_x[0];
 }
 
 static void UKFCorrectorAdditive_getPredict(real_T Rs, const real_T X1[3], const
@@ -380,7 +380,7 @@ void CSE_step(void)
   }
 
   CSE_Y.soc = CSE_DW.x[1] / CSE_DW.x[2];
-  CSE_Y.C = CSE_DW.x[2];
+  CSE_Y.capacity = CSE_DW.x[2];
   CSE_S_x(CSE_DW.x, tempY);
   for (iAcol_0 = 0; iAcol_0 < 9; iAcol_0++) {
     s_0 = 0.0017320508075688774 * CSE_DW.P[iAcol_0];

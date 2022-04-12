@@ -57,17 +57,17 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/programme_tasks.h ../Core/Inc/programme_queues.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Core/Inc/programme_data.h ../Core/Inc/rtos_LTC.h ../Core/Inc/COM.h \
- ../Core/Inc/PID.h ../Middlewares/ST/ARM/DSP/Inc/arm_math.h \
- ../Core/Inc/FAN.h ../Core/Inc/IMD.h ../Core/Inc/SM.h \
- ../Core/Inc/programme_states.h ../Core/Inc/SIM.h \
+ ../Core/Inc/programme_data.h ../Core/Inc/programme_functions.h \
+ ../Core/Inc/rtos_LTC.h ../Core/Inc/COM.h ../Core/Inc/PID.h \
+ ../Middlewares/ST/ARM/DSP/Inc/arm_math.h ../Core/Inc/FAN.h \
+ ../Core/Inc/IMD.h ../Core/Inc/SM.h ../Core/Inc/programme_states.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtwtypes.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE_types.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rt_nonfinite.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtGetInf.h \
- C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Accumulator.h \
- C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Accumulator_types.h
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0_types.h
 
 ../Core/Inc/main.h:
 
@@ -203,6 +203,8 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_SYS
 
 ../Core/Inc/programme_data.h:
 
+../Core/Inc/programme_functions.h:
+
 ../Core/Inc/rtos_LTC.h:
 
 ../Core/Inc/COM.h:
@@ -219,8 +221,6 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_SYS
 
 ../Core/Inc/programme_states.h:
 
-../Core/Inc/SIM.h:
-
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtwtypes.h:
@@ -231,6 +231,6 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rt_nonfinite.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtGetInf.h:
 
-C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Accumulator.h:
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0.h:
 
-C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Accumulator_types.h:
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0_types.h:

@@ -17,6 +17,7 @@ typedef enum {
 	STATE_DRIVE = 4,
 	STATE_PRECHARGE_CHARGE = 5,
 	STATE_CHARGE = 6,
+	STATE_BALANCE = 7,
 } state_t;
 
 typedef enum {

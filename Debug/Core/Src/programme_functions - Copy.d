@@ -1,4 +1,5 @@
-Core/Src/SIM.o: ../Core/Src/SIM.c ../Core/Inc/main.h \
+Core/Src/programme_functions - Copy.o: \
+ ../Core/Src/programme_functions\ -\ Copy.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -32,34 +33,9 @@ Core/Src/SIM.o: ../Core/Src/SIM.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- ../Core/Inc/programme_tasks.h ../Core/Inc/main.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- ../Core/Inc/FreeRTOSConfig.h \
- C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_SYSVIEW_FreeRTOS.h \
- C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_SYSVIEW.h \
- C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER.h \
- ../Core/Inc/Global.h \
- C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_SYSVIEW_ConfDefaults.h \
- ../Core/Inc/SEGGER_SYSVIEW_Conf.h \
- C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_RTT_Conf.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- ../Core/Inc/programme_queues.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Core/Inc/programme_data.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Accumulator.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtwtypes.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Accumulator_types.h \
- C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Charger.h \
- C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Charger_types.h \
  ../Core/Inc/SIM.h
 
 ../Core/Inc/main.h:
@@ -130,62 +106,10 @@ Core/Src/SIM.o: ../Core/Src/SIM.c ../Core/Inc/main.h \
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 
-../Core/Inc/programme_tasks.h:
-
-../Core/Inc/main.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
-
-../Core/Inc/FreeRTOSConfig.h:
-
-C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_SYSVIEW_FreeRTOS.h:
-
-C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_SYSVIEW.h:
-
-C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER.h:
-
-../Core/Inc/Global.h:
-
-C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_SYSVIEW_ConfDefaults.h:
-
-../Core/Inc/SEGGER_SYSVIEW_Conf.h:
-
-C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_RTT_Conf.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-
-../Core/Inc/programme_queues.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-
-../Core/Inc/programme_data.h:
-
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Accumulator.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtwtypes.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Accumulator_types.h:
-
-C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Charger.h:
-
-C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/Charger_types.h:
 
 ../Core/Inc/SIM.h:

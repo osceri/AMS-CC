@@ -24,6 +24,14 @@ QueueHandle_t state_queue;
 
 QueueHandle_t charge_state_queue;
 
+QueueHandle_t voltages_queue;
+
+QueueHandle_t voltages_d_queue;
+
+QueueHandle_t temperatures_queue;
+
+QueueHandle_t temperatures_d_queue;
+
 QueueHandle_t GPIO_queue;
 
 QueueHandle_t IMD_queue;

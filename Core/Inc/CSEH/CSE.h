@@ -23,13 +23,13 @@ typedef struct {
 } DW_CSE_T;
 
 typedef struct {
-  real_T u;
+  real_T current;
   real_T y;
 } ExtU_CSE_T;
 
 typedef struct {
   real_T soc;
-  real_T C;
+  real_T capacity;
 } ExtY_CSE_T;
 
 struct P_CSE_T_ {

@@ -65,6 +65,13 @@ state_t state_precharge_charge_step(void);
  * @Param	Y
  * @Retval	Z
  */
+state_t state_balance_step(void);
+
+/*
+ * @Brief	X
+ * @Param	Y
+ * @Retval	Z
+ */
 state_t state_charge_step(void);
 
 
