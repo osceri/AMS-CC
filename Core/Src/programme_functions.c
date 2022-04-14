@@ -7,6 +7,7 @@
 
 #include "main.h"
 
+#include "canlib_callbacks.h"
 #include "SIM0.h"
 
 void set_air_plus_ext(uint8_t closed){

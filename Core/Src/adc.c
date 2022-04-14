@@ -186,7 +186,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 
 uint16_t ADC_FLAG = 1;
 
-void interpret_ADC_buffer(ams_temperatures_t *ams_temperatures,
+void interpret_ADC_buffer(temperatures_t *temperatures,
 		uint16_t *adcBuffer, uint8_t L) {
 	uint16_t i, j;
 	float adcAverageBuffer[4];
@@ -212,16 +212,16 @@ void interpret_ADC_buffer(ams_temperatures_t *ams_temperatures,
 	/* temperature = beta / (log(R0 * ( resolution / adcAverageBuffer[i] - 1) ) - log(R)); */
 	/* v/vt = ((2^n - 1)*v/vref)/((2^n - 1)*vt/vref) = ((2^n - 1)*v/vref)/adcAverageBuffer[i] */
 	/* Assume v = vref, n = 12 */
-	ams_temperatures->pre_charge_resistor_temperature = beta
+	temperatures->precharge_resistor = beta
 			/ (log(R0 * (resolution / adcAverageBuffer[0] - 1)) - log(R))
 			- 273.15;
-	ams_temperatures->fuse_resistor_temperature = beta
+	temperatures->fuse = beta
 			/ (log(R0 * (resolution / adcAverageBuffer[1] - 1)) - log(R))
 			- 273.15;
-	ams_temperatures->aux_1_temperature = beta
+	temperatures->aux_1 = beta
 			/ (log(R0 * (resolution / adcAverageBuffer[2] - 1)) - log(R))
 			- 273.15;
-	ams_temperatures->aux_2_temperature = beta
+	temperatures->aux_2 = beta
 			/ (log(R0 * (resolution / adcAverageBuffer[3] - 1)) - log(R))
 			- 273.15;
 

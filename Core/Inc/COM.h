@@ -8,7 +8,6 @@
 #ifndef INC_COM_H_
 #define INC_COM_H_
 
-
 /*
  * @Brief	Checks whether the voltages are within range, or if they have been indeterminate for too long.
  * @Param	A vector of voltages to check
@@ -18,7 +17,6 @@
  */
 uint8_t COM_voltages_ok(float *voltages, uint8_t valid,
 		uint16_t sample_constraint);
-
 
 /*
  * @Brief	Checks whether the voltages are within range, or if they have been indeterminate for too long.
@@ -50,7 +48,6 @@ uint8_t COM_temperatures_ok(float *temperatures, uint8_t valid,
 uint8_t COM_temperatures_ok_d(double *temperatures, uint8_t valid,
 		uint16_t sample_constraint);
 
-
 /*
  * @Brief	Checks whether the current is within range, or if it has been indeterminate for too long.
  * @Param	A single current to check
@@ -60,7 +57,6 @@ uint8_t COM_temperatures_ok_d(double *temperatures, uint8_t valid,
  */
 uint8_t COM_current_ok(float *current, uint8_t valid,
 		uint16_t sample_constraint);
-
 
 /*
  * @Brief	Checks whether the current is within range, or if it has been indeterminate for too long.
@@ -72,6 +68,12 @@ uint8_t COM_current_ok(float *current, uint8_t valid,
 uint8_t COM_current_ok_d(double *current, uint8_t valid,
 		uint16_t sample_constraint);
 
-
+/*
+ * @Brief	Checks whether the data has been indeterminate for too long.
+ * @Param	A single current to check
+ * @Param	The sample constraint. How many consecutive samples may be wrong before an error is triggered
+ * @retval	1 if there is no error
+ */
+uint8_t COM_data_valid_ok(uint8_t valid, uint16_t sample_constraint);
 
 #endif /* INC_COM_H_ */

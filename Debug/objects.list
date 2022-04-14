@@ -1,5 +1,6 @@
-"./Core/CAN/lib/can1.o"
-"./Core/CAN/lib/can2.o"
+"./Core/Src/CANC/can1.o"
+"./Core/Src/CANC/can2.o"
+"./Core/Src/CANC/canlib.o"
 "./Core/Src/COM.o"
 "./Core/Src/FAN.o"
 "./Core/Src/IMD.o"

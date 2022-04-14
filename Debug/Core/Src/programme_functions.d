@@ -32,6 +32,8 @@ Core/Src/programme_functions.o: ../Core/Src/programme_functions.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_callbacks.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtwtypes.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0_types.h
@@ -103,6 +105,10 @@ Core/Src/programme_functions.o: ../Core/Src/programme_functions.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_callbacks.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0.h:
 

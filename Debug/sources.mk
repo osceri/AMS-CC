@@ -20,7 +20,7 @@ OBJCOPY_BIN :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-Core/CAN/lib \
+Core/Src/CANC \
 Core/Src \
 Core/Src/CSEC \
 Core/Startup \

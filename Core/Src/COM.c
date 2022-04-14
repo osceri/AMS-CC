@@ -17,6 +17,8 @@ static uint8_t under_temperatures[60];
 static uint8_t over_current;
 static uint8_t under_current;
 
+static uint8_t invalid;
+
 /*
  * @Brief	Increments if true, resets (to zero) otherwise
  * @Param	A conditional statement which evaluates to true or false
@@ -198,4 +200,21 @@ uint8_t COM_current_ok_d(double *current, uint8_t valid,
 
 	return 1;
 
+}
+
+/*
+ * @Brief	Checks whether the data has been indeterminate for too long.
+ * @Param	A single current to check
+ * @Param	The sample constraint. How many consecutive samples may be wrong before an error is triggered
+ * @retval	1 if there is no error
+ */
+uint8_t COM_data_valid_ok(uint8_t valid,
+		uint16_t sample_constraint) {
+	inc_res(valid, &invalid);
+
+	if (invalid > sample_constraint) {
+		return 0;
+	}
+
+	return 1;
 }

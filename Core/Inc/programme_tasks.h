@@ -25,8 +25,7 @@ void start_IMD_task(void *argument);
 void start_GPIO_task(void *argument);
 void start_ADC_task(void *argument);
 void start_COM_task(void *argument);
-void start_CAN_rx_task(void *argument);
-void start_CAN_tx_task(void *argument);
+void start_CAN_task(void *argument);
 void start_CSE_task(void *argument);
 void start_COOL_task(void *argument);
 void start_SIM_task(void *argument);
@@ -36,6 +35,7 @@ void start_SIM_task(void *argument);
 uint32_t first_tick;
 
 typedef struct {
+	osThreadAttr_t attributes;
 	float periodicity;	// [s] ((has to be a multiple of the systems lowest))
 	float offset;			// [s] ((account for every preceeding task))
 	float execution_time;	// [s] ((worst possible))
@@ -58,9 +58,7 @@ osThreadId_t ADC_task_handle;
 
 osThreadId_t COM_task_handle;
 
-osThreadId_t CAN_rx_task_handle;
-
-osThreadId_t CAN_tx_task_handle;
+osThreadId_t CAN_task_handle;
 
 /* Data consuming tasks */
 osThreadId_t CSE_task_handle;
@@ -69,5 +67,7 @@ osThreadId_t COOL_task_handle;
 
 /* Data simulation tasks */
 osThreadId_t SIM_task_handle;
+
+
 
 #endif /* INC_PROGRAMME_STRUCTURE_H_ */

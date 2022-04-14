@@ -48,6 +48,9 @@
 #include "stdlib.h"
 #include "SIM0.h"
 
+#include "canlib_callbacks.h"
+#include "canlib.h"
+
 #define ARM_MATH_CM4
 #include "arm_math.h"
 /* USER CODE END Includes */
@@ -71,92 +74,6 @@
 
 /* USER CODE BEGIN PV */
 
-const osThreadAttr_t SM_task_attributes = { .name = "SM_task", .stack_size =
-		1024 * 4, .priority = (osPriority_t) osPriorityLow1, };
-const osThreadAttr_t SIM_task_attributes = { .name = "SIM_task", .stack_size =
-		2048 * 4, .priority = (osPriority_t) osPriorityBelowNormal, };
-const osThreadAttr_t COOL_task_attributes = { .name = "COOL_task", .stack_size =
-		160 * 4, .priority = (osPriority_t) osPriorityNormal6, };
-const osThreadAttr_t CSE_task_attributes = { .name = "CSE_task", .stack_size =
-		1024 * 4, .priority = (osPriority_t) osPriorityNormal5, };
-const osThreadAttr_t CAN_tx_task_attributes =
-		{ .name = "CAN_tx_task", .stack_size = 512 * 4, .priority =
-				(osPriority_t) osPriorityBelowNormal2, };
-const osThreadAttr_t CAN_rx_task_attributes =
-		{ .name = "CAN_rx_task", .stack_size = 512 * 4, .priority =
-				(osPriority_t) osPriorityBelowNormal1, };
-const osThreadAttr_t COM_task_attributes = { .name = "COM_task", .stack_size =
-		2048 * 4, .priority = (osPriority_t) osPriorityLow4, };
-const osThreadAttr_t ADC_task_attributes = { .name = "ADC_task", .stack_size =
-		160 * 4, .priority = (osPriority_t) osPriorityNormal3, };
-const osThreadAttr_t GPIO_task_attributes = { .name = "GPIO_task", .stack_size =
-		160 * 4, .priority = (osPriority_t) osPriorityNormal2, };
-const osThreadAttr_t IMD_task_attributes = { .name = "IMD_task", .stack_size =
-		256 * 4, .priority = (osPriority_t) osPriorityLow5, };
-const osThreadAttr_t event_handler_task_attributes = { .name =
-		"event_handler_task", .stack_size = 128 * 4, .priority =
-		(osPriority_t) osPriorityHigh, };
-const osThreadAttr_t IWDG_task_attributes = { .name = "IWDG_task", .stack_size =
-		160 * 4, .priority = (osPriority_t) osPriorityLow, };
-
-const task_info SM_task_info = { .periodicity = 0.8, .offset = 0 * 0.000,
-		.execution_time = 0.010, };
-const task_info SIM_task_info = { .periodicity = 0.8, .offset = 0 * 0.230,
-		.execution_time = 0.1, };
-const task_info COOL_task_info = { .periodicity = 0.8, .offset = 0 * 0.220,
-		.execution_time = 0.001, };
-const task_info CSE_task_info = { .periodicity = 0.8, .offset = 0 * 0.170,
-		.execution_time = 0.035, };
-const task_info CAN_tx_task_info = { .periodicity = 0.8, .offset = 0 * 0.140,
-		.execution_time = 0.020, };
-const task_info CAN_rx_task_info = { .periodicity = 0.8, .offset = 0 * 0.110,
-		.execution_time = 0.020, };
-const task_info COM_task_info = { .periodicity = 0.8, .offset = 0 * 0.060,
-		.execution_time = 0.040, };
-const task_info ADC_task_info = { .periodicity = 0.8, .offset = 0 * 0.050,
-		.execution_time = 0.001, };
-const task_info GPIO_task_info = { .periodicity = 0.8, .offset = 0 * 0.040,
-		.execution_time = 0.001, };
-const task_info IMD_task_info = { .periodicity = 0.8, .offset = 0 * 0.60,
-		.execution_time = 0.001, };
-const task_info event_handler_task_info = { .periodicity = 0.8, .offset = 0
-		* 0.020, .execution_time = 0.001, };
-const task_info IWDG_task_info = { .periodicity = 0.8, .offset = 0 * 0.010,
-		.execution_time = 0.001, };
-
-const queue_info state_queue_info = { .element_count = 1, .element_size =
-		sizeof(state_t), };
-const queue_info charge_state_queue_info = { .element_count = 1, .element_size =
-		sizeof(charge_state_t), };
-const queue_info GPIO_queue_info = { .element_count = 1, .element_size =
-		sizeof(GPIO_t), };
-const queue_info IMD_queue_info = { .element_count = 1, .element_size =
-		sizeof(IMD_t), };
-const queue_info can_rx_queue_info = { .element_count = 8, .element_size =
-		sizeof(can_queue_element_t), };
-const queue_info can1_tx_queue_info = { .element_count = 72, .element_size =
-		sizeof(can_queue_element_t), };
-const queue_info can2_tx_queue_info = { .element_count = 72, .element_size =
-		sizeof(can_queue_element_t), };
-const queue_info ams_temperatures_queue_info = { .element_count = 1,
-		.element_size = sizeof(ams_temperatures_t), };
-const queue_info dbu_status_1_queue_info = { .element_count = 1, .element_size =
-		sizeof(dbu_status_1_t), };
-const queue_info ivt_msg_result_i_queue_info = { .element_count = 1,
-		.element_size = sizeof(ivt_msg_result_i_t), };
-const queue_info ivt_msg_result_u1_queue_info = { .element_count = 1,
-		.element_size = sizeof(ivt_msg_result_u1_t), };
-const queue_info ivt_msg_result_u3_queue_info = { .element_count = 1,
-		.element_size = sizeof(ivt_msg_result_u3_t), };
-const queue_info voltages_queue_info = { .element_count = 1, .element_size =
-		sizeof(float*), };
-const queue_info voltages_d_queue_info = { .element_count = 1, .element_size =
-		sizeof(double*), };
-const queue_info temperatures_queue_info = { .element_count = 1, .element_size =
-		sizeof(float*), };
-const queue_info temperatures_d_queue_info = { .element_count = 1,
-		.element_size = sizeof(double*), };
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -168,6 +85,86 @@ void MX_FREERTOS_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+const task_info SM_task_info = { { .name = "SM_task", .stack_size = 1024 * 4,
+		.priority = (osPriority_t) osPriorityLow2, }, .periodicity = 0.8,
+		.offset = 0 * 0.000, .execution_time = 0.010, };
+
+const task_info SIM_task_info = { { .name = "SIM_task", .stack_size = 3000 * 4,
+		.priority = (osPriority_t) osPriorityLow, }, .periodicity = 0.8,
+		.offset = 0 * 0.230, .execution_time = 0.1, };
+
+const task_info COOL_task_info = { { .name = "COOL_task", .stack_size = 160 * 4,
+		.priority = (osPriority_t) osPriorityNormal6, }, .periodicity = 0.8,
+		.offset = 0 * 0.220, .execution_time = 0.001, };
+
+const task_info CSE_task_info = { { .name = "CSE_task", .stack_size = 1024 * 4,
+		.priority = (osPriority_t) osPriorityNormal5, }, .periodicity = 0.8,
+		.offset = 0 * 0.170, .execution_time = 0.035, };
+
+const task_info CAN_task_info = { { .name = "CAN_task", .stack_size = 512 * 4,
+		.priority = (osPriority_t) osPriorityBelowNormal2, },
+		.periodicity = 0.8, .offset = 0 * 0.140, .execution_time = 0.020, };
+
+const task_info COM_task_info = { { .name = "COM_task", .stack_size = 2048 * 4,
+		.priority = (osPriority_t) osPriorityLow4, }, .periodicity = 0.8,
+		.offset = 0 * 0.060, .execution_time = 0.040, };
+
+const task_info ADC_task_info = { { .name = "ADC_task", .stack_size = 160 * 4,
+		.priority = (osPriority_t) osPriorityNormal3, }, .periodicity = 0.8,
+		.offset = 0 * 0.050, .execution_time = 0.001, };
+
+const task_info GPIO_task_info = { { .name = "GPIO_task", .stack_size = 160 * 4,
+		.priority = (osPriority_t) osPriorityNormal2, }, .periodicity = 0.8,
+		.offset = 0 * 0.040, .execution_time = 0.001, };
+
+const task_info IMD_task_info = { { .name = "IMD_task", .stack_size = 256 * 4,
+		.priority = (osPriority_t) osPriorityLow5, }, .periodicity = 0.8,
+		.offset = 0 * 0.60, .execution_time = 0.001, };
+
+const task_info event_handler_task_info = { { .name = "event_handler_task",
+		.stack_size = 128 * 4, .priority = (osPriority_t) osPriorityHigh, },
+		.periodicity = 0.8, .offset = 0 * 0.020, .execution_time = 0.001, };
+
+const task_info IWDG_task_info = { { .name = "IWDG_task", .stack_size = 160 * 4,
+		.priority = (osPriority_t) osPriorityLow1, }, .periodicity = 0.8,
+		.offset = 0 * 0.010, .execution_time = 0.001, };
+
+const queue_info state_queue_info = { .element_count = 1, .element_size =
+		sizeof(state_t), };
+
+const queue_info GPIO_queue_info = { .element_count = 1, .element_size =
+		sizeof(GPIO_t), };
+
+const queue_info IMD_queue_info = { .element_count = 1, .element_size =
+		sizeof(IMD_t), };
+
+const queue_info temperatures_queue_info = { .element_count = 1, .element_size =
+		sizeof(temperatures_t), };
+
+const queue_info accumulator_current_queue_info = { .element_count = 1,
+		.element_size = sizeof(double*), };
+
+const queue_info accumulator_voltage_queue_info = { .element_count = 1,
+		.element_size = sizeof(double*), };
+
+const queue_info vehicle_voltage_queue_info = { .element_count = 1,
+		.element_size = sizeof(double*), };
+
+const queue_info cell_voltages_queue_info = { .element_count = 1,
+		.element_size = sizeof(double*), };
+
+const queue_info cell_temperatures_queue_info = { .element_count = 1,
+		.element_size = sizeof(double*), };
+
+const queue_info start_drive_queue_info = { .element_count = 1, .element_size =
+		sizeof(uint8_t), };
+
+const queue_info start_charge_queue_info = { .element_count = 1, .element_size =
+		sizeof(uint8_t), };
+
+const queue_info start_balance_queue_info = { .element_count = 1,
+		.element_size = sizeof(uint8_t), };
 
 int main() {
 	/* INSTRUMENTATE */
@@ -190,7 +187,7 @@ int main() {
 	MX_TIM2_Init();
 	MX_ADC1_Init();
 
-	//initialize_can(&hcan1, &hcan2);
+	//initialize_CAN(&hcan1, &hcan2);
 	initialize_LTC(&hspi2);
 
 	/* Initialize kernel */
@@ -201,85 +198,78 @@ int main() {
 	state_queue = xQueueCreate(state_queue_info.element_count,
 			state_queue_info.element_size);
 
-	charge_state_queue = xQueueCreate(charge_state_queue_info.element_count,
-			charge_state_queue_info.element_size);
-
 	GPIO_queue = xQueueCreate(GPIO_queue_info.element_count,
 			GPIO_queue_info.element_size);
 
 	IMD_queue = xQueueCreate(IMD_queue_info.element_count,
 			IMD_queue_info.element_size);
 
-	can_rx_queue = xQueueCreate(can_rx_queue_info.element_count,
-			can_rx_queue_info.element_size);
-
-	can1_tx_queue = xQueueCreate(can1_tx_queue_info.element_count,
-			can1_tx_queue_info.element_size);
-
-	can2_tx_queue = xQueueCreate(can2_tx_queue_info.element_count,
-			can2_tx_queue_info.element_size);
-
-	ams_temperatures_queue = xQueueCreate(
-			ams_temperatures_queue_info.element_count,
-			ams_temperatures_queue_info.element_size);
-
-	dbu_status_1_queue = xQueueCreate(dbu_status_1_queue_info.element_count,
-			dbu_status_1_queue_info.element_size);
-
-	ivt_msg_result_i_queue = xQueueCreate(
-			ivt_msg_result_i_queue_info.element_count,
-			ivt_msg_result_i_queue_info.element_size);
-
-	ivt_msg_result_u1_queue = xQueueCreate(
-			ivt_msg_result_u1_queue_info.element_count,
-			ivt_msg_result_u1_queue_info.element_size);
-
-	ivt_msg_result_u3_queue = xQueueCreate(
-			ivt_msg_result_u3_queue_info.element_count,
-			ivt_msg_result_u3_queue_info.element_size);
-
-	voltages_queue = xQueueCreate(voltages_queue_info.element_count,
-			voltages_queue_info.element_size);
-	voltages_d_queue = xQueueCreate(voltages_d_queue_info.element_count,
-			voltages_d_queue_info.element_size);
 	temperatures_queue = xQueueCreate(temperatures_queue_info.element_count,
 			temperatures_queue_info.element_size);
-	temperatures_d_queue = xQueueCreate(temperatures_d_queue_info.element_count,
-			temperatures_d_queue_info.element_size);
+
+	accumulator_voltage_queue = xQueueCreate(
+			accumulator_voltage_queue_info.element_count,
+			accumulator_voltage_queue_info.element_size);
+
+	vehicle_voltage_queue = xQueueCreate(
+			vehicle_voltage_queue_info.element_count,
+			vehicle_voltage_queue_info.element_size);
+
+	accumulator_current_queue = xQueueCreate(
+			accumulator_current_queue_info.element_count,
+			accumulator_current_queue_info.element_size);
+
+	cell_voltages_queue = xQueueCreate(cell_voltages_queue_info.element_count,
+			cell_voltages_queue_info.element_size);
+
+	cell_temperatures_queue = xQueueCreate(
+			cell_temperatures_queue_info.element_count,
+			cell_temperatures_queue_info.element_size);
+
+	start_drive_queue = xQueueCreate(start_drive_queue_info.element_count,
+			start_drive_queue_info.element_size);
+
+	start_charge_queue = xQueueCreate(start_charge_queue_info.element_count,
+			start_charge_queue_info.element_size);
+
+	start_balance_queue = xQueueCreate(start_balance_queue_info.element_count,
+			start_balance_queue_info.element_size);
 
 	/* INITIALIZE TASKS */
 
 	first_tick = 0.25 * TICK2HZ + osKernelGetTickCount(); // Wait for segger, etc
 
-	SM_task_handle = osThreadNew(start_SM_task, NULL, &SM_task_attributes);
+	SM_task_handle = osThreadNew(start_SM_task, NULL, &SM_task_info.attributes);
 
-	SIM_task_handle = osThreadNew(start_SIM_task, NULL, &SIM_task_attributes);
+	SIM_task_handle = osThreadNew(start_SIM_task, NULL,
+			&SIM_task_info.attributes);
 
-	CSE_task_handle = osThreadNew(start_CSE_task, NULL, &CSE_task_attributes);
+	CSE_task_handle = osThreadNew(start_CSE_task, NULL,
+			&CSE_task_info.attributes);
 
-	IMD_task_handle = osThreadNew(start_IMD_task, NULL, &IMD_task_attributes);
+	IMD_task_handle = osThreadNew(start_IMD_task, NULL,
+			&IMD_task_info.attributes);
 
 	GPIO_task_handle = osThreadNew(start_GPIO_task, NULL,
-			&GPIO_task_attributes);
+			&GPIO_task_info.attributes);
 
-	ADC_task_handle = osThreadNew(start_ADC_task, NULL, &ADC_task_attributes);
+	ADC_task_handle = osThreadNew(start_ADC_task, NULL,
+			&ADC_task_info.attributes);
 
 	COOL_task_handle = osThreadNew(start_COOL_task, NULL,
-			&COOL_task_attributes);
+			&COOL_task_info.attributes);
 
-	CAN_rx_task_handle = osThreadNew(start_CAN_rx_task, NULL,
-			&CAN_rx_task_attributes);
+	CAN_task_handle = osThreadNew(start_CAN_task, NULL,
+			&CAN_task_info.attributes);
 
-	CAN_tx_task_handle = osThreadNew(start_CAN_tx_task, NULL,
-			&CAN_tx_task_attributes);
-
-	COM_task_handle = osThreadNew(start_COM_task, NULL, &COM_task_attributes);
+	COM_task_handle = osThreadNew(start_COM_task, NULL,
+			&COM_task_info.attributes);
 
 	IWDG_task_handle = osThreadNew(start_IWDG_task, NULL,
-			&IWDG_task_attributes);
+			&IWDG_task_info.attributes);
 
 	event_handler_task_handle = osThreadNew(start_event_handler_task, NULL,
-			&event_handler_task_attributes);
+			&event_handler_task_info.attributes);
 
 	/* Launch RTOS ! */
 	osKernelStart();
@@ -470,9 +460,9 @@ void start_ADC_task(void *argument) {
 	uint32_t tick_increment = TICK2HZ * ADC_task_info.periodicity;
 
 	/* Make task-specific structures */
-	ADC_initialize(&htim3);
 	uint16_t adc_readings[4 * 16];
-	ams_temperatures_t ams_temperatures;
+	ADC_initialize(&htim3);
+	temperatures_t temperatures;
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * ADC_task_info.offset;
@@ -481,9 +471,9 @@ void start_ADC_task(void *argument) {
 	for (;;) {
 		/* Enter periodic behaviour */
 		ADC_step((uint32_t*) &adc_readings, sizeof((uint32_t*) adc_readings));
-		interpret_ADC_buffer(&ams_temperatures, adc_readings, 16);
+		interpret_ADC_buffer(&temperatures, adc_readings, 16);
 
-		xQueueOverwrite(ams_temperatures_queue, &ams_temperatures);
+		xQueueOverwrite(temperatures_queue, &temperatures);
 
 		/* Wait until next period */
 		next_tick += tick_increment;
@@ -500,6 +490,7 @@ void start_COM_task(void *argument) {
 	const float voltage_time_constraint = 0.5;
 	const float temperature_time_constraint = 1.0;
 	const float current_time_constraint = 0.5;
+	const float valid_data_time_constraint = 5.0;
 
 	uint16_t voltage_sample_constraint = (voltage_time_constraint
 			/ COM_task_info.periodicity);
@@ -519,9 +510,18 @@ void start_COM_task(void *argument) {
 		current_sample_constraint = 1;
 	}
 
+	uint16_t valid_data_sample_constraint = (valid_data_time_constraint
+			/ COM_task_info.periodicity);
+	if (valid_data_sample_constraint < 1) {
+		valid_data_sample_constraint = 1;
+	}
+
 	double *cell_voltages;
+	uint16_t cell_voltages_valid;
 	double *cell_temperatures;
-	double *current;
+	uint16_t cell_temperatures_valid;
+	double current;
+	uint16_t current_valid;
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * COM_task_info.offset;
@@ -530,26 +530,46 @@ void start_COM_task(void *argument) {
 	for (;;) {
 		/* Enter periodic behaviour */
 
-		//LTC_acquire_data(1);
+		LTC_acquire_data(1);
+
 		cell_voltages = &SIM0_Y.cell_voltages;
 		cell_temperatures = &SIM0_Y.cell_temperatures;
-		current = &SIM0_Y.current;
+		cell_voltages_valid = 0x3FFF;
+		cell_temperatures_valid = 0x3FFF;
 
-		if (!COM_voltages_ok_d(cell_voltages, 1, voltage_sample_constraint)) {
+		current_valid = xQueueReceive(accumulator_current_queue, &current, 0);
+
+		//cell_voltages = LTC_voltages;
+		//cell_temperatures = LTC_temperatures;
+		if (!COM_data_valid_ok(
+				(cell_voltages_valid == 0x03FF)
+						&& (cell_temperatures_valid == 0x03FF) && current_valid,
+				valid_data_sample_constraint)) {
+
 			//Error_Handler();
 		}
 
-		if (!COM_temperatures_ok_d(cell_temperatures, 1,
+		if (!COM_voltages_ok_d(cell_voltages, cell_voltages_valid,
+				voltage_sample_constraint)) {
+
+			//Error_Handler();
+		}
+
+		if (!COM_temperatures_ok_d(cell_temperatures, cell_temperatures_valid,
 				temperature_sample_constraint)) {
+
 			//Error_Handler();
 		}
 
-		if (!COM_current_ok_d(current, 1, current_sample_constraint)) {
+		if (!COM_current_ok_d(&current, current_valid,
+				current_sample_constraint)) {
+
 			//Error_Handler();
+
 		}
 
-		xQueueOverwrite(voltages_d_queue, &cell_voltages);
-		xQueueOverwrite(temperatures_d_queue, &cell_temperatures);
+		xQueueOverwrite(cell_voltages_queue, &cell_voltages);
+		xQueueOverwrite(cell_temperatures_queue, &cell_temperatures);
 
 		/* Wait until next period */
 		next_tick += tick_increment;
@@ -557,35 +577,15 @@ void start_COM_task(void *argument) {
 	}
 }
 
-void start_CAN_rx_task(void *argument) {
+void start_CAN_task(void *argument) {
 	/* Set up task-specific timing parameters */
 	uint32_t next_tick = first_tick;
-	uint32_t tick_increment = TICK2HZ * CAN_rx_task_info.periodicity;
+	uint32_t tick_increment = TICK2HZ * CAN_task_info.periodicity;
 
 	/* Make task-specific structures */
 
 	/* Wait until offset */
-	next_tick += TICK2HZ * CAN_rx_task_info.offset;
-	osDelayUntil(next_tick);
-
-	for (;;) {
-		/* Enter periodic behaviour */
-
-		/* Wait until next period */
-		next_tick += tick_increment;
-		osDelayUntil(next_tick);
-	}
-}
-
-void start_CAN_tx_task(void *argument) {
-	/* Set up task-specific timing parameters */
-	uint32_t next_tick = first_tick;
-	uint32_t tick_increment = TICK2HZ * CAN_tx_task_info.periodicity;
-
-	/* Make task-specific structures */
-
-	/* Wait until offset */
-	next_tick += TICK2HZ * CAN_tx_task_info.offset;
+	next_tick += TICK2HZ * CAN_task_info.offset;
 	osDelayUntil(next_tick);
 
 	for (;;) {
@@ -650,7 +650,7 @@ void start_COOL_task(void *argument) {
 	for (;;) {
 		/* Enter periodic behaviour */
 
-		if(xQueuePeek(temperatures_d_queue, &temperatures, 0)) {
+		if (xQueuePeek(cell_temperatures_queue, &temperatures, 0)) {
 			temperature = temperatures[0];
 		}
 
@@ -670,13 +670,24 @@ void start_SIM_task(void *argument) {
 
 	/* Make task-specific structures */
 	SIM0_initialize();
-	ivt_msg_result_u1_t U1;
-	ivt_msg_result_u3_t U3;
 
-	SIM0_U.SC = 0;
+	SIM0_P.Ts = SIM_task_info.periodicity;
+	SIM0_U.SC = 1;
 	SIM0_U.drive = 1;
-	SIM0_U.charge = 1;
+	SIM0_U.charge = 0;
 	SIM0_U.drive_current = -100;
+	{
+		uint8_t start_drive = SIM0_U.drive > 0.5;
+		xQueueOverwrite(start_drive_queue, &start_drive);
+	}
+	{
+		uint8_t start_charge = SIM0_U.charge > 0.5;
+		xQueueOverwrite(start_charge_queue, &start_charge);
+	}
+	{
+		uint8_t start_balance = SIM0_U.drive + SIM0_U.charge > 1.5;
+		xQueueOverwrite(start_balance_queue, &start_balance);
+	}
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * SIM_task_info.offset;
@@ -686,11 +697,9 @@ void start_SIM_task(void *argument) {
 		/* Enter periodic behaviour */
 		SIM0_step();
 
-		U1.u_cells = SIM0_Y.accumulator_voltage;
-		U3.u_vehicle = SIM0_Y.vehicle_voltage;
-
-		xQueueOverwrite(ivt_msg_result_u1_queue, &U1);
-		xQueueOverwrite(ivt_msg_result_u3_queue, &U3);
+		xQueueOverwrite(accumulator_voltage_queue, &SIM0_Y.accumulator_voltage);
+		xQueueOverwrite(vehicle_voltage_queue, &SIM0_Y.vehicle_voltage);
+		xQueueOverwrite(accumulator_current_queue, &SIM0_Y.current);
 
 		/* Wait until next period */
 		next_tick += tick_increment;

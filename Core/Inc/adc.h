@@ -42,7 +42,7 @@ extern ADC_HandleTypeDef hadc1;
 void MX_ADC1_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-void interpret_ADC_buffer(ams_temperatures_t *ams_temperatures,
+void interpret_ADC_buffer(temperatures_t *temperatures,
 		uint16_t *adcBuffer, uint8_t L);
 
 void ADC_initialize(TIM_HandleTypeDef *htim);

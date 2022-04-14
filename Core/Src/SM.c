@@ -6,20 +6,16 @@
  */
 
 #include "main.h"
+
 #include "programme_states.h"
 #include "programme_data.h"
 #include "programme_queues.h"
 #include "programme_functions.h"
-
 #include "SIM0.h"
 
 #include "SM.h"
 
-static ivt_msg_result_u1_t ivt_msg_result_u1;
-static ivt_msg_result_u3_t ivt_msg_result_u3;
-
 static state_t state = STATE_NONE;
-static charge_state_t charge_state = CHARGE_STATE_NONE;
 
 /*
  * @Brief	X
@@ -27,12 +23,10 @@ static charge_state_t charge_state = CHARGE_STATE_NONE;
  * @Retval	Z
  */
 void state_machine_step(void) {
-	static __called = 0;
-	if (!__called++) {
-		state = STATE_ENTRY;
-	}
-
 	switch (state) {
+	case STATE_NONE:
+		state = STATE_ENTRY;
+		break;
 	case STATE_ERROR:
 		state = state_error_step();
 		break;
@@ -60,7 +54,6 @@ void state_machine_step(void) {
 	}
 
 	xQueueOverwrite(state_queue, &state);
-	xQueueOverwrite(charge_state_queue, &charge_state);
 
 }
 
@@ -88,17 +81,6 @@ state_t state_entry_step(void) {
 	/* ALL PERIPHERALS SHOULD BE INITIALIZED AT THIS POINT. */
 	/* .. IT WOULD BE A GOOD IDEA TO xQueueReceive() EVERY QUEUE/DATA PORT TO MAKE SURE THAT THEY ARE RUNNING*/
 
-	set_precharge_ext(0);
-	set_air_plus_ext(0);
-	set_air_minus_ext(0);
-	set_enable_charge_ext(0);
-
-	for (int i = 0; i < 126; i++) {
-		set_balance_ext(0, i, NULL);
-	}
-
-	osDelay(TICK2HZ * 5);
-
 	return STATE_IDLE;
 }
 
@@ -108,15 +90,38 @@ state_t state_entry_step(void) {
  * @Retval	Z
  */
 state_t state_idle_step(void) {
-	if (!get_sc_probe_ext() && SIM0_U.drive && SIM0_U.charge) {
-		return STATE_BALANCE;
+	set_precharge_ext(0);
+	set_air_plus_ext(0);
+	set_air_minus_ext(0);
+	set_enable_charge_ext(0);
+
+	for (int i = 0; i < 126; i++) {
+		set_balance_ext(0, i, NULL);
 	}
-	if (get_sc_probe_ext() && SIM0_U.drive) {
-		return STATE_PRECHARGE_DRIVE;
+
+	uint8_t SC;
+	uint8_t start_drive;
+	uint8_t start_charge;
+	uint8_t start_balance;
+
+	SC = get_sc_probe_ext();
+
+	if (xQueueReceive(start_drive_queue, &start_drive, 0)) {
+		if (SC && start_drive) {
+			return STATE_PRECHARGE_DRIVE;
+		}
 	}
-	if (get_sc_probe_ext() && SIM0_U.charge) {
-		return STATE_PRECHARGE_CHARGE;
+	if (xQueueReceive(start_charge_queue, &start_charge, 0)) {
+		if (SC && start_charge) {
+			return STATE_PRECHARGE_CHARGE;
+		}
 	}
+	if (xQueueReceive(start_balance_queue, &start_balance, 0)) {
+		if (!SC && start_balance) {
+			return STATE_BALANCE;
+		}
+	}
+
 
 	return STATE_IDLE;
 }
@@ -127,9 +132,9 @@ state_t state_idle_step(void) {
  * @Retval	Z
  */
 state_t state_precharge_drive_step(void) {
-	float DELAY = 1.0 / 0.2;
-	ivt_msg_result_u1_t U1;
-	ivt_msg_result_u3_t U3;
+	float DELAY = 4.0;
+	double accumulator_voltage;
+	double vehicle_voltage;
 
 	uint16_t precharge_timed_out = 0;
 
@@ -155,12 +160,12 @@ state_t state_precharge_drive_step(void) {
 	 */
 	uint32_t initial_tick = osKernelGetTickCount();
 	uint32_t current_tick = osKernelGetTickCount();
-	uint32_t min_tick = TICK2HZ * 0.5 / 0.2; // Wait at least 0.5 seconds
-	uint32_t max_tick = TICK2HZ * 25 / 0.2; // Wait at most 15 seconds
+	uint32_t min_tick = TICK2HZ * 0.5; // Wait at least 0.5 seconds
+	uint32_t max_tick = TICK2HZ * 25; // Wait at most 15 seconds
 
 	/* We want the data to be up-to-date. Clear whatever is currently gathered */
-	xQueueReceive(ivt_msg_result_u1_queue, &U1, 0);
-	xQueueReceive(ivt_msg_result_u3_queue, &U3, 0);
+	xQueueReceive(accumulator_voltage_queue, &accumulator_voltage, 0);
+	xQueueReceive(vehicle_voltage_queue, &vehicle_voltage, 0);
 
 	for (;; current_tick = osKernelGetTickCount()) {
 		osDelay(TICK2HZ * 0.100);
@@ -177,13 +182,13 @@ state_t state_precharge_drive_step(void) {
 		}
 
 		/* If no new voltage data is retrieved we shouldn't go on */
-		if (!(xQueueReceive(ivt_msg_result_u1_queue, &U1, 0)
-				&& xQueueReceive(ivt_msg_result_u3_queue, &U3, 0))) {
+		if (!(xQueueReceive(accumulator_voltage_queue, &accumulator_voltage, 0)
+				&& xQueueReceive(vehicle_voltage_queue, &vehicle_voltage, 0))) {
 			continue;
 		}
 
 		/* If we are within time constraints and the data is up-to-date and satisfactory, then go on! */
-		if (0.95 * U1.u_cells < U3.u_vehicle) {
+		if (0.95 * accumulator_voltage < vehicle_voltage) {
 			precharge_timed_out = 0;
 			break;
 		}
@@ -231,9 +236,9 @@ state_t state_drive_step(void) {
  * @Retval	Z
  */
 state_t state_precharge_charge_step(void) {
-	float DELAY = 1.0 / 0.2;
-	ivt_msg_result_u1_t U1;
-	ivt_msg_result_u3_t U3;
+	float DELAY = 4.0;
+	double accumulator_voltage;
+	double vehicle_voltage;
 
 	set_charger_voltage_limit_ext(4.15 * 126);
 	set_charger_current_limit_ext(2 * 6.6);
@@ -262,12 +267,12 @@ state_t state_precharge_charge_step(void) {
 	 */
 	uint32_t initial_tick = osKernelGetTickCount();
 	uint32_t current_tick = osKernelGetTickCount();
-	uint32_t min_tick = TICK2HZ * 0.5 / 0.2; // Wait at least 0.5 seconds
-	uint32_t max_tick = TICK2HZ * 25 / 0.2; // Wait at most 15 seconds
+	uint32_t min_tick = TICK2HZ * 0.5; // Wait at least 0.5 seconds
+	uint32_t max_tick = TICK2HZ * 25; // Wait at most 15 seconds
 
 	/* We want the data to be up-to-date. Clear whatever is currently gathered */
-	xQueueReceive(ivt_msg_result_u1_queue, &U1, 0);
-	xQueueReceive(ivt_msg_result_u3_queue, &U3, 0);
+	xQueueReceive(accumulator_voltage_queue, &accumulator_voltage, 0);
+	xQueueReceive(vehicle_voltage_queue, &vehicle_voltage, 0);
 
 	for (;; current_tick = osKernelGetTickCount()) {
 		osDelay(TICK2HZ * 0.100);
@@ -284,13 +289,13 @@ state_t state_precharge_charge_step(void) {
 		}
 
 		/* If no new voltage data is retrieved we shouldn't go on */
-		if (!(xQueueReceive(ivt_msg_result_u1_queue, &U1, 0)
-				&& xQueueReceive(ivt_msg_result_u3_queue, &U3, 0))) {
+		if (!(xQueueReceive(accumulator_voltage_queue, &accumulator_voltage, 0)
+				&& xQueueReceive(vehicle_voltage_queue, &vehicle_voltage, 0))) {
 			continue;
 		}
 
 		/* If we are within time constraints and the data is up-to-date and satisfactory, then go on! */
-		if (0.95 * U1.u_cells < U3.u_vehicle) {
+		if (0.95 * accumulator_voltage < vehicle_voltage) {
 			precharge_timed_out = 0;
 			break;
 		}
@@ -320,39 +325,32 @@ state_t state_precharge_charge_step(void) {
 	return STATE_CHARGE;
 }
 
+static uint8_t I[126] = {
 #define gWx1(x, y, z) (x + 7*y + 7*3*z)
-#define gWx2(y, z) gWx1(0, y, z), gWx1(1, y, z), gWx1(2, y, z), gWx1(3, y, z), gWx1(4, y, z), gWx1(5, y, z), gWx1(6, y, z),
-#define gWx3(z) gWx2(0, z) gWx2(1, z) gWx2(2, z)
-#define gWx4 { gWx3(0) gWx3(1) gWx3(2) gWx3(3) gWx3(4) gWx3(5) }
+#define gWx2(y, z) gWx1(0, y, z),gWx1(1, y, z),gWx1(2, y, z),gWx1(3, y, z),gWx1(4, y, z),gWx1(5, y, z),gWx1(6, y, z),
+#define gWx3(z) gWx2(0, z)gWx2(1, z)gWx2(2, z)
+		gWx3(0)gWx3(1)gWx3(2)gWx3(3)gWx3(4)gWx3(5) };
 
-static uint8_t I[126] = gWx4;
-static double *voltages;
-double mean;
-double var;
-
-uint8_t gnome_cmp(uint8_t x) {
-	return (voltages[I[x]] <= voltages[I[x - 1]]);
-}
-
-uint8_t gnome_swap(uint8_t x) {
-	uint8_t c = I[x];
-	I[x] = I[x - 1];
-	I[x - 1] = c;
-}
+static double *cell_voltages;
+static double mean;
+static double var;
 
 void gnome_sort() {
 	uint8_t pos = 0;
+	uint8_t tmp;
 	while (pos < 126) {
 		if (pos == 0) {
 			pos++;
-		} else if (gnome_cmp(pos)) {
+		} else if (cell_voltages[I[pos]] <= cell_voltages[I[pos - 1]]) {
 			pos++;
 		} else {
-			gnome_swap(pos);
+			tmp = I[pos];
+			I[pos] = I[pos - 1];
+			I[pos - 1] = tmp;
 			pos--;
 		}
-	}
 
+	}
 }
 
 /*
@@ -361,19 +359,19 @@ void gnome_sort() {
  * @Retval	Z
  */
 state_t state_balance_step(void) {
-	static k = 0;
+	static int k = 0;
 
-	if (xQueuePeek(voltages_d_queue, &voltages, 0)) {
+	if (xQueuePeek(cell_voltages_queue, &cell_voltages, 0)) {
 		mean = 0;
 		var = 0;
 		double svar = 0;
 
 		for (int i = 0; i < 126; i++) {
-			mean += voltages[i];
+			mean += cell_voltages[i];
 		}
 		mean /= 126;
 		for (int i = 0; i < 126; i++) {
-			svar = voltages[i] - mean;
+			svar = cell_voltages[i] - mean;
 			var = svar * svar;
 		}
 
@@ -393,7 +391,6 @@ state_t state_balance_step(void) {
 
 		}
 
-
 		k = (k + 1) % 300;
 
 	}
@@ -407,16 +404,17 @@ state_t state_balance_step(void) {
  * @Retval	Z
  */
 state_t state_charge_step(void) {
+	float *cell_voltages;
+
 	set_enable_charge_ext(1);
+	set_charger_voltage_limit_ext(4.15 * 126);
+	set_charger_current_limit_ext(2 * 6.6);
 
-	SIM0_U.VoltageLimit = 4.15 * 126;
-	SIM0_U.CurrentLimit = 2 * 6.6;
-
-	if (xQueuePeek(voltages_d_queue, &voltages, 0)) {
+	if (xQueuePeek(cell_voltages_queue, &cell_voltages, 0)) {
 		float max = 0;
 		for (int i = 0; i < 126; i++) {
-			if (voltages[i] > max) {
-				max = voltages[i];
+			if (cell_voltages[i] > max) {
+				max = cell_voltages[i];
 			}
 		}
 		if (max > 4.15) {
