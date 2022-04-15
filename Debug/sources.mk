@@ -23,6 +23,7 @@ SUBDIRS := \
 Core/Src/CANC \
 Core/Src \
 Core/Src/CSEC \
+Core/Src/SMILEC \
 Core/Startup \
 Drivers/STM32F4xx_HAL_Driver/Src \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \

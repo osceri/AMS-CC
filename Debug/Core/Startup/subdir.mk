@@ -16,7 +16,7 @@ S_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 Core/Startup/%.o: ../Core/Startup/%.s Core/Startup/subdir.mk
-	arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -I"C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER" -I"C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH" -I"C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Src/CSEC" -I"C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH" -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -I"C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER" -I"C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH" -I"C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Src/CSEC" -I"C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH" -I"C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH" -I"C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Src/SMILEC" -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@" "$<"
 
 clean: clean-Core-2f-Startup
 

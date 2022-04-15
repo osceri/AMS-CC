@@ -61,7 +61,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/programme_data.h ../Core/Inc/programme_functions.h \
  ../Core/Inc/rtos_LTC.h ../Core/Inc/COM.h ../Core/Inc/PID.h \
  ../Middlewares/ST/ARM/DSP/Inc/arm_math.h ../Core/Inc/FAN.h \
- ../Core/Inc/IMD.h ../Core/Inc/SM.h ../Core/Inc/programme_states.h \
+ ../Core/Inc/IMD.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtwtypes.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE_types.h \
@@ -69,6 +69,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtGetInf.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0_types.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile_data.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile_data.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile_callbacks.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_callbacks.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib.h
@@ -223,10 +227,6 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_SYS
 
 ../Core/Inc/IMD.h:
 
-../Core/Inc/SM.h:
-
-../Core/Inc/programme_states.h:
-
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtwtypes.h:
@@ -240,6 +240,14 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtGetInf.h:
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0_types.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile_data.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile_data.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile_callbacks.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_callbacks.h:
 

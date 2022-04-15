@@ -42,12 +42,14 @@
 #include "PID.h"
 #include "FAN.h"
 #include "IMD.h"
-#include "SM.h"
 #include "CSE.h"
 #include "queue.h"
 #include "stdlib.h"
 #include "SIM0.h"
 
+#include "smile_data.h"
+#include "smile_callbacks.h"
+#include "smile.h"
 #include "canlib_callbacks.h"
 #include "canlib.h"
 
@@ -130,9 +132,6 @@ const task_info IWDG_task_info = { { .name = "IWDG_task", .stack_size = 160 * 4,
 		.priority = (osPriority_t) osPriorityLow1, }, .periodicity = 0.8,
 		.offset = 0 * 0.010, .execution_time = 0.001, };
 
-const queue_info state_queue_info = { .element_count = 1, .element_size =
-		sizeof(state_t), };
-
 const queue_info GPIO_queue_info = { .element_count = 1, .element_size =
 		sizeof(GPIO_t), };
 
@@ -194,9 +193,6 @@ int main() {
 	osKernelInitialize();
 
 	/* INITIALIZE QUEUES */
-
-	state_queue = xQueueCreate(state_queue_info.element_count,
-			state_queue_info.element_size);
 
 	GPIO_queue = xQueueCreate(GPIO_queue_info.element_count,
 			GPIO_queue_info.element_size);
@@ -329,6 +325,9 @@ void SystemClock_Config(void) {
 }
 
 /* USER CODE BEGIN 4 */
+uint8_t vv;
+uint8_t av;
+uint16_t state;
 
 /* ENTER TASKS */
 void start_SM_task(void *argument) {
@@ -339,6 +338,12 @@ void start_SM_task(void *argument) {
 	uint32_t tick_increment = TICK2HZ * SM_task_info.periodicity;
 
 	/* Make task-specific structures */
+	ams_parameters.Ts_f32 = SM_task_info.periodicity;
+	double *cell_voltages;
+
+	xQueueReceive(start_drive_queue, &ams_inputs.drive_u8, 0);
+	xQueueReceive(start_charge_queue, &ams_inputs.charge_u8, 0);
+	xQueueReceive(start_balance_queue, &ams_inputs.balance_u8, 0);
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * SM_task_info.offset;
@@ -346,7 +351,21 @@ void start_SM_task(void *argument) {
 
 	for (;;) {
 		/* Enter periodic behaviour */
-		state_machine_step();
+		xQueueReceive(cell_voltages_queue, &cell_voltages, 0);
+
+		ams_inputs.AIR_minus_closed_u8 = get_air_minus_ext();
+		ams_inputs.AIR_plus_closed_u8 = get_air_plus_ext();
+		ams_inputs.precharge_closed_u8 = get_precharge_ext();
+		ams_inputs.SC_u8 = get_sc_probe_ext();
+		ams_inputs.accumulator_voltage_f64 = SIM0_Y.accumulator_voltage;
+		ams_inputs.vehicle_voltage_f64 = SIM0_Y.vehicle_voltage;
+		ams_inputs.drive_u8 = 0;
+		ams_inputs.charge_u8 = 1;
+		ams_inputs.charger_is_live_u8 = 1;
+		ams(&state);
+		set_air_minus_ext(ams_outputs.enable_AIR_minus_u8);
+		set_air_plus_ext(ams_outputs.enable_AIR_plus_u8);
+		set_precharge_ext(ams_outputs.enable_precharge_u8);
 
 		/* Wait until next period */
 		next_tick += tick_increment;
@@ -673,8 +692,8 @@ void start_SIM_task(void *argument) {
 
 	SIM0_P.Ts = SIM_task_info.periodicity;
 	SIM0_U.SC = 1;
-	SIM0_U.drive = 1;
-	SIM0_U.charge = 0;
+	SIM0_U.drive = 0;
+	SIM0_U.charge = 1;
 	SIM0_U.drive_current = -100;
 	{
 		uint8_t start_drive = SIM0_U.drive > 0.5;
