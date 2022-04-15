@@ -10,25 +10,15 @@
 #
 #
 
-first = True
-for state in state_machines:
-    if state.states:
-        #typedef enum {
-        for substate in state.states:
-            #  $substate.name.upper()$_STATE = $substate.id$,
-        #} $state.name$_t;
-        #
-#
 
-#uint8_t after(uint32_t* timer, float boundary);
-#
-#uint8_t before(uint32_t* timer, float boundary);
+#typedef enum {
+#   STATE_NONE = -1;
+for state in state_machines:
+    #   STATE_$state.name.upper()$ = $state.id$,
+#} $SM$_state_t;
 #
 
 for state in state_machines:
-    if state.name == SM:
-        #void $state.name$();
-    else:
-        #void $state.name$(uint32_t* super_timer, uint8_t* super_state);
+    #void $state.name$_function();
 
 ##endif

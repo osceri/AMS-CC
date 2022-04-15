@@ -21,11 +21,19 @@ fbbdn += ["uint64_t"]
 fbbdn += ["float"]
 fbbdn += ["double"]
 
+max_depth = 0
+state_count = 1
+
 class StateMachine:
-    def __init__(self, _id, name, machine, transitions):
+    def __init__(self, depth, name, machine, transitions):
         self.name = name
         self.states = []
-        self.id = _id
+        self.depth = depth
+        global max_depth, state_count
+        if max_depth == self.depth:
+            max_depth = self.depth + 1
+        self.id = state_count
+        state_count = state_count + 1
         self.transitions = transitions
 
         if machine:
@@ -43,11 +51,9 @@ class StateMachine:
                     states[f"{name}_{source}"] = submachine
 
             self.states = []
-            _id = 0
             for state, state_machine in states.items():
                 transitions = [ (src, dst, con, sta) for src, dst, con, sta in c_transitions if src == state ]
-                self.states += [ StateMachine(_id, f"{state}", state_machine, transitions) ]
-                _id = _id + 1
+                self.states += [ StateMachine(self.depth + 1, f"{state}", state_machine, transitions) ]
 
     def __repr__(self):
         return self.name

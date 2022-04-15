@@ -8,10 +8,7 @@ for header in glob.glob("headers/*.py"):
     ECU = ecu.upper()
 
     # empty out output
-    try:
-        shutil.rmtree(f"output/{ECU}")
-    except:
-        pass
+    shutil.rmtree(f"output/{ECU}")
     os.mkdir(f"output/{ECU}")
 
     # create files
