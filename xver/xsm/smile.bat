@@ -1,0 +1,2 @@
+python smile.py
+pause

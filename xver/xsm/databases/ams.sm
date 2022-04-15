@@ -1,0 +1,151 @@
+(0 -> entry) : [] {
+	balances_126u8;
+}
+
+(entry -> entry) : [] {
+	precharge_drive_complete_u8 = 0;
+	precharge_charge_complete_u8 = 0;
+	zero_out_balance_v0();
+	enable_charge_u8 = 0;
+	enable_precharge_u8 = 0;
+	enable_AIR_plus_u8 = 0;
+	enable_AIR_minus_u8 = 0;
+}
+
+(entry -> idle) : [after(5)] {}
+
+(idle -> idle) : [] {}
+
+(idle -> balance) : [SC_u8 && balance_u8] {}
+
+(balance -> balance) : [after(60)] { do_balance_v0(); } {}
+
+(balance -> idle) : [U_variance_f64 < 0.00001] { zero_out_balance_v0(); } {}
+
+(idle -> precharge_drive) : [SC_u8 && drive_u8] {}
+
+(precharge_drive -> precharge_drive) : [] {} {
+	(0 -> close_air_minus) : [] {
+		enable_AIR_minus_u8 = 1;
+	}
+
+	(close_air_minus -> close_precharge) : [before(2) && (AIR_minus_closed_u8 == 1)] {
+		enable_precharge_u8 = 1;
+	}
+
+	(close_air_minus -> error) : [after(2)] {}
+
+	(close_precharge -> wait) : [before(2) && (precharge_closed_u8 == 1)] {
+		enable_driver_u8 = 1;
+	}
+
+	(close_precharge -> error) : [after(2)] {}
+
+	(wait -> close_air_plus) : [after(2) && before(25) && (0.95 * accumulator_voltage_f64 < vehicle_voltage_f64)] {
+		enable_AIR_plus_u8 = 1;
+	}
+
+	(wait -> error) : [after(25)] {}
+
+	(close_air_plus -> open_precharge) : [before(2) && (AIR_plus_closed_u8 == 1)] {
+		enable_precharge_u8 = 0;
+	}
+
+	(close_air_plus -> error) : [after(2)] {}
+
+	(open_precharge -> exit) : [before(2) && (precharge_closed_u8 == 1)] {
+		precharge_drive_complete_u8 = 1;
+	}
+
+	(open_precharge -> error) : [after(2)] {}
+
+	(error -> error) : [] {
+		precharge_drive_error_u8 = 1;
+	}
+}
+
+(precharge_drive -> drive) : [precharge_drive_complete_u8 == 1] {}
+
+(precharge_drive -> error) : [(precharge_drive_error_u8 == 1) || error_u8] {
+	AMS_error_u8 = 1;
+}
+
+(drive -> idle) : [drive_u8 == 0] {
+	enable_precharge_u8 = 0;
+	enable_AIR_plus_u8 = 0;
+	enable_AIR_minus_u8 = 0;
+}
+
+(drive -> error) : [error_u8] {
+	enable_precharge_u8 = 0;
+	enable_AIR_plus_u8 = 0;
+	enable_AIR_minus_u8 = 0;
+}
+
+(idle -> precharge_charge) : [SC_u8 && charge_u8] {}
+
+(precharge_charge -> precharge_charge) : [] {} {
+	(0 -> start_charger) : [] {
+	}
+
+	(start_charger -> close_air_minus) : [before(10) && (charger_is_live_u8)] {
+		enable_AIR_minus_u8 = 1;
+	}
+
+	(start_charger -> error) : [after(10)] {}
+
+	(close_air_minus -> close_precharge) : [before(2) && (AIR_minus_closed_u8 == 1)] {
+		enable_precharge_u8 = 1;
+	}
+
+	(close_air_minus -> error) : [after(2)] {}
+
+	(close_precharge -> wait) : [before(2) && (precharge_closed_u8 == 1)] {}
+
+	(close_precharge -> error) : [after(2)] {}
+
+	(wait -> close_air_plus) : [after(2) && before(25) && (0.95 * accumulator_voltage_f64 < vehicle_voltage_f64)] {
+		enable_AIR_plus_u8 = 1;
+	}
+
+	(wait -> error) : [after(25)] {}
+
+	(close_air_plus -> open_precharge) : [before(2) && (AIR_plus_closed_u8 == 1)] {
+		enable_precharge_u8 = 0;
+	}
+
+	(close_air_plus -> error) : [after(2)] {}
+
+	(open_precharge -> exit) : [before(2) && (precharge_closed_u8 == 1)] {
+		precharge_charge_complete_u8 = 1;
+	}
+
+	(open_precharge -> error) : [after(2)] {}
+
+	(error -> error) : [] {
+		precharge_charge_error_u8 = 1;
+	}
+}
+
+(precharge_charge -> charge) : [precharge_charge_complete_u8] {}
+
+(charge -> idle) : [(charge_u8 == 0) || (0.995 * sought_voltage_f64 < accumulator_voltage_f64)] {
+	enable_charger_u8 = 0;
+	enable_precharge_u8 = 0;
+	enable_AIR_plus_u8 = 0;
+	enable_AIR_minus_u8 = 0;
+}
+
+(charge -> error) : [error_u8 || precharge_charge_error_u8] {
+	enable_precharge_u8 = 0;
+	enable_AIR_plus_u8 = 0;
+	enable_AIR_minus_u8 = 0;
+}
+
+(error -> error) : [] {
+	enable_precharge_u8 = 0;
+	enable_AIR_plus_u8 = 0;
+	enable_AIR_minus_u8 = 0;
+}
+
+(error -> idle) : [!error_u8] {}

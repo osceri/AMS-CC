@@ -16,6 +16,96 @@
 static uint32_t tx_mailbox;
 static uint8_t rx_data[8];
 
+/*
+ * @Brief  
+ * @Param  A pointer to the message which was received
+ * @Retval None
+ */
+__weak void can1_dbu_status_1_rx_callback(dbu_status_1_t* dbu_status_1) {
+
+}
+
+/*
+ * @Brief  
+ * @Param  A pointer to the message which was received
+ * @Retval None
+ */
+__weak void can2_amk1_setpoints_1_rx_callback(amk1_setpoints_1_t* amk1_setpoints_1) {
+
+}
+
+/*
+ * @Brief  
+ * @Param  A pointer to the message which was received
+ * @Retval None
+ */
+__weak void can2_ivt_msg_result_i_rx_callback(ivt_msg_result_i_t* ivt_msg_result_i) {
+
+}
+
+/*
+ * @Brief  
+ * @Param  A pointer to the message which was received
+ * @Retval None
+ */
+__weak void can2_ivt_msg_result_u1_rx_callback(ivt_msg_result_u1_t* ivt_msg_result_u1) {
+
+}
+
+/*
+ * @Brief  
+ * @Param  A pointer to the message which was received
+ * @Retval None
+ */
+__weak void can2_ivt_msg_result_u3_rx_callback(ivt_msg_result_u3_t* ivt_msg_result_u3) {
+
+}
+
+/*
+ * @Brief  
+ * @Param  A pointer to the message which was received
+ * @Retval None
+ */
+__weak void can2_cc_status_rx_callback(cc_status_t* cc_status) {
+
+}
+
+/*
+ * @Brief  
+ * @Param  A pointer to a message which should be sent
+ * @Retval Return 1 if the data entered in ams_status_1 should be sent
+ */
+__weak uint8_t can1_ams_status_1_tx_callback(ams_status_1_t* ams_status_1) {
+
+}
+
+/*
+ * @Brief  
+ * @Param  A pointer to a message which should be sent
+ * @Retval Return 1 if the data entered in ams_temperatures should be sent
+ */
+__weak uint8_t can1_ams_temperatures_tx_callback(ams_temperatures_t* ams_temperatures) {
+
+}
+
+/*
+ * @Brief  
+ * @Param  A pointer to a message which should be sent
+ * @Retval Return 1 if the data entered in ams_cell_voltages should be sent
+ */
+__weak uint8_t can1_ams_cell_voltages_tx_callback(ams_cell_voltages_t* ams_cell_voltages) {
+
+}
+
+/*
+ * @Brief  
+ * @Param  A pointer to a message which should be sent
+ * @Retval Return 1 if the data entered in ams_cell_temperatures should be sent
+ */
+__weak uint8_t can1_ams_cell_temperatures_tx_callback(ams_cell_temperatures_t* ams_cell_temperatures) {
+
+}
+
 static struct can1_dbu_status_1_t can1_dbu_status_1;
 
 static struct can1_ams_status_1_t can1_ams_status_1;
@@ -494,7 +584,6 @@ void can2_cc_status_receive() {
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
    CAN_RxHeaderTypeDef rx_header;
-   static uint8_t rx_data[8];
 
    if (HAL_OK == HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data)) {
        switch(rx_header.StdId) {
@@ -522,7 +611,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 
 void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan) {
    CAN_RxHeaderTypeDef rx_header;
-   static uint8_t rx_data[8];
 
    if (HAL_OK == HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO1, &rx_header, rx_data)) {
        switch(rx_header.StdId) {
@@ -549,33 +637,35 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 }
 
 void simple_filter() {
-   CAN_FilterTypeDef filter_config;
-   
-   filter_config.FilterActivation = ENABLE;
-   filter_config.FilterBank = 0;
-   filter_config.FilterMode = CAN_FILTERMODE_IDMASK;
-   filter_config.FilterIdHigh = 0x0000;
-   filter_config.FilterIdLow = 0x0000;
-   filter_config.FilterMaskIdHigh = 0x0000;
-   filter_config.FilterMaskIdLow = 0x0000;
-   filter_config.FilterScale = CAN_FILTERSCALE_32BIT;
+	CAN_FilterTypeDef filter_config;
 
-   filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-   if (HAL_CAN_ConfigFilter(_hcan1, &filter_config) != HAL_OK) {
-       Error_Handler();
-   }
-   filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO1;
-   if (HAL_CAN_ConfigFilter(_hcan1, &filter_config) != HAL_OK) {
-       Error_Handler();
-   }
-   filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-   if (HAL_CAN_ConfigFilter(_hcan2, &filter_config) != HAL_OK) {
-       Error_Handler();
-   }
-   filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO1;
-   if (HAL_CAN_ConfigFilter(_hcan2, &filter_config) != HAL_OK) {
-       Error_Handler();
-   }
+		filter_config.FilterActivation = ENABLE;
+		filter_config.FilterBank = 0;
+		filter_config.FilterMode = CAN_FILTERMODE_IDMASK;
+		filter_config.FilterIdHigh = 0x0000;
+		filter_config.FilterIdLow = 0x0000;
+		filter_config.FilterMaskIdHigh = 0x0000;
+		filter_config.FilterMaskIdLow = 0x0000;
+		filter_config.FilterScale = CAN_FILTERSCALE_32BIT;
+
+		filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+		if (HAL_CAN_ConfigFilter(_hcan1, &filter_config) != HAL_OK) {
+			Error_Handler();
+		}
+
+		filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO1;
+		if (HAL_CAN_ConfigFilter(_hcan1, &filter_config) != HAL_OK) {
+			Error_Handler();
+		}
+
+		if (HAL_CAN_ConfigFilter(_hcan2, &filter_config) != HAL_OK) {
+			Error_Handler();
+		}
+
+		filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO1;
+		if (HAL_CAN_ConfigFilter(_hcan2, &filter_config) != HAL_OK) {
+			Error_Handler();
+		}
 
 
 }
