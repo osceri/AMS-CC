@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-04-16T21:01:12.307Z" agent="5.0 (Windows)" etag="7Ac3KMf2xUAmKEul6Cdk" version="17.4.5" type="github" pages="6">
+<mxfile host="app.diagrams.net" modified="2022-04-16T21:24:09.808Z" agent="5.0 (Windows)" etag="bC0xH6VO_bV01FCGTS8Z" version="17.4.5" type="github" pages="6">
   <diagram id="lIlviWQBLWVIYCWAqPnO" name="ams">
     <mxGraphModel dx="2128" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -22,7 +22,7 @@
         </mxCell>
         <UserObject label="precharge_drive" link="data:page/id,uZr323zTnWptXHUSKYWT" id="46x8wgh4q0gtktNa0b1w-2">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-            <mxGeometry x="280" y="120" width="120" height="60" as="geometry" />
+            <mxGeometry x="380" y="120" width="120" height="60" as="geometry" />
           </mxCell>
         </UserObject>
         <mxCell id="Ewt_asla_2gGVvgFWyWK-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="46x8wgh4q0gtktNa0b1w-3" target="46x8wgh4q0gtktNa0b1w-7" edge="1">
@@ -43,11 +43,13 @@
         </mxCell>
         <UserObject label="precharge_charge" link="data:page/id,Ef1t-dHHU9oMEyzxMcuo" id="46x8wgh4q0gtktNa0b1w-3">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-            <mxGeometry x="280" y="300" width="120" height="60" as="geometry" />
+            <mxGeometry x="380" y="300" width="120" height="60" as="geometry" />
           </mxCell>
         </UserObject>
         <mxCell id="Ewt_asla_2gGVvgFWyWK-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="46x8wgh4q0gtktNa0b1w-7" target="46x8wgh4q0gtktNa0b1w-9" edge="1">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1020" y="290" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="oGJmd9VbnoFBgs1ou5Ew-14" value="[ams_error||imd_error||charge_error]{error=1;}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ewt_asla_2gGVvgFWyWK-7" vertex="1" connectable="0">
           <mxGeometry x="0.6296" relative="1" as="geometry">
@@ -64,7 +66,7 @@
         </mxCell>
         <UserObject label="charge" link="data:page/id,o0BBDSF6INu3mvJSLO7V" id="46x8wgh4q0gtktNa0b1w-7">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-            <mxGeometry x="640" y="300" width="120" height="60" as="geometry" />
+            <mxGeometry x="700" y="300" width="120" height="60" as="geometry" />
           </mxCell>
         </UserObject>
         <mxCell id="Ewt_asla_2gGVvgFWyWK-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="46x8wgh4q0gtktNa0b1w-8" target="46x8wgh4q0gtktNa0b1w-9" edge="1">
@@ -85,26 +87,26 @@
         </mxCell>
         <UserObject label="drive" link="data:page/id,-CS63IcI1riEPQ8zZ3c_" id="46x8wgh4q0gtktNa0b1w-8">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-            <mxGeometry x="640" y="120" width="120" height="60" as="geometry" />
+            <mxGeometry x="700" y="120" width="120" height="60" as="geometry" />
           </mxCell>
         </UserObject>
         <mxCell id="oGJmd9VbnoFBgs1ou5Ew-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="46x8wgh4q0gtktNa0b1w-9" target="46x8wgh4q0gtktNa0b1w-12" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="980" y="240" />
-              <mxPoint x="980" y="450" />
+              <mxPoint x="1090" y="240" />
+              <mxPoint x="1090" y="450" />
               <mxPoint x="110" y="450" />
             </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="oGJmd9VbnoFBgs1ou5Ew-16" value="&lt;div&gt;[error_resolved&amp;amp;&amp;amp;!(ams_error||imd_error)]{&lt;/div&gt;&lt;div&gt;precharge_drive_error = 0;&lt;/div&gt;&lt;div&gt;precharge_charge_error = 0;&lt;/div&gt;&lt;div&gt;drive_error = 0;&lt;/div&gt;&lt;div&gt;charge_error = 0;&lt;/div&gt;&lt;div&gt;error = 0;}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="oGJmd9VbnoFBgs1ou5Ew-15" vertex="1" connectable="0">
           <mxGeometry x="-0.6689" relative="1" as="geometry">
-            <mxPoint x="-30" y="-32" as="offset" />
+            <mxPoint x="30" y="-35" as="offset" />
           </mxGeometry>
         </mxCell>
         <UserObject label="error" id="46x8wgh4q0gtktNa0b1w-9">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-            <mxGeometry x="840" y="210" width="120" height="60" as="geometry" />
+            <mxGeometry x="920" y="210" width="120" height="60" as="geometry" />
           </mxCell>
         </UserObject>
         <mxCell id="Ewt_asla_2gGVvgFWyWK-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="46x8wgh4q0gtktNa0b1w-12" target="46x8wgh4q0gtktNa0b1w-2" edge="1">
@@ -118,7 +120,7 @@
         <mxCell id="Ewt_asla_2gGVvgFWyWK-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="46x8wgh4q0gtktNa0b1w-12" target="46x8wgh4q0gtktNa0b1w-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="oGJmd9VbnoFBgs1ou5Ew-2" value="[SC&amp;amp;&amp;amp;charge]{}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ewt_asla_2gGVvgFWyWK-13" vertex="1" connectable="0">
+        <mxCell id="oGJmd9VbnoFBgs1ou5Ew-2" value="[SC&amp;amp;&amp;amp;charge]{enable_charger = 1;}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ewt_asla_2gGVvgFWyWK-13" vertex="1" connectable="0">
           <mxGeometry x="0.2731" relative="1" as="geometry">
             <mxPoint x="-8" as="offset" />
           </mxGeometry>
@@ -327,7 +329,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="Ef1t-dHHU9oMEyzxMcuo" name="precharge_charge">
-    <mxGraphModel dx="1065" dy="447" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1278" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
