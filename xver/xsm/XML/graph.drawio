@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-04-16T18:18:10.404Z" agent="5.0 (Windows)" etag="EMrRhiLnrUTjpRiIIi6f" version="17.4.5" type="github" pages="6">
+<mxfile host="app.diagrams.net" modified="2022-04-16T18:40:53.415Z" agent="5.0 (Windows)" etag="BKaNwHI6_1hZMlITbj2q" version="17.4.5" type="github" pages="6">
   <diagram id="lIlviWQBLWVIYCWAqPnO" name="ams">
     <mxGraphModel dx="2128" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -131,7 +131,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="oGJmd9VbnoFBgs1ou5Ew-3" value="[!SC&amp;amp;&amp;amp;balance]{}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ewt_asla_2gGVvgFWyWK-19" vertex="1" connectable="0">
+        <mxCell id="oGJmd9VbnoFBgs1ou5Ew-3" value="[!SC&amp;amp;&amp;amp;balance&amp;amp;&amp;amp;(cell_voltages_variance_f32 &amp;lt; 0.0001)]{}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ewt_asla_2gGVvgFWyWK-19" vertex="1" connectable="0">
           <mxGeometry x="0.0245" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -149,14 +149,14 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="oGJmd9VbnoFBgs1ou5Ew-4" value="&lt;div&gt;[SC||!balance||balance_done]{}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ewt_asla_2gGVvgFWyWK-18" vertex="1" connectable="0">
+        <mxCell id="oGJmd9VbnoFBgs1ou5Ew-4" value="&lt;div&gt;[SC||!balance||(cell_voltages_variance_f32 &amp;gt; 0.0001)]{}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ewt_asla_2gGVvgFWyWK-18" vertex="1" connectable="0">
           <mxGeometry x="-0.0136" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
         <object label="balance" state="" link="data:page/id,DzXCORfQ2eGAM-OcjKNi" id="Ewt_asla_2gGVvgFWyWK-16">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-            <mxGeometry x="-240" y="210" width="120" height="60" as="geometry" />
+            <mxGeometry x="-410" y="210" width="120" height="60" as="geometry" />
           </mxCell>
         </object>
         <mxCell id="zdowHT4Q--c81eRwjxZP-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="zdowHT4Q--c81eRwjxZP-2" target="46x8wgh4q0gtktNa0b1w-12">
