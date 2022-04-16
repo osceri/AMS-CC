@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-04-16T22:05:20.234Z" agent="5.0 (Windows)" etag="-B9X2qhC71R1k5bwJz_O" version="17.4.5" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2022-04-16T22:07:06.820Z" agent="5.0 (Windows)" etag="xIik-DJQWA_vkvYfmvZC" version="17.4.5" type="github" pages="7">
   <diagram id="lIlviWQBLWVIYCWAqPnO" name="ams">
     <mxGraphModel dx="2354" dy="631" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -51,7 +51,7 @@
             <mxPoint x="1020" y="290" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="oGJmd9VbnoFBgs1ou5Ew-14" value="[ams_error||imd_error||charge_error]{error=1;enable_charger=0;}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ewt_asla_2gGVvgFWyWK-7" vertex="1" connectable="0">
+        <mxCell id="oGJmd9VbnoFBgs1ou5Ew-14" value="[ams_error||imd_error||charge_error]{error=1;}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ewt_asla_2gGVvgFWyWK-7" vertex="1" connectable="0">
           <mxGeometry x="0.6296" relative="1" as="geometry">
             <mxPoint x="10" as="offset" />
           </mxGeometry>
@@ -104,7 +104,7 @@
             <mxPoint x="30" y="-35" as="offset" />
           </mxGeometry>
         </mxCell>
-        <UserObject label="error" id="46x8wgh4q0gtktNa0b1w-9">
+        <UserObject label="error" link="data:page/id,4Eal9zZOS9WOm3qdCi38" id="46x8wgh4q0gtktNa0b1w-9">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
             <mxGeometry x="920" y="210" width="120" height="60" as="geometry" />
           </mxCell>
