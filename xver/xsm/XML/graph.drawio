@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-04-16T20:33:14.673Z" agent="5.0 (Windows)" etag="hDu3lxUNWiZ0I-FbY1L9" version="17.4.5" type="github" pages="6">
+<mxfile host="app.diagrams.net" modified="2022-04-16T20:44:16.437Z" agent="5.0 (Windows)" etag="N8jzL3COLr1BoLEseXxJ" version="17.4.5" type="github" pages="6">
   <diagram id="lIlviWQBLWVIYCWAqPnO" name="ams">
     <mxGraphModel dx="1731" dy="370" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -485,7 +485,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="-CS63IcI1riEPQ8zZ3c_" name="drive">
-    <mxGraphModel dx="881" dy="370" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1278" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -521,7 +521,7 @@
         <mxCell id="-pkq6wS3JihGK_DhRYbo-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="RWR0uX_LrAzGrr3y9ukB-8" target="RWR0uX_LrAzGrr3y9ukB-12" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="-pkq6wS3JihGK_DhRYbo-4" value="&lt;div&gt;[after(7)]{&lt;/div&gt;&lt;div&gt;close_air_plus= 0;&lt;/div&gt;&lt;div&gt;close_air_minus = 0;&lt;/div&gt;&lt;div&gt;close_precharge = 0;&lt;/div&gt;&lt;div&gt;drive_force_quit = 1;}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="-pkq6wS3JihGK_DhRYbo-2" vertex="1" connectable="0">
+        <mxCell id="-pkq6wS3JihGK_DhRYbo-4" value="&lt;div&gt;[after(7)]{&lt;/div&gt;&lt;div&gt;close_air_plus= 0;&lt;/div&gt;&lt;div&gt;close_air_minus = 0;&lt;/div&gt;&lt;div&gt;close_precharge = 0;&lt;/div&gt;&lt;div&gt;drive_error = 1;}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="-pkq6wS3JihGK_DhRYbo-2" vertex="1" connectable="0">
           <mxGeometry x="0.4568" relative="1" as="geometry">
             <mxPoint y="-2" as="offset" />
           </mxGeometry>
@@ -581,7 +581,7 @@
         <mxCell id="PsCbVwXv-jA8KolUmENP-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="PsCbVwXv-jA8KolUmENP-10" target="PsCbVwXv-jA8KolUmENP-12" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="PsCbVwXv-jA8KolUmENP-9" value="&lt;div&gt;[after(7)]{&lt;/div&gt;&lt;div&gt;close_air_plus = 0;&lt;/div&gt;&lt;div&gt;close_air_minus = 0;&lt;/div&gt;&lt;div&gt;close_precharge = 0;&lt;/div&gt;&lt;div&gt;charge_force_quit = 1;}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PsCbVwXv-jA8KolUmENP-8" vertex="1" connectable="0">
+        <mxCell id="PsCbVwXv-jA8KolUmENP-9" value="&lt;div&gt;[after(7)]{&lt;/div&gt;&lt;div&gt;close_air_plus = 0;&lt;/div&gt;&lt;div&gt;close_air_minus = 0;&lt;/div&gt;&lt;div&gt;close_precharge = 0;&lt;/div&gt;&lt;div&gt;charge_error = 1;}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PsCbVwXv-jA8KolUmENP-8" vertex="1" connectable="0">
           <mxGeometry x="0.4568" relative="1" as="geometry">
             <mxPoint y="-2" as="offset" />
           </mxGeometry>
