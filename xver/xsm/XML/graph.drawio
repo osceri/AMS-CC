@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-04-16T15:42:44.757Z" agent="5.0 (Windows)" etag="CDhM-sIg6UuT6DamT5bs" version="17.4.5" type="github" pages="5">
+<mxfile host="app.diagrams.net" modified="2022-04-16T15:46:32.211Z" agent="5.0 (Windows)" etag="naXOovY0mD9mfLAQv9_u" version="17.4.5" type="github" pages="5">
   <diagram id="lIlviWQBLWVIYCWAqPnO" name="ams">
     <mxGraphModel dx="1731" dy="370" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -526,7 +526,7 @@
         <mxCell id="-pkq6wS3JihGK_DhRYbo-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="RWR0uX_LrAzGrr3y9ukB-8" target="RWR0uX_LrAzGrr3y9ukB-11" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="-pkq6wS3JihGK_DhRYbo-3" value="&lt;div&gt;[before(7)&amp;amp;&amp;amp;(absf(accumulator_current_f64) &amp;lt; 0.001)]{&lt;/div&gt;&lt;div&gt;close_air_plus = 0;&lt;/div&gt;&lt;div&gt;close_air_minus = 0;&lt;/div&gt;&lt;div&gt;close_precharge = 0;&lt;/div&gt;&lt;div&gt;drive_complete = 1;}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="-pkq6wS3JihGK_DhRYbo-1" vertex="1" connectable="0">
+        <mxCell id="-pkq6wS3JihGK_DhRYbo-3" value="&lt;div&gt;[before(7)&amp;amp;&amp;amp;(fabsf(accumulator_current_f64) &amp;lt; 0.001)]{&lt;/div&gt;&lt;div&gt;close_air_plus = 0;&lt;/div&gt;&lt;div&gt;close_air_minus = 0;&lt;/div&gt;&lt;div&gt;close_precharge = 0;&lt;/div&gt;&lt;div&gt;drive_complete = 1;}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="-pkq6wS3JihGK_DhRYbo-1" vertex="1" connectable="0">
           <mxGeometry x="0.4114" y="1" relative="1" as="geometry">
             <mxPoint x="-6" y="3" as="offset" />
           </mxGeometry>
@@ -586,7 +586,7 @@
         <mxCell id="PsCbVwXv-jA8KolUmENP-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="PsCbVwXv-jA8KolUmENP-10" target="PsCbVwXv-jA8KolUmENP-11">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="PsCbVwXv-jA8KolUmENP-7" value="&lt;div&gt;[before(7)&amp;amp;&amp;amp;(absf(accumulator_current_f64) &amp;lt; 0.001)]{&lt;/div&gt;&lt;div&gt;close_air_plus = 0;&lt;/div&gt;&lt;div&gt;close_air_minus = 0;&lt;/div&gt;&lt;div&gt;close_precharge = 0;&lt;/div&gt;&lt;div&gt;charge_complete = 1;}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="PsCbVwXv-jA8KolUmENP-6">
+        <mxCell id="PsCbVwXv-jA8KolUmENP-7" value="&lt;div&gt;[before(7)&amp;amp;&amp;amp;(fabsf(accumulator_current_f64) &amp;lt; 0.001)]{&lt;/div&gt;&lt;div&gt;close_air_plus = 0;&lt;/div&gt;&lt;div&gt;close_air_minus = 0;&lt;/div&gt;&lt;div&gt;close_precharge = 0;&lt;/div&gt;&lt;div&gt;charge_complete = 1;}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="PsCbVwXv-jA8KolUmENP-6">
           <mxGeometry x="0.4114" y="1" relative="1" as="geometry">
             <mxPoint x="-6" y="3" as="offset" />
           </mxGeometry>
