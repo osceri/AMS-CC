@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-04-16T20:21:52.565Z" agent="5.0 (Windows)" etag="MjxExT5CEvP15eI53GWl" version="17.4.5" type="github" pages="6">
+<mxfile host="app.diagrams.net" modified="2022-04-16T20:29:00.105Z" agent="5.0 (Windows)" etag="ehpjBwxwUczcgC_w3PHI" version="17.4.5" type="github" pages="6">
   <diagram id="lIlviWQBLWVIYCWAqPnO" name="ams">
     <mxGraphModel dx="1731" dy="370" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -131,7 +131,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="oGJmd9VbnoFBgs1ou5Ew-3" value="[!SC&amp;amp;&amp;amp;balance&amp;amp;&amp;amp;(cell_voltages_variance_f32 &amp;gt; 0.01)]{}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ewt_asla_2gGVvgFWyWK-19" vertex="1" connectable="0">
+        <mxCell id="oGJmd9VbnoFBgs1ou5Ew-3" value="&lt;div&gt;[!SC&amp;amp;&amp;amp;balance&amp;amp;&amp;amp;(cell_voltages_variance_f32 &amp;gt; 0.01)]{&lt;/div&gt;&lt;div&gt;stop_cell_balancing();}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ewt_asla_2gGVvgFWyWK-19" vertex="1" connectable="0">
           <mxGeometry x="0.0245" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
