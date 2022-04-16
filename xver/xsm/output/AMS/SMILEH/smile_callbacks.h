@@ -9,6 +9,6 @@
 
 #include "smile_data.h"
 
-void zero_out_balance_v0();
-void do_balance_v0();
+uint8_t zero_cells();
+uint8_t balance_cells();
 #endif

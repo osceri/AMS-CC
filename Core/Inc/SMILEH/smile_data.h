@@ -10,38 +10,40 @@
 #include "smile_data.h"
 
 struct {
-   uint8_t precharge_drive_complete_u8;
-   uint8_t precharge_drive_error_u8;
-   uint8_t precharge_charge_error_u8;
-   uint8_t precharge_charge_complete_u8;
-   float Ts_f32;
+   uint8_t drive_complete;
+   uint8_t precharge_charge_complete;
+   uint8_t precharge_charge_error;
+   uint8_t precharge_drive_complete;
+   uint8_t precharge_drive_error;
+   float Ts;
 } ams_parameters;
 
 struct {
-   double sought_voltage_f64;
-   uint8_t AIR_minus_closed_u8;
-   uint8_t drive_u8;
-   uint8_t balance_u8;
-   uint8_t AIR_plus_closed_u8;
-   double U_variance_f64;
-   uint8_t charge_u8;
-   uint8_t precharge_closed_u8;
-   uint8_t SC_u8;
-   uint8_t error_u8;
-   uint8_t charger_is_live_u8;
-   double accumulator_voltage_f64;
-   double vehicle_voltage_f64;
+   uint8_t precharge_closed;
+   float accumulator_voltage;
+   uint8_t air_plus_closed;
+   uint8_t balance;
+   uint8_t SC;
+   float vehicle_voltage;
+   uint8_t charge;
+   uint8_t drive;
+   float cell_voltage_variance;
+   double accumulator_current;
+   uint8_t drive_error;
+   uint8_t air_minus_closed;
+   uint8_t imd_error;
+   uint8_t charge_error;
+   uint8_t charger_is_awake;
+   uint8_t charge_complete;
+   uint8_t ams_error;
 } ams_inputs;
 
 struct {
-   uint8_t enable_charge_u8;
-   uint8_t enable_AIR_minus_u8;
-   uint8_t enable_precharge_u8;
-   uint8_t enable_driver_u8;
-   uint8_t enable_charger_u8;
-   uint8_t AMS_error_u8;
-   uint8_t balances_126u8[126];
-   uint8_t enable_AIR_plus_u8;
+   uint8_t close_air_minus;
+   uint8_t close_air_plus;
+   uint8_t error;
+   uint8_t drive_force_quit;
+   uint8_t close_precharge;
 } ams_outputs;
 
 #endif

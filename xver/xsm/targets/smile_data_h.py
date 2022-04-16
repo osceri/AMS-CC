@@ -11,7 +11,7 @@
 #
 
 #struct {
-for data_name, data_size, data_type in parameters:
+for _, data_name, data_size, data_type in parameters:
     if data_size:
         if data_size < 1:
             #   $data_type$* $data_name$;
@@ -25,7 +25,7 @@ for data_name, data_size, data_type in parameters:
 #
 
 #struct {
-for data_name, data_size, data_type in inputs:
+for _, data_name, data_size, data_type in inputs:
     if data_size:
         if data_size < 1:
             #   $data_type$* $data_name$;
@@ -39,7 +39,7 @@ for data_name, data_size, data_type in inputs:
 #
 
 #struct {
-for data_name, data_size, data_type in outputs:
+for _, data_name, data_size, data_type in outputs:
     if data_size:
         if data_size < 1:
             #   $data_type$* $data_name$;

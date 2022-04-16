@@ -336,12 +336,12 @@ void start_SM_task(void *argument) {
 	uint32_t tick_increment = TICK2HZ * SM_task_info.periodicity;
 
 	/* Make task-specific structures */
-	ams_parameters.Ts_f32 = SM_task_info.periodicity;
+	ams_parameters.Ts = SM_task_info.periodicity;
 	double *cell_voltages;
 
-	xQueueReceive(start_drive_queue, &ams_inputs.drive_u8, 0);
-	xQueueReceive(start_charge_queue, &ams_inputs.charge_u8, 0);
-	xQueueReceive(start_balance_queue, &ams_inputs.balance_u8, 0);
+	xQueueReceive(start_drive_queue, &ams_inputs.drive, 0);
+	xQueueReceive(start_charge_queue, &ams_inputs.charge, 0);
+	xQueueReceive(start_balance_queue, &ams_inputs.balance, 0);
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * SM_task_info.offset;
@@ -351,19 +351,19 @@ void start_SM_task(void *argument) {
 		/* Enter periodic behaviour */
 		xQueueReceive(cell_voltages_queue, &cell_voltages, 0);
 
-		ams_inputs.AIR_minus_closed_u8 = get_air_minus_ext();
-		ams_inputs.AIR_plus_closed_u8 = get_air_plus_ext();
-		ams_inputs.precharge_closed_u8 = get_precharge_ext();
-		ams_inputs.SC_u8 = get_sc_probe_ext();
-		ams_inputs.accumulator_voltage_f64 = SIM0_Y.accumulator_voltage;
-		ams_inputs.vehicle_voltage_f64 = SIM0_Y.vehicle_voltage;
-		ams_inputs.drive_u8 = 0;
-		ams_inputs.charge_u8 = 1;
-		ams_inputs.charger_is_live_u8 = 1;
-		ams(&state);
-		set_air_minus_ext(ams_outputs.enable_AIR_minus_u8);
-		set_air_plus_ext(ams_outputs.enable_AIR_plus_u8);
-		set_precharge_ext(ams_outputs.enable_precharge_u8);
+		ams_inputs.air_minus_closed = get_air_minus_ext();
+		ams_inputs.air_plus_closed = get_air_plus_ext();
+		ams_inputs.precharge_closed = get_precharge_ext();
+		ams_inputs.SC = get_sc_probe_ext();
+		ams_inputs.U_accumulator_voltage = SIM0_Y.accumulator_voltage;
+		ams_inputs.vehicle_voltage = SIM0_Y.vehicle_voltage;
+		ams_inputs.drive = 0;
+		ams_inputs.charge = 1;
+		ams_inputs.charger_is_awake = 1;
+		ams_function();
+		set_air_minus_ext(ams_outputs.close_air_minus);
+		set_air_plus_ext(ams_outputs.close_air_plus);
+		set_precharge_ext(ams_outputs.close_precharge);
 
 		/* Wait until next period */
 		next_tick += tick_increment;

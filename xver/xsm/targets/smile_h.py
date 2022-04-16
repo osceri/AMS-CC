@@ -12,13 +12,13 @@
 
 
 #typedef enum {
-#   STATE_NONE = -1;
+#   STATE_NONE = -1,
 for state in state_machines:
     #   STATE_$state.name.upper()$ = $state.id$,
 #} $SM$_state_t;
 #
 
 for state in state_machines:
-    #void $state.name$_function();
+    #$SM$_state_t $state.name$_function();
 
 ##endif

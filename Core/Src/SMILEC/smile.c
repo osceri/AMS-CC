@@ -12,480 +12,559 @@
 #include "smile.h"
 
 
-uint8_t after(uint32_t* timer, float boundary) {
-   return !(timer[0]*ams_parameters.Ts_f32 < boundary);
-}
-
-uint8_t before(uint32_t* timer, float boundary) {
-   return (timer[0]*ams_parameters.Ts_f32 < boundary);
-}
-
-__weak void do_balance_v0() {
+__weak uint8_t zero_cells() {
    /* Type your actual code somewhere else */
 }
-__weak void zero_out_balance_v0() {
+
+__weak uint8_t balance_cells() {
    /* Type your actual code somewhere else */
 }
-void ams_0(uint32_t* super_timer, uint8_t* super_state) {
+
+static ams_state_t state_r0;
+static ams_state_t state_r1;
+static ams_state_t state_r2;
+static float timer_r0;
+static float timer_r1;
+static float timer_r2;
+
+ams_state_t ams_precharge_drive_close_air_minus_function() {
+   if((timer_r2 < 2)&&ams_inputs.air_minus_closed) {
+       ams_outputs.close_precharge=1;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_CLOSE_PRECHARGE;
+   }
+
+   if((timer_r2 > 2)) {
+       ams_parameters.precharge_drive_error=1;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_ERROR;
+   }
+
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_DRIVE_CLOSE_AIR_MINUS;
+}
+
+ams_state_t ams_precharge_drive_close_precharge_function() {
+   if((timer_r2 < 2)&&ams_inputs.precharge_closed) {
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_WAIT;
+   }
+
+   if((timer_r2 > 2)) {
+       ams_parameters.precharge_drive_error=2;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_ERROR;
+   }
+
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_DRIVE_CLOSE_PRECHARGE;
+}
+
+ams_state_t ams_precharge_drive_error_function() {
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_DRIVE_ERROR;
+}
+
+ams_state_t ams_precharge_drive_wait_function() {
+   if((timer_r2 > 5)&&(timer_r2 < 30)&&(ams_inputs.accumulator_voltage*0.95<ams_inputs.vehicle_voltage)) {
+       ams_outputs.close_air_plus=1;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_CLOSE_AIR_PLUS;
+   }
+
+   if((timer_r2 > 2)) {
+       ams_parameters.precharge_drive_error=3;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_ERROR;
+   }
+
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_DRIVE_WAIT;
+}
+
+ams_state_t ams_precharge_drive_close_air_plus_function() {
+   if((timer_r2 < 2)&&ams_inputs.air_plus_closed) {
+       ams_outputs.close_precharge=0;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_OPEN_PRECHARGE;
+   }
+
+   if((timer_r2 > 30)) {
+       ams_parameters.precharge_drive_error=4;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_ERROR;
+   }
+
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_DRIVE_CLOSE_AIR_PLUS;
+}
+
+ams_state_t ams_precharge_drive_open_precharge_function() {
+   if((timer_r2 > 2)) {
+       ams_parameters.precharge_drive_error=5;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_ERROR;
+   }
+
+   if((timer_r2 < 2)&&!ams_inputs.precharge_closed) {
+       ams_parameters.precharge_drive_complete=1;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_EXIT;
+   }
+
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_DRIVE_OPEN_PRECHARGE;
+}
+
+ams_state_t ams_precharge_drive_exit_function() {
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_DRIVE_EXIT;
+}
+
+ams_state_t ams_precharge_drive_0_function() {
    if(1) {
-       ams_outputs.balances_126u8;
-       super_timer[0] = 0;
-       super_state[0] = AMS_ENTRY_STATE;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_ENTRY;
    }
 
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_DRIVE_0;
 }
-void ams_entry(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+
+ams_state_t ams_precharge_drive_entry_function() {
+   if(1) {
+       ams_outputs.close_air_minus=1;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE_CLOSE_AIR_MINUS;
+   }
+
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_DRIVE_ENTRY;
+}
+
+ams_state_t ams_precharge_drive_function() {
+   if(timer_r1 < 0.001*ams_parameters.Ts) {
+       state_r1 = STATE_AMS_PRECHARGE_DRIVE_0;
+   }
+
+   switch(state_r2) {
+       case STATE_AMS_PRECHARGE_DRIVE_CLOSE_AIR_MINUS:
+           state_r2 = ams_precharge_drive_close_air_minus_function();
+           break;
+       case STATE_AMS_PRECHARGE_DRIVE_CLOSE_PRECHARGE:
+           state_r2 = ams_precharge_drive_close_precharge_function();
+           break;
+       case STATE_AMS_PRECHARGE_DRIVE_ERROR:
+           state_r2 = ams_precharge_drive_error_function();
+           break;
+       case STATE_AMS_PRECHARGE_DRIVE_WAIT:
+           state_r2 = ams_precharge_drive_wait_function();
+           break;
+       case STATE_AMS_PRECHARGE_DRIVE_CLOSE_AIR_PLUS:
+           state_r2 = ams_precharge_drive_close_air_plus_function();
+           break;
+       case STATE_AMS_PRECHARGE_DRIVE_OPEN_PRECHARGE:
+           state_r2 = ams_precharge_drive_open_precharge_function();
+           break;
+       case STATE_AMS_PRECHARGE_DRIVE_EXIT:
+           state_r2 = ams_precharge_drive_exit_function();
+           break;
+       case STATE_AMS_PRECHARGE_DRIVE_0:
+           state_r2 = ams_precharge_drive_0_function();
+           break;
+       case STATE_AMS_PRECHARGE_DRIVE_ENTRY:
+           state_r2 = ams_precharge_drive_entry_function();
+           break;
+   }
+
+   if(ams_parameters.precharge_drive_complete) {
+       timer_r1 = 0;
+       return STATE_AMS_DRIVE;
+   }
+
+   if(ams_parameters.precharge_drive_error||ams_inputs.ams_error||ams_inputs.imd_error) {
+       ams_outputs.error=1;
+       timer_r1 = 0;
+       return STATE_AMS_ERROR;
    }
 
    if(1) {
-       ams_parameters.precharge_drive_complete_u8=0;
-       ams_parameters.precharge_charge_complete_u8=0;
-       zero_out_balance_v0();
-       ams_outputs.enable_charge_u8=0;
-       ams_outputs.enable_precharge_u8=0;
-       ams_outputs.enable_AIR_plus_u8=0;
-       ams_outputs.enable_AIR_minus_u8=0;
-   }
-   if(after(&timer,5)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_IDLE_STATE;
+       timer_r1 = 0;
    }
 
+   timer_r1 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_DRIVE;
 }
-void ams_idle(uint32_t* super_timer, uint8_t* super_state) {
-   if(ams_inputs.SC_u8&&ams_inputs.balance_u8) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_BALANCE_STATE;
-   }
-   if(ams_inputs.SC_u8&&ams_inputs.drive_u8) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_STATE;
-   }
-   if(ams_inputs.SC_u8&&ams_inputs.charge_u8) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_STATE;
-   }
 
-}
-void ams_balance(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
-   }
-
-   if(after(&timer,60)) {
-       do_balance_v0();
-   }
-   if(ams_inputs.U_variance_f64<0.00001) {
-       zero_out_balance_v0();
-       super_timer[0] = 0;
-       super_state[0] = AMS_IDLE_STATE;
-   }
-
-}
-void ams_precharge_drive_0(uint32_t* super_timer, uint8_t* super_state) {
+ams_state_t ams_drive_0_function() {
    if(1) {
-       ams_outputs.enable_AIR_minus_u8=1;
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_CLOSE_AIR_MINUS_STATE;
+       timer_r2 = 0;
+       return STATE_AMS_DRIVE_DRIVE;
    }
 
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_DRIVE_0;
 }
-void ams_precharge_drive_close_air_minus(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+
+ams_state_t ams_drive_drive_function() {
+   if(!ams_inputs.drive) {
+       timer_r2 = 0;
+       return STATE_AMS_DRIVE_END_DRIVE;
    }
 
-   if(before(&timer,2)&&(ams_inputs.AIR_minus_closed_u8==1)) {
-       ams_outputs.enable_precharge_u8=1;
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_CLOSE_PRECHARGE_STATE;
-   }
-   if(after(&timer,2)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_ERROR_STATE;
-   }
-
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_DRIVE_DRIVE;
 }
-void ams_precharge_drive_close_precharge(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+
+ams_state_t ams_drive_end_drive_function() {
+   if((timer_r2 < 7)&&(abs(ams_inputs.accumulator_current)<0.001)) {
+       ams_outputs.close_air_plus=0;
+       ams_outputs.close_air_minus=0;
+       ams_outputs.close_precharge=0;
+       ams_parameters.drive_complete=1;
+       timer_r2 = 0;
+       return STATE_AMS_DRIVE_EXIT;
    }
 
-   if(before(&timer,2)&&(ams_inputs.precharge_closed_u8==1)) {
-       ams_outputs.enable_driver_u8=1;
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_WAIT_STATE;
-   }
-   if(after(&timer,2)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_ERROR_STATE;
+   if((timer_r2 > 7)) {
+       ams_outputs.close_air_plus=0;
+       ams_outputs.close_air_minus=0;
+       ams_outputs.close_precharge=0;
+       ams_outputs.drive_force_quit=1;
+       timer_r2 = 0;
+       return STATE_AMS_DRIVE_FORCE_QUIT;
    }
 
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_DRIVE_END_DRIVE;
 }
-void ams_precharge_drive_error(uint32_t* super_timer, uint8_t* super_state) {
+
+ams_state_t ams_drive_exit_function() {
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_DRIVE_EXIT;
+}
+
+ams_state_t ams_drive_force_quit_function() {
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_DRIVE_FORCE_QUIT;
+}
+
+ams_state_t ams_drive_function() {
+   if(timer_r1 < 0.001*ams_parameters.Ts) {
+       state_r1 = STATE_AMS_DRIVE_0;
+   }
+
+   switch(state_r2) {
+       case STATE_AMS_DRIVE_0:
+           state_r2 = ams_drive_0_function();
+           break;
+       case STATE_AMS_DRIVE_DRIVE:
+           state_r2 = ams_drive_drive_function();
+           break;
+       case STATE_AMS_DRIVE_END_DRIVE:
+           state_r2 = ams_drive_end_drive_function();
+           break;
+       case STATE_AMS_DRIVE_EXIT:
+           state_r2 = ams_drive_exit_function();
+           break;
+       case STATE_AMS_DRIVE_FORCE_QUIT:
+           state_r2 = ams_drive_force_quit_function();
+           break;
+   }
+
+   if(ams_inputs.ams_error||ams_inputs.imd_error||ams_inputs.drive_error) {
+       ams_outputs.error=1;
+       timer_r1 = 0;
+       return STATE_AMS_ERROR;
+   }
+
+   if(ams_parameters.drive_complete) {
+       timer_r1 = 0;
+       return STATE_AMS_IDLE;
+   }
+
    if(1) {
-       ams_parameters.precharge_drive_error_u8=1;
+       timer_r1 = 0;
    }
 
+   timer_r1 += ams_parameters.Ts;
+   return STATE_AMS_DRIVE;
 }
-void ams_precharge_drive_wait(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+
+ams_state_t ams_error_function() {
+   if(!(ams_inputs.imd_error|ams_inputs.ams_error|ams_parameters.precharge_drive_error|ams_parameters.precharge_charge_error)) {
+       timer_r1 = 0;
+       return STATE_AMS_IDLE;
    }
 
-   if(after(&timer,2)&&before(&timer,25)&&(0.95*ams_inputs.accumulator_voltage_f64<ams_inputs.vehicle_voltage_f64)) {
-       ams_outputs.enable_AIR_plus_u8=1;
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_CLOSE_AIR_PLUS_STATE;
-   }
-   if(after(&timer,25)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_ERROR_STATE;
-   }
-
+   timer_r1 += ams_parameters.Ts;
+   return STATE_AMS_ERROR;
 }
-void ams_precharge_drive_close_air_plus(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+
+ams_state_t ams_precharge_charge_close_air_minus_function() {
+   if((timer_r2 < 2)&&ams_inputs.air_minus_closed) {
+       ams_outputs.close_precharge=1;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_CLOSE_PRECHARGE;
    }
 
-   if(before(&timer,2)&&(ams_inputs.AIR_plus_closed_u8==1)) {
-       ams_outputs.enable_precharge_u8=0;
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_OPEN_PRECHARGE_STATE;
-   }
-   if(after(&timer,2)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_ERROR_STATE;
+   if((timer_r2 > 2)) {
+       ams_parameters.precharge_charge_error=2;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_ERROR;
    }
 
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_CHARGE_CLOSE_AIR_MINUS;
 }
-void ams_precharge_drive_open_precharge(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+
+ams_state_t ams_precharge_charge_close_precharge_function() {
+   if((timer_r2 < 2)&&ams_inputs.precharge_closed) {
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_WAIT;
    }
 
-   if(before(&timer,2)&&(ams_inputs.precharge_closed_u8==1)) {
-       ams_parameters.precharge_drive_complete_u8=1;
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_EXIT_STATE;
-   }
-   if(after(&timer,2)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_DRIVE_ERROR_STATE;
+   if((timer_r2 > 2)) {
+       ams_parameters.precharge_charge_error=3;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_ERROR;
    }
 
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_CHARGE_CLOSE_PRECHARGE;
 }
-void ams_precharge_drive_exit(uint32_t* super_timer, uint8_t* super_state) {
 
+ams_state_t ams_precharge_charge_error_function() {
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_CHARGE_ERROR;
 }
-void ams_precharge_drive(uint32_t* super_timer, uint8_t* super_state) {
-   static ams_precharge_drive_t state = AMS_PRECHARGE_DRIVE_0_STATE;
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
-       state = AMS_PRECHARGE_DRIVE_0_STATE;
+
+ams_state_t ams_precharge_charge_wait_function() {
+   if((timer_r2 > 5)&&(timer_r2 < 30)&&(ams_inputs.accumulator_voltage*0.95<ams_inputs.vehicle_voltage)) {
+       ams_outputs.close_air_plus=1;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_CLOSE_AIR_PLUS;
    }
 
-   switch(state) {
-       case AMS_PRECHARGE_DRIVE_0_STATE:
-           ams_precharge_drive_0(&timer, &state);
-           break;
-       case AMS_PRECHARGE_DRIVE_CLOSE_AIR_MINUS_STATE:
-           ams_precharge_drive_close_air_minus(&timer, &state);
-           break;
-       case AMS_PRECHARGE_DRIVE_CLOSE_PRECHARGE_STATE:
-           ams_precharge_drive_close_precharge(&timer, &state);
-           break;
-       case AMS_PRECHARGE_DRIVE_ERROR_STATE:
-           ams_precharge_drive_error(&timer, &state);
-           break;
-       case AMS_PRECHARGE_DRIVE_WAIT_STATE:
-           ams_precharge_drive_wait(&timer, &state);
-           break;
-       case AMS_PRECHARGE_DRIVE_CLOSE_AIR_PLUS_STATE:
-           ams_precharge_drive_close_air_plus(&timer, &state);
-           break;
-       case AMS_PRECHARGE_DRIVE_OPEN_PRECHARGE_STATE:
-           ams_precharge_drive_open_precharge(&timer, &state);
-           break;
-       case AMS_PRECHARGE_DRIVE_EXIT_STATE:
-           ams_precharge_drive_exit(&timer, &state);
-           break;
+   if((timer_r2 > 2)) {
+       ams_parameters.precharge_charge_error=4;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_ERROR;
    }
 
-   if(ams_parameters.precharge_drive_complete_u8==1) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_DRIVE_STATE;
-   }
-   if((ams_parameters.precharge_drive_error_u8==1)||ams_inputs.error_u8) {
-       ams_outputs.AMS_error_u8=1;
-       super_timer[0] = 0;
-       super_state[0] = AMS_ERROR_STATE;
-   }
-
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_CHARGE_WAIT;
 }
-void ams_drive(uint32_t* super_timer, uint8_t* super_state) {
-   if(ams_inputs.drive_u8==0) {
-       ams_outputs.enable_precharge_u8=0;
-       ams_outputs.enable_AIR_plus_u8=0;
-       ams_outputs.enable_AIR_minus_u8=0;
-       super_timer[0] = 0;
-       super_state[0] = AMS_IDLE_STATE;
-   }
-   if(ams_inputs.error_u8) {
-       ams_outputs.enable_precharge_u8=0;
-       ams_outputs.enable_AIR_plus_u8=0;
-       ams_outputs.enable_AIR_minus_u8=0;
-       super_timer[0] = 0;
-       super_state[0] = AMS_ERROR_STATE;
+
+ams_state_t ams_precharge_charge_close_air_plus_function() {
+   if((timer_r2 < 2)&&ams_inputs.air_plus_closed) {
+       ams_outputs.close_precharge=0;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_OPEN_PRECHARGE;
    }
 
+   if((timer_r2 > 30)) {
+       ams_parameters.precharge_charge_error=5;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_ERROR;
+   }
+
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_CHARGE_CLOSE_AIR_PLUS;
 }
-void ams_error(uint32_t* super_timer, uint8_t* super_state) {
+
+ams_state_t ams_precharge_charge_open_precharge_function() {
+   if((timer_r2 > 2)) {
+       ams_parameters.precharge_charge_error=6;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_ERROR;
+   }
+
+   if((timer_r2 < 2)&&!ams_inputs.precharge_closed) {
+       ams_parameters.precharge_charge_complete=1;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_EXIT;
+   }
+
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_CHARGE_OPEN_PRECHARGE;
+}
+
+ams_state_t ams_precharge_charge_exit_function() {
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_CHARGE_EXIT;
+}
+
+ams_state_t ams_precharge_charge_0_function() {
    if(1) {
-       ams_outputs.enable_precharge_u8=0;
-       ams_outputs.enable_AIR_plus_u8=0;
-       ams_outputs.enable_AIR_minus_u8=0;
-   }
-   if(!ams_inputs.error_u8) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_IDLE_STATE;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_WAKE_CHARGER;
    }
 
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_CHARGE_0;
 }
-void ams_precharge_charge_0(uint32_t* super_timer, uint8_t* super_state) {
 
+ams_state_t ams_precharge_charge_wake_charger_function() {
+   if((timer_r2 < 10)&&ams_inputs.charger_is_awake) {
+       ams_outputs.close_air_minus=1;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_CLOSE_AIR_MINUS;
+   }
+
+   if((timer_r2 > 10)) {
+       ams_parameters.precharge_charge_error=1;
+       timer_r2 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE_ERROR;
+   }
+
+   timer_r2 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_CHARGE_WAKE_CHARGER;
 }
-void ams_precharge_charge_start_charger(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+
+ams_state_t ams_precharge_charge_function() {
+   if(timer_r1 < 0.001*ams_parameters.Ts) {
+       state_r1 = STATE_AMS_PRECHARGE_CHARGE_0;
    }
 
-   if(before(&timer,10)&&(ams_inputs.charger_is_live_u8)) {
-       ams_outputs.enable_AIR_minus_u8=1;
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_CLOSE_AIR_MINUS_STATE;
-   }
-   if(after(&timer,10)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_ERROR_STATE;
+   switch(state_r2) {
+       case STATE_AMS_PRECHARGE_CHARGE_CLOSE_AIR_MINUS:
+           state_r2 = ams_precharge_charge_close_air_minus_function();
+           break;
+       case STATE_AMS_PRECHARGE_CHARGE_CLOSE_PRECHARGE:
+           state_r2 = ams_precharge_charge_close_precharge_function();
+           break;
+       case STATE_AMS_PRECHARGE_CHARGE_ERROR:
+           state_r2 = ams_precharge_charge_error_function();
+           break;
+       case STATE_AMS_PRECHARGE_CHARGE_WAIT:
+           state_r2 = ams_precharge_charge_wait_function();
+           break;
+       case STATE_AMS_PRECHARGE_CHARGE_CLOSE_AIR_PLUS:
+           state_r2 = ams_precharge_charge_close_air_plus_function();
+           break;
+       case STATE_AMS_PRECHARGE_CHARGE_OPEN_PRECHARGE:
+           state_r2 = ams_precharge_charge_open_precharge_function();
+           break;
+       case STATE_AMS_PRECHARGE_CHARGE_EXIT:
+           state_r2 = ams_precharge_charge_exit_function();
+           break;
+       case STATE_AMS_PRECHARGE_CHARGE_0:
+           state_r2 = ams_precharge_charge_0_function();
+           break;
+       case STATE_AMS_PRECHARGE_CHARGE_WAKE_CHARGER:
+           state_r2 = ams_precharge_charge_wake_charger_function();
+           break;
    }
 
-}
-void ams_precharge_charge_close_air_minus(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+   if(ams_parameters.precharge_charge_complete) {
+       timer_r1 = 0;
+       return STATE_AMS_CHARGE;
    }
 
-   if(before(&timer,2)&&(ams_inputs.AIR_minus_closed_u8==1)) {
-       ams_outputs.enable_precharge_u8=1;
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_CLOSE_PRECHARGE_STATE;
-   }
-   if(after(&timer,2)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_ERROR_STATE;
+   if(ams_parameters.precharge_charge_error||ams_inputs.ams_error||ams_inputs.imd_error) {
+       ams_outputs.error=1;
+       timer_r1 = 0;
+       return STATE_AMS_ERROR;
    }
 
-}
-void ams_precharge_charge_error(uint32_t* super_timer, uint8_t* super_state) {
    if(1) {
-       ams_parameters.precharge_charge_error_u8=1;
+       timer_r1 = 0;
    }
 
+   timer_r1 += ams_parameters.Ts;
+   return STATE_AMS_PRECHARGE_CHARGE;
 }
-void ams_precharge_charge_close_precharge(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+
+ams_state_t ams_charge_function() {
+   if(ams_inputs.ams_error||ams_inputs.imd_error||ams_inputs.charge_error) {
+       ams_outputs.error=1;
+       timer_r1 = 0;
+       return STATE_AMS_ERROR;
    }
 
-   if(before(&timer,2)&&(ams_inputs.precharge_closed_u8==1)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_WAIT_STATE;
-   }
-   if(after(&timer,2)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_ERROR_STATE;
+   if(ams_inputs.charge_complete) {
+       timer_r1 = 0;
+       return STATE_AMS_IDLE;
    }
 
+   if(1) {
+       timer_r1 = 0;
+   }
+
+   timer_r1 += ams_parameters.Ts;
+   return STATE_AMS_CHARGE;
 }
-void ams_precharge_charge_wait(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+
+ams_state_t ams_idle_function() {
+   if(ams_inputs.SC&&ams_inputs.drive) {
+       timer_r1 = 0;
+       return STATE_AMS_PRECHARGE_DRIVE;
    }
 
-   if(after(&timer,2)&&before(&timer,25)&&(0.95*ams_inputs.accumulator_voltage_f64<ams_inputs.vehicle_voltage_f64)) {
-       ams_outputs.enable_AIR_plus_u8=1;
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_CLOSE_AIR_PLUS_STATE;
-   }
-   if(after(&timer,25)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_ERROR_STATE;
+   if(ams_inputs.SC&&ams_inputs.charge) {
+       timer_r1 = 0;
+       return STATE_AMS_PRECHARGE_CHARGE;
    }
 
+   if(!ams_inputs.SC&&ams_inputs.balance) {
+       timer_r1 = 0;
+   }
+
+   if(ams_inputs.SC||!ams_inputs.balance||(ams_inputs.cell_voltage_variance<0.00001)) {
+       zero_cells();
+       timer_r1 = 0;
+   }
+
+   if((timer_r1 > 60)) {
+       balance_cells();
+       timer_r1 = 0;
+   }
+
+   timer_r1 += ams_parameters.Ts;
+   return STATE_AMS_IDLE;
 }
-void ams_precharge_charge_close_air_plus(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+
+ams_state_t ams_0_function() {
+   if(1) {
+       timer_r1 = 0;
+       return STATE_AMS_IDLE;
    }
 
-   if(before(&timer,2)&&(ams_inputs.AIR_plus_closed_u8==1)) {
-       ams_outputs.enable_precharge_u8=0;
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_OPEN_PRECHARGE_STATE;
-   }
-   if(after(&timer,2)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_ERROR_STATE;
-   }
-
+   timer_r1 += ams_parameters.Ts;
+   return STATE_AMS_0;
 }
-void ams_precharge_charge_open_precharge(uint32_t* super_timer, uint8_t* super_state) {
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
+
+ams_state_t ams_function() {
+   if(timer_r0 < 0.001*ams_parameters.Ts) {
+       state_r0 = STATE_AMS_0;
    }
 
-   if(before(&timer,2)&&(ams_inputs.precharge_closed_u8==1)) {
-       ams_parameters.precharge_charge_complete_u8=1;
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_EXIT_STATE;
-   }
-   if(after(&timer,2)) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_PRECHARGE_CHARGE_ERROR_STATE;
+   switch(state_r2) {
+       case STATE_AMS_PRECHARGE_DRIVE:
+           state_r2 = ams_precharge_drive_function();
+           break;
+       case STATE_AMS_DRIVE:
+           state_r2 = ams_drive_function();
+           break;
+       case STATE_AMS_ERROR:
+           state_r2 = ams_error_function();
+           break;
+       case STATE_AMS_PRECHARGE_CHARGE:
+           state_r2 = ams_precharge_charge_function();
+           break;
+       case STATE_AMS_CHARGE:
+           state_r2 = ams_charge_function();
+           break;
+       case STATE_AMS_IDLE:
+           state_r2 = ams_idle_function();
+           break;
+       case STATE_AMS_0:
+           state_r2 = ams_0_function();
+           break;
    }
 
+   timer_r0 += ams_parameters.Ts;
+   return STATE_AMS;
 }
-void ams_precharge_charge_exit(uint32_t* super_timer, uint8_t* super_state) {
 
-}
-void ams_precharge_charge(uint32_t* super_timer, uint8_t* super_state) {
-   static ams_precharge_charge_t state = AMS_PRECHARGE_CHARGE_0_STATE;
-   static uint32_t timer = 0;
-   timer++;
-   if (super_timer[0] == 0) {
-       timer = 0;
-       state = AMS_PRECHARGE_CHARGE_0_STATE;
-   }
-
-   switch(state) {
-       case AMS_PRECHARGE_CHARGE_0_STATE:
-           ams_precharge_charge_0(&timer, &state);
-           break;
-       case AMS_PRECHARGE_CHARGE_START_CHARGER_STATE:
-           ams_precharge_charge_start_charger(&timer, &state);
-           break;
-       case AMS_PRECHARGE_CHARGE_CLOSE_AIR_MINUS_STATE:
-           ams_precharge_charge_close_air_minus(&timer, &state);
-           break;
-       case AMS_PRECHARGE_CHARGE_ERROR_STATE:
-           ams_precharge_charge_error(&timer, &state);
-           break;
-       case AMS_PRECHARGE_CHARGE_CLOSE_PRECHARGE_STATE:
-           ams_precharge_charge_close_precharge(&timer, &state);
-           break;
-       case AMS_PRECHARGE_CHARGE_WAIT_STATE:
-           ams_precharge_charge_wait(&timer, &state);
-           break;
-       case AMS_PRECHARGE_CHARGE_CLOSE_AIR_PLUS_STATE:
-           ams_precharge_charge_close_air_plus(&timer, &state);
-           break;
-       case AMS_PRECHARGE_CHARGE_OPEN_PRECHARGE_STATE:
-           ams_precharge_charge_open_precharge(&timer, &state);
-           break;
-       case AMS_PRECHARGE_CHARGE_EXIT_STATE:
-           ams_precharge_charge_exit(&timer, &state);
-           break;
-   }
-
-   if(ams_parameters.precharge_charge_complete_u8) {
-       super_timer[0] = 0;
-       super_state[0] = AMS_CHARGE_STATE;
-   }
-
-}
-void ams_charge(uint32_t* super_timer, uint8_t* super_state) {
-   if((ams_inputs.charge_u8==0)||(0.995*ams_inputs.sought_voltage_f64<ams_inputs.accumulator_voltage_f64)) {
-       ams_outputs.enable_charger_u8=0;
-       ams_outputs.enable_precharge_u8=0;
-       ams_outputs.enable_AIR_plus_u8=0;
-       ams_outputs.enable_AIR_minus_u8=0;
-       super_timer[0] = 0;
-       super_state[0] = AMS_IDLE_STATE;
-   }
-   if(ams_inputs.error_u8||ams_parameters.precharge_charge_error_u8) {
-       ams_outputs.enable_precharge_u8=0;
-       ams_outputs.enable_AIR_plus_u8=0;
-       ams_outputs.enable_AIR_minus_u8=0;
-       super_timer[0] = 0;
-       super_state[0] = AMS_ERROR_STATE;
-   }
-
-}
-void ams() {
-   static ams_t state = AMS_0_STATE;
-   static uint32_t timer = 0;
-   timer++;
-   switch(state) {
-       case AMS_0_STATE:
-           ams_0(&timer, &state);
-           break;
-       case AMS_ENTRY_STATE:
-           ams_entry(&timer, &state);
-           break;
-       case AMS_IDLE_STATE:
-           ams_idle(&timer, &state);
-           break;
-       case AMS_BALANCE_STATE:
-           ams_balance(&timer, &state);
-           break;
-       case AMS_PRECHARGE_DRIVE_STATE:
-           ams_precharge_drive(&timer, &state);
-           break;
-       case AMS_DRIVE_STATE:
-           ams_drive(&timer, &state);
-           break;
-       case AMS_ERROR_STATE:
-           ams_error(&timer, &state);
-           break;
-       case AMS_PRECHARGE_CHARGE_STATE:
-           ams_precharge_charge(&timer, &state);
-           break;
-       case AMS_CHARGE_STATE:
-           ams_charge(&timer, &state);
-           break;
-   }
-
-
-}

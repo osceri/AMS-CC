@@ -10,70 +10,69 @@
 
 
 typedef enum {
-  AMS_PRECHARGE_DRIVE_0_STATE = 0,
-  AMS_PRECHARGE_DRIVE_CLOSE_AIR_MINUS_STATE = 1,
-  AMS_PRECHARGE_DRIVE_CLOSE_PRECHARGE_STATE = 2,
-  AMS_PRECHARGE_DRIVE_ERROR_STATE = 3,
-  AMS_PRECHARGE_DRIVE_WAIT_STATE = 4,
-  AMS_PRECHARGE_DRIVE_CLOSE_AIR_PLUS_STATE = 5,
-  AMS_PRECHARGE_DRIVE_OPEN_PRECHARGE_STATE = 6,
-  AMS_PRECHARGE_DRIVE_EXIT_STATE = 7,
-} ams_precharge_drive_t;
+   STATE_NONE = -1,
+   STATE_AMS_PRECHARGE_DRIVE_CLOSE_AIR_MINUS = 3,
+   STATE_AMS_PRECHARGE_DRIVE_CLOSE_PRECHARGE = 4,
+   STATE_AMS_PRECHARGE_DRIVE_ERROR = 5,
+   STATE_AMS_PRECHARGE_DRIVE_WAIT = 6,
+   STATE_AMS_PRECHARGE_DRIVE_CLOSE_AIR_PLUS = 7,
+   STATE_AMS_PRECHARGE_DRIVE_OPEN_PRECHARGE = 8,
+   STATE_AMS_PRECHARGE_DRIVE_EXIT = 9,
+   STATE_AMS_PRECHARGE_DRIVE_0 = 10,
+   STATE_AMS_PRECHARGE_DRIVE_ENTRY = 11,
+   STATE_AMS_PRECHARGE_DRIVE = 2,
+   STATE_AMS_DRIVE_0 = 13,
+   STATE_AMS_DRIVE_DRIVE = 14,
+   STATE_AMS_DRIVE_END_DRIVE = 15,
+   STATE_AMS_DRIVE_EXIT = 16,
+   STATE_AMS_DRIVE_FORCE_QUIT = 17,
+   STATE_AMS_DRIVE = 12,
+   STATE_AMS_ERROR = 18,
+   STATE_AMS_PRECHARGE_CHARGE_CLOSE_AIR_MINUS = 20,
+   STATE_AMS_PRECHARGE_CHARGE_CLOSE_PRECHARGE = 21,
+   STATE_AMS_PRECHARGE_CHARGE_ERROR = 22,
+   STATE_AMS_PRECHARGE_CHARGE_WAIT = 23,
+   STATE_AMS_PRECHARGE_CHARGE_CLOSE_AIR_PLUS = 24,
+   STATE_AMS_PRECHARGE_CHARGE_OPEN_PRECHARGE = 25,
+   STATE_AMS_PRECHARGE_CHARGE_EXIT = 26,
+   STATE_AMS_PRECHARGE_CHARGE_0 = 27,
+   STATE_AMS_PRECHARGE_CHARGE_WAKE_CHARGER = 28,
+   STATE_AMS_PRECHARGE_CHARGE = 19,
+   STATE_AMS_CHARGE = 29,
+   STATE_AMS_IDLE = 30,
+   STATE_AMS_0 = 31,
+   STATE_AMS = 1,
+} ams_state_t;
 
-typedef enum {
-  AMS_PRECHARGE_CHARGE_0_STATE = 0,
-  AMS_PRECHARGE_CHARGE_START_CHARGER_STATE = 1,
-  AMS_PRECHARGE_CHARGE_CLOSE_AIR_MINUS_STATE = 2,
-  AMS_PRECHARGE_CHARGE_ERROR_STATE = 3,
-  AMS_PRECHARGE_CHARGE_CLOSE_PRECHARGE_STATE = 4,
-  AMS_PRECHARGE_CHARGE_WAIT_STATE = 5,
-  AMS_PRECHARGE_CHARGE_CLOSE_AIR_PLUS_STATE = 6,
-  AMS_PRECHARGE_CHARGE_OPEN_PRECHARGE_STATE = 7,
-  AMS_PRECHARGE_CHARGE_EXIT_STATE = 8,
-} ams_precharge_charge_t;
-
-typedef enum {
-  AMS_0_STATE = 0,
-  AMS_ENTRY_STATE = 1,
-  AMS_IDLE_STATE = 2,
-  AMS_BALANCE_STATE = 3,
-  AMS_PRECHARGE_DRIVE_STATE = 4,
-  AMS_DRIVE_STATE = 5,
-  AMS_ERROR_STATE = 6,
-  AMS_PRECHARGE_CHARGE_STATE = 7,
-  AMS_CHARGE_STATE = 8,
-} ams_t;
-
-
-uint8_t after(uint32_t* timer, float boundary);
-
-uint8_t before(uint32_t* timer, float boundary);
-
-void ams_0(uint32_t* super_timer, uint8_t* super_state);
-void ams_entry(uint32_t* super_timer, uint8_t* super_state);
-void ams_idle(uint32_t* super_timer, uint8_t* super_state);
-void ams_balance(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_drive_0(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_drive_close_air_minus(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_drive_close_precharge(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_drive_error(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_drive_wait(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_drive_close_air_plus(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_drive_open_precharge(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_drive_exit(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_drive(uint32_t* super_timer, uint8_t* super_state);
-void ams_drive(uint32_t* super_timer, uint8_t* super_state);
-void ams_error(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_charge_0(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_charge_start_charger(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_charge_close_air_minus(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_charge_error(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_charge_close_precharge(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_charge_wait(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_charge_close_air_plus(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_charge_open_precharge(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_charge_exit(uint32_t* super_timer, uint8_t* super_state);
-void ams_precharge_charge(uint32_t* super_timer, uint8_t* super_state);
-void ams_charge(uint32_t* super_timer, uint8_t* super_state);
-void ams();
+ams_state_t ams_precharge_drive_close_air_minus_function();
+ams_state_t ams_precharge_drive_close_precharge_function();
+ams_state_t ams_precharge_drive_error_function();
+ams_state_t ams_precharge_drive_wait_function();
+ams_state_t ams_precharge_drive_close_air_plus_function();
+ams_state_t ams_precharge_drive_open_precharge_function();
+ams_state_t ams_precharge_drive_exit_function();
+ams_state_t ams_precharge_drive_0_function();
+ams_state_t ams_precharge_drive_entry_function();
+ams_state_t ams_precharge_drive_function();
+ams_state_t ams_drive_0_function();
+ams_state_t ams_drive_drive_function();
+ams_state_t ams_drive_end_drive_function();
+ams_state_t ams_drive_exit_function();
+ams_state_t ams_drive_force_quit_function();
+ams_state_t ams_drive_function();
+ams_state_t ams_error_function();
+ams_state_t ams_precharge_charge_close_air_minus_function();
+ams_state_t ams_precharge_charge_close_precharge_function();
+ams_state_t ams_precharge_charge_error_function();
+ams_state_t ams_precharge_charge_wait_function();
+ams_state_t ams_precharge_charge_close_air_plus_function();
+ams_state_t ams_precharge_charge_open_precharge_function();
+ams_state_t ams_precharge_charge_exit_function();
+ams_state_t ams_precharge_charge_0_function();
+ams_state_t ams_precharge_charge_wake_charger_function();
+ams_state_t ams_precharge_charge_function();
+ams_state_t ams_charge_function();
+ams_state_t ams_idle_function();
+ams_state_t ams_0_function();
+ams_state_t ams_function();
 #endif

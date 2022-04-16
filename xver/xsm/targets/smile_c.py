@@ -13,7 +13,7 @@
 #
 #
 
-for data_name, data_size, data_type in functions:
+for _, data_name, data_size, data_type in functions:
     if data_size < 1:
         #__weak $data_type$* $data_name$();
     elif data_size < 2:
@@ -22,18 +22,19 @@ for data_name, data_size, data_type in functions:
         #__weak $data_type$* $data_name$(){
     #   /* Type your actual code somewhere else */
     #}
+    #
 
 for index in range(max_depth):
-    #static state_t state_r$index$;
+    #static $SM$_state_t state_r$index$;
 for index in range(max_depth):
     #static float timer_r$index$;
-
+#
 for state in state_machines:
     allcond = ''.join([ conditional for _, _, conditional, _ in state.transitions ])
     uses_timer = state.states or ('before' in allcond) or ('after' in allcond)
     #$SM$_state_t $state.name$_function() {
     if state.states:
-        #   if(timer_r$state.depth$ < 0.001*Ts) {
+        #   if(timer_r$state.depth$ < 0.001*$SM$_parameters.Ts) {
         #       state_r$state.depth$ = STATE_$state.name.upper()$_0;
         #   }
         #
@@ -60,7 +61,7 @@ for state in state_machines:
                 #       $statement$;
             #   }
         #
-    #   timer_r$state.depth$ += $SM$_parameters.Ts_f32;
+    #   timer_r$state.depth$ += $SM$_parameters.Ts;
     #   return STATE_$state.name.upper()$;
     #}
     #

@@ -1,87 +1,87 @@
 import regex
 
+xml = "graph"
 
-with open("graph.drawio") as diag:
+output = ""
+
+with open(xml + ".drawio") as diag:
     content = diag.read()
+    xml_weird = [('\n', ''), ('\t', ''), ('&quot;', '"'), ('&amp;amp;', '&'), ('&apos;', "'"), ('&lt;', '<'), ('&gt;', '>'), ('&amp;', '&'), ('<div>', ''), ('</div>', '')]
+    for x, y in xml_weird:
+        content = content.replace(x, y)
+    for x, y in xml_weird:
+        content = content.replace(x, y)
+    print(content)
 
-    transition_data = dict()
+    first = True
 
-    parents = dict()
+    transitions = []
+    transitions_dict = dict()
+    
+    for id, page in regex.findall('<diagram id="([^"]*)"[^>]*>(.*?)<\/diagram>', content):
+        transitions_dict[id] = []
 
-    ipst = regex.findall('id="([^"]*)".*parent="([^"]*)" source="([^"]*)" target="([^"]*)"', content)
+        ist = regex.findall('id="([^"]*)" style(.*?)source="([^"]*)"(.*?)target="([^"]*)"', page)
+        ivp = regex.findall('id="([^"]*)" value="([^"]*)"(.*?)parent="([^"]*)"', page)
+        nli = regex.findall('(UserObject|object) label="([^"]*)".*?(link="data:page\/id,([^"]*)")? id="([^"]*)"', page)
 
-    for id, parent, source, target in ipst:
-        # lines
-        transition_data[id] = dict()
-        transition_data[id]["source"] = source
-        transition_data[id]["target"] = target
-        transition_data[id]["transition"] = id
-        transition_data[id]["parent"] = parent
-        parents[parent] = None
+        _states = dict()
+        _lines = dict()
+        _links = dict()
+        _transitions = dict()
 
-    for _parent in parents:
-        for _, parent, source, target in ipst:
-            if (_parent == source) or (_parent == target):
-                transition_data["__" + _parent] = dict()
-                transition_data["__" + _parent]["source"] = _parent
-                transition_data["__" + _parent]["target"] = _parent
-                transition_data["__" + _parent]["transition"] = -1
-                transition_data["__" + _parent]["parent"] = parent
-                break
+        for _, v, _, p in ivp:
+            _lines[p] = v
 
-    name_codec = dict()
-    line_codec = dict()
-    own_codec = dict()
+        for _, n, _, l, i in nli:
+            _states[i] = n
+            if l:
+                _links[i] = l
 
-    cvp = regex.findall('id="([^"]*)" value="([^"]*)".*parent="([^"]*)"', content)
+        empty_subs = [ (i, None, i, None, i) for i in _links if not any((s==t)and(s==i) for _, _, s, _, t in ist) ]
+        
+        for i, _, s, _, t in ist + empty_subs:
+            _s = _states[s]
+            _t = _states[t]
 
-    for child, value, parent in cvp:
-        # is either the transition data of a line, or it is a state nesetd in another state
-        if regex.findall('(\[[^]]*\]) ?(\{[^}]*\})', value):
-            line_codec[parent] = value
-        else:
-            own_codec[child] = parent
-            name_codec[child] = value
+            if _lines.get(i):
+                for C, S in regex.findall('(\[[^]]*\])?(\{[^}]*\})', _lines[i]):
+                    _C = C
+                    _S = S
+            else:
+                _C = "[]"
+                _S = "{}"
 
-    name_codec['1'] = '1'
+            if _links.get(i):
+                _L = _links[i]
+            else:
+                _L = None
 
-    _transition_data = dict()
-    for key, data in transition_data.items():
-        _transition_data[key] = dict()
-        source = name_codec[data["source"]]
-        _transition_data[key]["source"] = source
-        target = name_codec[data["target"]]
-        _transition_data[key]["target"] = target
+            if first:
+                transitions += [(_s, _t, _C, _S, _L)]
+            else:
+                transitions_dict[id] += [(_s, _t, _C, _S, _L)]
+        first = False
 
-        if line_codec.get(data["transition"]):
-            line = line_codec[data["transition"]]
-        else:
-            line = "[]{}"
-        _transition_data[key]["transition"] = line
+    def plog(r, x):
+        global output
+        output += "    "*r + x + '\n'
+    
+    def rec_add(r, T):
+        for s, t, C, S, L in T:
+            if transitions_dict.get(L):
+                plog(r, f"({s} -> {t}) : {C} {S}" + " {")
+                rec_add(r + 1, transitions_dict[L])
+                plog(r, "}")
+            else:
+                plog(r, f"({s} -> {t}) : {C} {S}" + " {}")
 
-        parent = name_codec[data["parent"]]
-        _transition_data[key]["parent"] = parent
+    rec_add(0, transitions)
 
-    def p_t(r, x):
-        print("    "*r + x)
+with open(xml + ".sm", "w") as sm:
+    sm.write(output)
+    print(output)
 
-    def add_text(r, p):
-        for _, data in _transition_data.items():
-            source = data["source"]
-            target = data["target"]
-            transition = data["transition"]
-            parent = data["parent"]
 
-            if parent == p:
-                if source != target:
-                    p_t(r, f"({source} -> {target}) : {transition}" + " {")
-                    p_t(r, "}")
-                else:
-                    p_t(r, f"({source} -> {target}) : {transition}" + " {")
-                    add_text(r + 1, source)
-                    p_t(r, "}")
-                p_t(0, "")
-
-    add_text(0, '1')
 
 

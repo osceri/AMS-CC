@@ -20,6 +20,8 @@ fbbdn += ["int64_t"]
 fbbdn += ["uint64_t"]
 fbbdn += ["float"]
 fbbdn += ["double"]
+fbbdn += ["abs"]
+fbbdn += ["exp"]
 
 max_depth = 0
 state_count = 1
@@ -98,7 +100,7 @@ with open(f"databases/{SM}.sm") as sm:
     content = sm.read()
     content = content.replace(" ", "").replace("\n", "").replace("\t", "")
 
-    state_machine_tree = StateMachine(1, f"{SM}", content, [])
+    state_machine_tree = StateMachine(0, f"{SM}", content, [])
 
     all_conditionals = '{' + "}{".join([condition for condition in get_conditionals(state_machine_tree) ]) + '}'
     all_statements = '{' + "}{".join([statement for statement in get_statements(state_machine_tree) ]) + '}'
@@ -106,45 +108,63 @@ with open(f"databases/{SM}.sm") as sm:
     def _rec_datas(arg):
         _variables = []
         _functions = []
-        for data_name, data_size, data_type, brackets, inner in regex.findall("(\w*_)(\d*)(v0|i8|i16|i32|i64|u8|u16|u32|u64|f32|f64)(\(([^\)]*)\))?", arg):
+        for _data_name, brackets, inner in regex.findall('([a-zA-Z_]\w*)(\(([^\)]*)\))?', arg):
             if brackets:
                 __variables, __functions = _rec_datas(inner)
-                _functions += __functions + [(data_name, data_size, data_type, brackets, inner)]
+                _functions += __functions
                 _variables += __variables
+            if _data_name in fbbdn:
+                continue
+
+            typeway = regex.findall('(\w*)(?:_)(\d*)(v0|i8|i16|i32|i64|u8|u16|u32|u64|f32|f64)', _data_name)
+            if typeway:
+                for data_name, data_size, data_type in typeway:
+                    if brackets:
+                        __variables, __functions = _rec_datas(inner)
+                        _functions += __functions + [(_data_name, data_name, data_size, data_type, brackets, inner)]
+                        _variables += __variables
+                    else:
+                        _variables += [(_data_name, data_name, data_size, data_type)]
             else:
-                _variables += [(data_name, data_size, data_type)]
+                if brackets:
+                    __variables, __functions = _rec_datas(inner)
+                    _functions += __functions + [(_data_name, _data_name, '1', 'u8', brackets, inner)]
+                    _variables += __variables
+                else:
+                    _variables += [(_data_name, _data_name, '1', 'u8')]
         return (_variables, _functions)
+
 
     type_dict = { "v0" : "void", "i8" : "int8_t", "u8" : "uint8_t", "i16" : "int16_t", "u16" : "uint16_t", "i32" : "int32_t", "u32" : "uint32_t", "i64" : "int64_t", "u64" : "uint64_t", "f32" : "float", "f64" : "double" }
 
     def _make_funs(_funs):
         __vars = []
-        for data_name, data_size, data_type, brackets, inner in _funs:
+        for _data_name, data_name, data_size, data_type, brackets, inner in _funs:
             if data_size:
                 if data_type:
-                    __vars += [(data_name + data_size + data_type, int(data_size), type_dict[data_type])]
+                    __vars += [(_data_name, data_name, int(data_size), type_dict[data_type])]
                 else:
-                    __vars += [(data_name + data_size + data_type, int(data_size), "uint8_t")]
+                    __vars += [(_data_name, data_name, int(data_size), "uint8_t")]
             else:
                 if data_type:
-                    __vars += [(data_name + data_size + data_type, 1,  type_dict[data_type])]
+                    __vars += [(_data_name, data_name, 1,  type_dict[data_type])]
                 else:
-                    __vars += [(data_name + data_size + data_type, 1, "uint8_t")]
+                    __vars += [(_data_name, data_name, 1, "uint8_t")]
         return __vars
 
     def _make_vars(_vars):
         __vars = []
-        for data_name, data_size, data_type in _vars:
+        for _data_name, data_name, data_size, data_type in _vars:
             if data_size:
                 if data_type:
-                    __vars += [(data_name + data_size + data_type, int(data_size), type_dict[data_type])]
+                    __vars += [(_data_name, data_name, int(data_size), type_dict[data_type])]
                 else:
-                    __vars += [(data_name + data_size + data_type, int(data_size), "uint8_t")]
+                    __vars += [(_data_name, data_name, int(data_size), "uint8_t")]
             else:
                 if data_type:
-                    __vars += [(data_name + data_size + data_type, 1,  type_dict[data_type])]
+                    __vars += [(_data_name, data_name, 1,  type_dict[data_type])]
                 else:
-                    __vars += [(data_name + data_size + data_type, 1, "uint8_t")]
+                    __vars += [(_data_name, data_name, 1, "uint8_t")]
         return __vars
 
     _get_variables, _get_functions = _rec_datas(all_conditionals)
@@ -158,11 +178,12 @@ with open(f"databases/{SM}.sm") as sm:
     outputs = _make_vars(_outputs.difference(_parameters))
     parameters = _make_vars(_parameters)
     functions = _make_funs(_functions)
-    parameters += [("Ts_f32", 1, "float")]
+    parameters += [("Ts", "Ts", 1, "float")]
 
-    _codec += [ ("".join(data), f"{SM}_inputs." + "".join(data)) for data, _, _ in inputs ]
-    _codec += [ ("".join(data), f"{SM}_outputs." + "".join(data)) for data, _, _ in outputs ]
-    _codec += [ ("".join(data), f"{SM}_parameters." + "".join(data)) for data, _, _ in parameters ]
+
+    _codec += [ (_data_name, f"{SM}_inputs." + data_name) for _data_name, data_name, data_size, data_type in inputs ]
+    _codec += [ (_data_name, f"{SM}_outputs." + data_name) for _data_name, data_name, data_size, data_type in outputs ]
+    _codec += [ (_data_name, f"{SM}_parameters." + data_name) for _data_name, data_name, data_size, data_type in parameters ]
 
     state_machines = get_states(state_machine_tree)
 
