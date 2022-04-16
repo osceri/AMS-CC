@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-04-16T21:26:06.441Z" agent="5.0 (Windows)" etag="DM4vS-YBFfsdsccB9Ins" version="17.4.5" type="github" pages="6">
+<mxfile host="app.diagrams.net" modified="2022-04-16T21:30:42.340Z" agent="5.0 (Windows)" etag="_nUEmo6EnYGsLLS-ETxP" version="17.4.5" type="github" pages="6">
   <diagram id="lIlviWQBLWVIYCWAqPnO" name="ams">
     <mxGraphModel dx="2354" dy="631" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -562,7 +562,7 @@
         <mxCell id="PsCbVwXv-jA8KolUmENP-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="PsCbVwXv-jA8KolUmENP-5" target="PsCbVwXv-jA8KolUmENP-10" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="PsCbVwXv-jA8KolUmENP-4" value="[!charge]{}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PsCbVwXv-jA8KolUmENP-3" vertex="1" connectable="0">
+        <mxCell id="PsCbVwXv-jA8KolUmENP-4" value="[(maximum_cell_voltage &amp;gt; 4.15)&amp;amp;&amp;amp;!charge]{enable_charger = 0;}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PsCbVwXv-jA8KolUmENP-3" vertex="1" connectable="0">
           <mxGeometry x="-0.1333" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
