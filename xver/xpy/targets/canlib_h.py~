@@ -1,0 +1,49 @@
+#/*
+# * "canlib.h"
+# *
+# *  Created on: Mar 12, 2022
+# *      Author: oscar
+# */
+##ifndef INC_CANLIB_H_
+##define INC_CANLIB_H_
+#
+#void initialize_CAN($', '.join(['CAN_HandleTypeDef* __h' + system.name for system in systems])$);
+#
+
+def func(x):
+    x = x.replace('12', 'l')
+    x = x.replace('11', 'k')
+    x = x.replace('10', 'j')
+    x = x.replace('9', 'i')
+    x = x.replace('8', 'h')
+    x = x.replace('7', 'g')
+    x = x.replace('6', 'f')
+    x = x.replace('5', 'e')
+    x = x.replace('4', 'd')
+    x = x.replace('3', 'c')
+    x = x.replace('2', 'b')
+    x = x.replace('1', 'a')
+    return x
+
+for system in systems:
+    for message in sorted(system.tx_messages, key=lambda x: func(x.name)):
+        #/*
+        # * @Brief  
+        # * @Retval None
+        # */
+        #void $system.name$_$message.name$_transmit();
+        #
+    #
+
+for system in systems:
+    for message in sorted(system.rx_messages, key=func):
+        #/*
+        # * @Brief  
+        # * @Retval None
+        # */
+        #void $system.name$_$message.name$_receive();
+        #
+    #
+        
+
+##endif

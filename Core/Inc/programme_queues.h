@@ -24,6 +24,12 @@ QueueHandle_t GPIO_queue;
 
 QueueHandle_t IMD_queue;
 
+QueueHandle_t charger_queue;
+
+QueueHandle_t PID_queue;
+
+QueueHandle_t CSE_queue;
+
 QueueHandle_t cell_voltages_queue;
 
 QueueHandle_t cell_temperatures_queue;
@@ -41,6 +47,10 @@ QueueHandle_t start_drive_queue;
 QueueHandle_t start_charge_queue;
 
 QueueHandle_t start_balance_queue;
+
+QueueHandle_t state_queue;
+
+QueueHandle_t error_queue;
 
 
 #endif /* INC_PROGRAMME_QUEUES_H_ */

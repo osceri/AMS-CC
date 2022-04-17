@@ -17,10 +17,10 @@ SPI_HandleTypeDef *hltc;
 
 uint8_t LTC_read_buffer[10], LTC_write_buffer[10], LTC_command_buffer[4];
 uint16_t LTC_data[12 * 6 * 3];
-float LTC_voltages[126];
-float LTC_temperatures[60];
+double LTC_voltages[126];
+double LTC_temperatures[60];
 
-uint16_t LTC_ccv;
+uint8_t LTC_data_valid;
 
 static const unsigned int crc15Table[256] = { 0x0, 0xc599, 0xceab, 0xb32,
 		0xd8cf, 0x1d56, 0x1664, 0xd3fd, 0xf407, 0x319e,
@@ -229,17 +229,16 @@ uint8_t LTC_write_command(uint8_t wake, uint16_t command) {
 /*
  * @brief	The function which acquires all of the cell temperatures and voltages, and places them in cell_voltages and cell_temperatures
  * @param	Whether or not to wake the isoSPI port beforehand
- * @param	LTC_ccv[n] is high if the n:th slave has given valid data
+ * @param	LTC_data_valid[n] is high if the n:th slave has given valid data
  * @retval	LTC Status
  */
 uint8_t LTC_acquire_data(uint8_t wake) {
 	int p, k, i, j, command;
-	uint16_t all_read; /* LTC_ccv[n] might only be high if slave n was read (PEC correct, among other things) */
-	uint16_t all_zeros; /* LTC_ccv[n] might only be high if the bits are not all zero, as this would constitute a zero voltage reference (or zeroed/floating cell voltages) */
-	uint16_t all_ones; /* LTC_ccv[n] might only be high if the bits are not all ones, as this is indicative of the message being corrupted */
-	uint16_t all_good; /* LTC_ccv[n] is high if this is high for slave n */
+	uint16_t all_read; /* LTC_data_valid[n] might only be high if slave n was read (PEC correct, among other things) */
+	uint16_t all_zeros; /* LTC_data_valid[n] might only be high if the bits are not all zero, as this would constitute a zero voltage reference (or zeroed/floating cell voltages) */
+	uint16_t all_ones; /* LTC_data_valid[n] might only be high if the bits are not all ones, as this is indicative of the message being corrupted */
 
-	LTC_ccv = 0;
+	LTC_data_valid = 0;
 
 	/* ADCV, MD = 10, PUP = 1, DCP = 0, CH = 000 */
 	command = 0b0000001101110000;
@@ -263,8 +262,7 @@ uint8_t LTC_acquire_data(uint8_t wake) {
 	for (k = 0; k < 12; k++) { // 12 segments
 		all_read = 1;
 		all_zeros = 1;
-		all_read = 1;
-		all_good = 0;
+		all_ones = 1;
 
 		for (i = 0; i < 6; i++) {
 			// We use the RDCVA command and increment it every pass to get RDCVB, RDCVC .. RDAUXB
@@ -277,15 +275,14 @@ uint8_t LTC_acquire_data(uint8_t wake) {
 				LTC_data[p] = LTC_read_buffer[2 * j]
 						| (LTC_read_buffer[2 * j + 1] << 8);
 
-				all_zeros &= (LTC_data[p] == 0);
-				all_ones &= (LTC_data[p] == -1);
+				//all_zeros &= (LTC_data[p] == 0);
+				//all_ones &= (LTC_data[p] == -1);
 
 				p++;
 			}
 		}
 
-		all_good = (all_read && !all_zeros && !all_ones);
-		LTC_ccv |= (all_good << k);
+		LTC_data_valid = (all_read && !all_zeros && !all_ones);
 	}
 
 	LTC_make_voltages();
@@ -321,10 +318,10 @@ uint8_t LTC_make_voltages(void) {
 uint8_t LTC_make_temperatures(void) {
 	uint16_t cellstack, K, k, p;
 
-	float beta = 3500;
-	float temp = 25 + 273.15;
-	float R0 = 10000 * exp(-beta / temp);
-	float R = 10000;
+	double beta = 3500;
+	double temp = 25 + 273.15;
+	double R0 = 10000 * exp(-beta / temp);
+	double R = 10000;
 
 	p = 0;
 

@@ -95,7 +95,7 @@ for system in systems:
         #void $system.name$_$message.name$_decode() {
         #   $system.name$_$message.name$_unpack(&$system.name$_$message.name$, rx_data, $message.length$);
         if message.multiplexer:
-            #   $system.name$_$message.name$_array_raise($message.name$.$message.multiplexer$);
+            #   $system.name$_$message.name$_array_raise($system.name$_$message.name$.$message.multiplexer$);
         else:
             #   $system.name$_$message.name$_flag = 1;
         #}
@@ -123,15 +123,14 @@ for system in systems:
             #   $system.name$_$message.name$.$signal.name$ = $system.name$_$message.name$_$signal.name$_encode($message.name$.$signal.name$);
         #
         if message.multiplexer:
-            #   for(int i = 0; i < $message.multiplexer_size$; i++) {
-            #       $system.name$_$message.name$.$message.multiplexer$ = i;
-            #       $system.name$_$message.name$_pack(tx_data, &$system.name$_$message.name$, $message.length$);
-            #       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_h$system.name$)) {
-            #           if (HAL_CAN_AddTxMessage(_h$system.name$, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
-            #           Error_Handler();
-            #           }
-            #       }
-            #   }
+            for multiplexer_id in message.multiplexer_ids:
+                #       $system.name$_$message.name$.$message.multiplexer$ = $multiplexer_id$;
+                #       $system.name$_$message.name$_pack(tx_data, &$system.name$_$message.name$, $message.length$);
+                #       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_h$system.name$)) {
+                #           if (HAL_CAN_AddTxMessage(_h$system.name$, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+                #           Error_Handler();
+                #           }
+                #       }
         else:
             #   $system.name$_$message.name$_pack(tx_data, &$system.name$_$message.name$, $message.length$);
             #   while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_h$system.name$)) {

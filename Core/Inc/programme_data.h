@@ -27,18 +27,60 @@ typedef struct {
 } GPIO_t;
 
 typedef struct {
-	float duty_cycle;
-	float frequency;
+	double duty_cycle;
+	double frequency;
 } IMD_t;
 
 typedef struct {
-   float precharge_resistor;
-   float fuse;
-   float aux_1;
-   float aux_2;
+	double duty_cycle;
+} pPID_t;
+
+typedef struct {
+   double precharge_resistor;
+   double fuse;
+   double aux_1;
+   double aux_2;
 } temperatures_t;
 
+typedef struct {
+	double charger_current_limit;
+	double charger_voltage_limit;
+	uint8_t enable_charger;
+} charger_t;
 
+typedef struct {
+	double SOC;
+	double SOH;
+} CSE_t;
+
+
+typedef enum {
+	ERROR_NO_ERROR = 0,
+	ERROR_ANY = 1,
+	ERROR_IMD = 2,
+	ERROR_AMS = 3,
+	ERROR_NO_LTC_DATA = 10,
+	ERROR_NO_CURRENT_DATA = 11,
+	ERROR_UNDER_VOLTAGE = 21,
+	ERROR_OVER_VOLTAGE = 22,
+	ERROR_UNDER_TEMPERATURE = 23,
+	ERROR_OVER_TEMPERATURE = 24,
+	ERROR_UNDER_CURRENT = 31,
+	ERROR_OVER_CURRENT = 32,
+	ERROR_NO_CURRENT = 33,
+	ERROR_SM_PRECHARGE_DRIVE_CLOSE_AIR_MINUS = 111,
+	ERROR_SM_PRECHARGE_DRIVE_CLOSE_PRECHARGE = 112,
+	ERROR_SM_PRECHARGE_DRIVE_WAIT = 113,
+	ERROR_SM_PRECHARGE_DRIVE_CLOSE_AIR_PLUS = 114,
+	ERROR_SM_PRECHARGE_DRIVE_OPEN_PRECHARGE = 115,
+	ERROR_SM_PRECHARGE_CHARGE_CLOSE_AIR_MINUS = 121,
+	ERROR_SM_PRECHARGE_CHARGE_CLOSE_PRECHARGE = 122,
+	ERROR_SM_PRECHARGE_CHARGE_WAIT = 123,
+	ERROR_SM_PRECHARGE_CHARGE_CLOSE_AIR_PLUS = 124,
+	ERROR_SM_PRECHARGE_CHARGE_OPEN_PRECHARGE = 125,
+	ERROR_SM_DRIVE_FORCE_QUIT = 131,
+	ERROR_SM_CHARGE_FORCE_QUIT = 141
+} error_t;
 
 
 

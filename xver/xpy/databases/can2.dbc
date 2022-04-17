@@ -135,7 +135,7 @@ BO_ 1319 IVT_msg_result_As: 6 IVT
 BO_ 1320 IVT_msg_result_Wh: 6 IVT
  SG_ TSA_used_energy : 7|48@0- (1,0) [0|0] "Wh" Vector__XXX
 
-BO_ 624 charger_config: 4 charger
+BO_ 624 charger_config: 4 AMS
  SG_ set_mux M : 0|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ MsgSetVoltageLimit m64 : 15|16@0+ (1,0) [0|900] "V" Vector__XXX
  SG_ MsgSetCurrentLimit m65 : 15|16@0+ (0.1,0) [0|13.3] "A" Vector__XXX

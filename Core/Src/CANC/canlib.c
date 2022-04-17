@@ -106,6 +106,15 @@ __weak uint8_t can1_ams_cell_temperatures_tx_callback(ams_cell_temperatures_t* a
 
 }
 
+/*
+ * @Brief  
+ * @Param  A pointer to a message which should be sent
+ * @Retval Return 1 if the data entered in charger_config should be sent
+ */
+__weak uint8_t can2_charger_config_tx_callback(charger_config_t* charger_config) {
+
+}
+
 static struct can1_dbu_status_1_t can1_dbu_status_1;
 
 static struct can1_ams_status_1_t can1_ams_status_1;
@@ -119,6 +128,7 @@ static struct can2_ivt_msg_result_u1_t can2_ivt_msg_result_u1;
 static struct can2_ivt_msg_result_u3_t can2_ivt_msg_result_u3;
 static struct can2_cc_status_t can2_cc_status;
 
+static struct can2_charger_config_t can2_charger_config;
 
 static uint8_t can1_dbu_status_1_flag = 0;
 
@@ -396,15 +406,174 @@ void can1_ams_cell_voltages_transmit() {
    can1_ams_cell_voltages.v6s11 = can1_ams_cell_voltages_v6s11_encode(ams_cell_voltages.v6s11);
    can1_ams_cell_voltages.v6s12 = can1_ams_cell_voltages_v6s12_encode(ams_cell_voltages.v6s12);
 
-   for(int i = 0; i < 23; i++) {
-       can1_ams_cell_voltages.voltage_multiplexor = i;
+       can1_ams_cell_voltages.voltage_multiplexor = 0;
        can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
        while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
            if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
            Error_Handler();
            }
        }
-   }
+       can1_ams_cell_voltages.voltage_multiplexor = 1;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 2;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 3;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 4;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 5;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 6;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 7;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 8;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 9;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 10;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 11;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 12;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 13;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 14;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 15;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 16;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 17;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 18;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 19;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 20;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 21;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 22;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_voltages.voltage_multiplexor = 23;
+       can1_ams_cell_voltages_pack(tx_data, &can1_ams_cell_voltages, 7);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
 }
 
 /*
@@ -485,15 +654,143 @@ void can1_ams_cell_temperatures_transmit() {
    can1_ams_cell_temperatures.t5s11 = can1_ams_cell_temperatures_t5s11_encode(ams_cell_temperatures.t5s11);
    can1_ams_cell_temperatures.t5s12 = can1_ams_cell_temperatures_t5s12_encode(ams_cell_temperatures.t5s12);
 
-   for(int i = 0; i < 11; i++) {
-       can1_ams_cell_temperatures.temperature_multiplexor = i;
+       can1_ams_cell_temperatures.temperature_multiplexor = 0;
        can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
        while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
            if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
            Error_Handler();
            }
        }
-   }
+       can1_ams_cell_temperatures.temperature_multiplexor = 1;
+       can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_temperatures.temperature_multiplexor = 2;
+       can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_temperatures.temperature_multiplexor = 3;
+       can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_temperatures.temperature_multiplexor = 4;
+       can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_temperatures.temperature_multiplexor = 5;
+       can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_temperatures.temperature_multiplexor = 6;
+       can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_temperatures.temperature_multiplexor = 7;
+       can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_temperatures.temperature_multiplexor = 8;
+       can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_temperatures.temperature_multiplexor = 9;
+       can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_temperatures.temperature_multiplexor = 10;
+       can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can1_ams_cell_temperatures.temperature_multiplexor = 11;
+       can1_ams_cell_temperatures_pack(tx_data, &can1_ams_cell_temperatures, 8);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan1)) {
+           if (HAL_CAN_AddTxMessage(_hcan1, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+}
+
+/*
+ * @Brief  
+ * @Retval None
+ */
+void can2_charger_config_transmit() {
+   uint8_t tx_data[8];
+   const CAN_TxHeaderTypeDef tx_header = {
+       .DLC = 4,
+       .IDE = CAN_ID_STD,
+       .StdId = 624,
+       .RTR = CAN_RTR_DATA,
+       .TransmitGlobalTime = DISABLE,
+   };
+   charger_config_t charger_config;
+   can2_charger_config_tx_callback(&charger_config);
+
+   can2_charger_config.set_mux = can2_charger_config_set_mux_encode(charger_config.set_mux);
+   can2_charger_config.msg_set_voltage_limit = can2_charger_config_msg_set_voltage_limit_encode(charger_config.msg_set_voltage_limit);
+   can2_charger_config.msg_set_current_limit = can2_charger_config_msg_set_current_limit_encode(charger_config.msg_set_current_limit);
+   can2_charger_config.msg_set_power_limit = can2_charger_config_msg_set_power_limit_encode(charger_config.msg_set_power_limit);
+   can2_charger_config.msg_set_enabled = can2_charger_config_msg_set_enabled_encode(charger_config.msg_set_enabled);
+   can2_charger_config.msg_set_time_out = can2_charger_config_msg_set_time_out_encode(charger_config.msg_set_time_out);
+
+       can2_charger_config.set_mux = 64;
+       can2_charger_config_pack(tx_data, &can2_charger_config, 4);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan2)) {
+           if (HAL_CAN_AddTxMessage(_hcan2, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can2_charger_config.set_mux = 65;
+       can2_charger_config_pack(tx_data, &can2_charger_config, 4);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan2)) {
+           if (HAL_CAN_AddTxMessage(_hcan2, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can2_charger_config.set_mux = 66;
+       can2_charger_config_pack(tx_data, &can2_charger_config, 4);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan2)) {
+           if (HAL_CAN_AddTxMessage(_hcan2, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
+       can2_charger_config.set_mux = 68;
+       can2_charger_config_pack(tx_data, &can2_charger_config, 4);
+       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_hcan2)) {
+           if (HAL_CAN_AddTxMessage(_hcan2, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+           Error_Handler();
+           }
+       }
 }
 
 /*
@@ -584,6 +881,7 @@ void can2_cc_status_receive() {
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
    CAN_RxHeaderTypeDef rx_header;
+   static uint8_t rx_data[8];
 
    if (HAL_OK == HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data)) {
        switch(rx_header.StdId) {
@@ -611,6 +909,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 
 void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan) {
    CAN_RxHeaderTypeDef rx_header;
+   static uint8_t rx_data[8];
 
    if (HAL_OK == HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO1, &rx_header, rx_data)) {
        switch(rx_header.StdId) {
@@ -637,35 +936,33 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 }
 
 void simple_filter() {
-	CAN_FilterTypeDef filter_config;
+   CAN_FilterTypeDef filter_config;
+   
+   filter_config.FilterActivation = ENABLE;
+   filter_config.FilterBank = 0;
+   filter_config.FilterMode = CAN_FILTERMODE_IDMASK;
+   filter_config.FilterIdHigh = 0x0000;
+   filter_config.FilterIdLow = 0x0000;
+   filter_config.FilterMaskIdHigh = 0x0000;
+   filter_config.FilterMaskIdLow = 0x0000;
+   filter_config.FilterScale = CAN_FILTERSCALE_32BIT;
 
-		filter_config.FilterActivation = ENABLE;
-		filter_config.FilterBank = 0;
-		filter_config.FilterMode = CAN_FILTERMODE_IDMASK;
-		filter_config.FilterIdHigh = 0x0000;
-		filter_config.FilterIdLow = 0x0000;
-		filter_config.FilterMaskIdHigh = 0x0000;
-		filter_config.FilterMaskIdLow = 0x0000;
-		filter_config.FilterScale = CAN_FILTERSCALE_32BIT;
-
-		filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-		if (HAL_CAN_ConfigFilter(_hcan1, &filter_config) != HAL_OK) {
-			Error_Handler();
-		}
-
-		filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO1;
-		if (HAL_CAN_ConfigFilter(_hcan1, &filter_config) != HAL_OK) {
-			Error_Handler();
-		}
-
-		if (HAL_CAN_ConfigFilter(_hcan2, &filter_config) != HAL_OK) {
-			Error_Handler();
-		}
-
-		filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO1;
-		if (HAL_CAN_ConfigFilter(_hcan2, &filter_config) != HAL_OK) {
-			Error_Handler();
-		}
+   filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+   if (HAL_CAN_ConfigFilter(_hcan1, &filter_config) != HAL_OK) {
+       Error_Handler();
+   }
+   filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO1;
+   if (HAL_CAN_ConfigFilter(_hcan1, &filter_config) != HAL_OK) {
+       Error_Handler();
+   }
+   filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+   if (HAL_CAN_ConfigFilter(_hcan2, &filter_config) != HAL_OK) {
+       Error_Handler();
+   }
+   filter_config.FilterFIFOAssignment = CAN_FILTER_FIFO1;
+   if (HAL_CAN_ConfigFilter(_hcan2, &filter_config) != HAL_OK) {
+       Error_Handler();
+   }
 
 
 }

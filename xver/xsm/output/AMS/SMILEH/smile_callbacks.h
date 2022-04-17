@@ -7,8 +7,10 @@
 #ifndef INC_SMILE_CALLBACKS_H_
 #define INC_SMILE_CALLBACKS_H_
 
+#include "main.h"
+
 #include "smile_data.h"
 
-uint8_t zero_cells();
-uint8_t balance_cells();
+uint8_t end_cell_balancing();
+uint8_t do_cell_balancing();
 #endif

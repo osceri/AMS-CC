@@ -34,6 +34,12 @@ void can1_ams_cell_voltages_transmit();
 void can1_ams_cell_temperatures_transmit();
 
 
+/*
+ * @Brief  
+ * @Retval None
+ */
+void can2_charger_config_transmit();
+
 
 /*
  * @Brief  

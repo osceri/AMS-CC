@@ -7,6 +7,8 @@
 ##ifndef INC_SMILE_CALLBACKS_H_
 ##define INC_SMILE_CALLBACKS_H_
 #
+##include "main.h"
+#
 ##include "smile_data.h"
 #
 

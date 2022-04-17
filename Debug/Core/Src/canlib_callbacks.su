@@ -1,0 +1,11 @@
+canlib_callbacks.c:16:6:can1_dbu_status_1_rx_callback	16	static
+canlib_callbacks.c:20:6:can2_amk1_setpoints_1_rx_callback	16	static
+canlib_callbacks.c:24:6:can2_ivt_msg_result_i_rx_callback	16	static
+canlib_callbacks.c:28:6:can2_ivt_msg_result_u1_rx_callback	16	static
+canlib_callbacks.c:32:6:can2_ivt_msg_result_u3_rx_callback	16	static
+canlib_callbacks.c:36:6:can2_cc_status_rx_callback	16	static
+canlib_callbacks.c:40:9:can2_charger_config_tx_callback	40	static
+canlib_callbacks.c:52:9:can1_ams_status_1_tx_callback	152	static
+canlib_callbacks.c:110:9:can1_ams_temperatures_tx_callback	16	static
+canlib_callbacks.c:115:9:can1_ams_cell_voltages_tx_callback	16	static
+canlib_callbacks.c:120:9:can1_ams_cell_temperatures_tx_callback	16	static

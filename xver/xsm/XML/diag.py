@@ -4,14 +4,13 @@ xml = "graph"
 
 output = ""
 
-with open(xml + ".drawio") as diag:
+with open("XML/" + xml + ".drawio") as diag:
     content = diag.read()
-    xml_weird = [('\n', ''), ('\t', ''), ('&quot;', '"'), ('&amp;amp;', '&'), ('&apos;', "'"), ('&lt;', '<'), ('&gt;', '>'), ('&amp;', '&'), ('<div>', ''), ('</div>', '')]
+    xml_weird = [('\n', ''), ('\t', ''), ('&quot;', '"'), ('&amp;amp;', '&'), ('&apos;', "'"), ('&lt;', '<'), ('&gt;', '>'), ('&amp;', '&'), ('<div>', ''), ('</div>', ''), ('<br>', '')]
     for x, y in xml_weird:
         content = content.replace(x, y)
     for x, y in xml_weird:
         content = content.replace(x, y)
-    print(content)
 
     first = True
 
@@ -78,7 +77,7 @@ with open(xml + ".drawio") as diag:
 
     rec_add(0, transitions)
 
-with open(xml + ".sm", "w") as sm:
+with open("XML/" + xml + ".sm", "w") as sm:
     sm.write(output)
     print(output)
 

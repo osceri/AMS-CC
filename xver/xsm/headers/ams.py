@@ -20,7 +20,7 @@ fbbdn += ["int64_t"]
 fbbdn += ["uint64_t"]
 fbbdn += ["float"]
 fbbdn += ["double"]
-fbbdn += ["abs"]
+fbbdn += ["fabsf"]
 fbbdn += ["exp"]
 
 max_depth = 0

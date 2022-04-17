@@ -9,6 +9,8 @@
 "./Core/Src/SEGGER_SYSVIEW_FreeRTOS.o"
 "./Core/Src/adc.o"
 "./Core/Src/can.o"
+"./Core/Src/canlib_callbacks.o"
+"./Core/Src/cell_balancer.o"
 "./Core/Src/dma.o"
 "./Core/Src/freertos.o"
 "./Core/Src/gpio.o"

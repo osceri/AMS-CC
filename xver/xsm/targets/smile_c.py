@@ -23,7 +23,10 @@ for _, data_name, data_size, data_type in functions:
     #   /* Type your actual code somewhere else */
     #}
     #
-
+#__weak void $SM$_error() {
+#   /* Type your actual code somewhere else */
+#}
+#
 for index in range(max_depth):
     #static $SM$_state_t state_r$index$;
 for index in range(max_depth):
@@ -35,14 +38,18 @@ for state in state_machines:
     #$SM$_state_t $state.name$_function() {
     if state.states:
         #   if(timer_r$state.depth$ < 0.001*$SM$_parameters.Ts) {
-        #       state_r$state.depth$ = STATE_$state.name.upper()$_0;
+        #       state_r$state.depth+1$ = STATE_$state.name.upper()$_0;
         #   }
         #
-        #   switch(state_r$index$) {
+        #   switch(state_r$state.depth+1$) {
         for sub_state in state.states:
             #       case STATE_$sub_state.name.upper()$:
-            #           state_r$index$ = $sub_state.name$_function();
+            #           state_r$state.depth+1$ = $sub_state.name$_function();
             #           break;
+
+        #       default:
+        #           $SM$_error();
+        #           break;
         #   }
         #
     for source_state, destination_state, conditional, statements in state.transitions:
@@ -51,8 +58,8 @@ for state in state_machines:
         conditional = regex.sub('after\(([^)]*)\)', f'(timer_r$state.depth$ > \\1)', conditional)
 
         statements = codec(statements)
-        statements += f'timer_r$state.depth$ = 0;'
         if destination_state != source_state:
+            statements += f'timer_r$state.depth$ = 0;'
             statements += f'return STATE_$destination_state.upper()$;'
 
         if statements:

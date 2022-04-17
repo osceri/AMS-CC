@@ -12,10 +12,10 @@ RT_MODEL_SIM0_T *const SIM0_M = &SIM0_M_;
 void SIM0_step(void)
 {
   real_T rtb_Memory15[126];
+  real_T rtb_Memory19[126];
   real_T rtb_Memory21[126];
   real_T rtb_Rpz[126];
   real_T rtb_Rsz[126];
-  real_T rtb_Switch[126];
   real_T rtb_Current;
   real_T rtb_Exp;
   real_T rtb_Memory20;
@@ -54,14 +54,10 @@ void SIM0_step(void)
     SIM0_Y.cell_capacities[i] = SIM0_DW.Memory10_PreviousInput[i];
     rtb_Memory21[i] = SIM0_DW.Memory10_PreviousInput[i] * rtb_Exp;
     rtb_Rsz[i] = rtb_Product1_n;
-    rtb_Rpz[i] = rtb_is_drive;
-  }
-
-  rtb_Exp = SIM0_P.Ts * rtb_Memory20;
-  for (i = 0; i < 126; i++) {
-    rtb_Switch[i] = SIM0_DW.Memory21_PreviousInput[i] / SIM0_P.R_short
-      * SIM0_DW.Memory19_PreviousInput[i] * SIM0_P.Gain_Gain + (rtb_Exp +
-      SIM0_DW.Memory_PreviousInput[i]);
+    rtb_Rpz[i] = (SIM0_DW.Memory21_PreviousInput[i] / SIM0_P.R_short
+                  * SIM0_DW.Memory19_PreviousInput[i] * SIM0_P.Gain_Gain +
+                  rtb_Memory20) * SIM0_P.Ts + SIM0_DW.Memory_PreviousInput[i];
+    rtb_Memory19[i] = rtb_is_drive;
   }
 
   boolean_T rtb_Logic_idx_1;
@@ -162,8 +158,8 @@ void SIM0_step(void)
     SIM0_DW.Memory9_PreviousInput);
   for (i = 0; i < 126; i++) {
     rtb_Memory22 = rtb_Memory21[i];
-    rtb_Memory20 = rtb_Switch[i];
-    rtb_is_drive = rtb_Rpz[i];
+    rtb_Memory20 = rtb_Rpz[i];
+    rtb_is_drive = rtb_Memory19[i];
     SIM0_DW.Memory15_PreviousInput[i] = rtb_is_drive;
     SIM0_DW.Memory12_PreviousInput[i] = rtb_Rsz[i];
     if (rtb_Memory20 > rtb_Memory22) {

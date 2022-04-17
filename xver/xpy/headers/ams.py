@@ -1,11 +1,24 @@
 import cantools
 import glob
+import regex
 from functools import reduce
 
 class Signal:
     def __init__(self, signal):
         # String descriptors
         self.name = signal.name.lower()
+        self.name = ""
+        Ks = []
+        for token in signal.name.split("_"):
+            Ls = []
+            for part in regex.findall('[A-Z]?[a-z0-9]*', token):
+                if part:
+                    Ls += [part.lower()]
+            ls = "_".join(Ls)
+            if ls:
+                Ks += [ls]
+        self.name = "_".join(Ks)
+
         self.comment = signal.comment
         self.is_multiplexer = signal.is_multiplexer
 
@@ -28,7 +41,7 @@ class Signal:
 
         if self.unit:
             if self.length <= 32:
-                self.type = "float"
+                self.type = "double" # May regret this
             else:
                 self.type = "double"
         else:
@@ -56,9 +69,11 @@ class Message:
         self.length = message.length
         self.is_extended = message.is_extended_frame
         self.multiplexer = [ signal.name for signal in self.signals if signal.is_multiplexer ]
+        self.multiplexer_ids = []
         if self.multiplexer:
             self.multiplexer = self.multiplexer[0]
-            self.multiplexer_size = max(reduce(lambda x, y: x + y, [signal.multiplexer_ids for signal in self.signals if signal.multiplexer_ids]))
+            self.multiplexer_ids = list(set(reduce(lambda x, y: x + y, [signal.multiplexer_ids for signal in self.signals if signal.multiplexer_ids])))
+            self.multiplexer_size = max(self.multiplexer_ids)
 
         # Message descriptors
         self.periodicity = message.cycle_time

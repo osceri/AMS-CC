@@ -79,4 +79,11 @@ uint8_t can1_ams_cell_voltages_tx_callback(ams_cell_voltages_t* ams_cell_voltage
  */
 uint8_t can1_ams_cell_temperatures_tx_callback(ams_cell_temperatures_t* ams_cell_temperatures);
 
+/*
+ * @Brief  
+ * @Param  A pointer to a message which should be sent
+ * @Retval Return 1 if the data entered in charger_config should be sent
+ */
+uint8_t can2_charger_config_tx_callback(charger_config_t* charger_config);
+
 #endif

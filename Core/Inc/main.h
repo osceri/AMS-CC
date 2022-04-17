@@ -105,7 +105,11 @@ void Error_Handler(void);
 #define enable_precharge_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 
-#define TICK2HZ (configTICK_RATE_HZ) // Specific for using a STM32F446RE with STm32F407VG code ...
+#define TICK2HZ (configTICK_RATE_HZ / 1.2) // Specific for using a STM32F446RE with STm32F407VG code ...
+
+#define SIMULATION
+
+#define STREAM_DATA
 
 /* USER CODE END Private defines */
 

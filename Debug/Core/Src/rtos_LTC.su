@@ -7,5 +7,5 @@ rtos_LTC.c:133:9:LTC_command	24	static
 rtos_LTC.c:161:9:LTC_read_command	24	static
 rtos_LTC.c:200:9:LTC_write_command	24	static
 rtos_LTC.c:235:9:LTC_acquire_data	48	static
-rtos_LTC.c:302:9:LTC_make_voltages	24	static
-rtos_LTC.c:321:9:LTC_make_temperatures	48	static
+rtos_LTC.c:299:9:LTC_make_voltages	24	static
+rtos_LTC.c:318:9:LTC_make_temperatures	80	static

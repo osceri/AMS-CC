@@ -8,11 +8,13 @@
 ##ifndef INC_SMILE_H_
 ##define INC_SMILE_H_
 #
+##include "main.h"
+#
 #
 
 
 #typedef enum {
-#   STATE_NONE = -1,
+#   STATE_NONE = 0,
 for state in state_machines:
     #   STATE_$state.name.upper()$ = $state.id$,
 #} $SM$_state_t;
