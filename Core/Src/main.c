@@ -401,9 +401,16 @@ void __wait_for_data(uint16_t FLAGS) {
 }
 
 error_t __error;
-void __raise_error(error_t error) {
+void __raise_ams_error(error_t error) {
+	set_ams_error_ext(1);
 	__error = error;
-	xQueueSend(error_queue, &error, portMAX_DELAY);
+	xQueueOverwrite(error_queue, &error);
+}
+
+void __raise_imd_error(error_t error) {
+	set_imd_error_ext(1);
+	__error = error;
+	xQueueOverwrite(error_queue, &error);
 }
 
 /* ENTER TASKS */
@@ -416,7 +423,7 @@ void start_SM_task(void *argument) {
 
 	/* Make task-specific structures */
 	charger_t charger;
-	ams_parameters.Ts = SM_task_info.periodicity;
+	ams_inputs.Ts = SM_task_info.periodicity;
 	double *cell_voltages;
 	double minimum;
 	double mean;
@@ -428,9 +435,6 @@ void start_SM_task(void *argument) {
 	osDelayUntil(next_tick);
 
 	__wait_for_data(WAIT_FOR_ALL);
-
-	set_charger_voltage_limit_ext(4.15 * 126);
-	set_charger_current_limit_ext(6.6 * 2);
 
 	for (;;) {
 		/* Enter periodic behaviour */
@@ -479,23 +483,26 @@ void start_SM_task(void *argument) {
 
 			/* Try to get the trigger signals */
 			if (!xQueueReceive(start_drive_queue, &ams_inputs.drive, 0)) {
-				ams_inputs.drive = 0;
+				//ams_inputs.drive = 0;
 			}
 			if (!xQueueReceive(start_charge_queue, &ams_inputs.charge, 0)) {
-				ams_inputs.charge = 0;
+				//ams_inputs.charge = 0;
 			}
 			if (!xQueueReceive(start_balance_queue, &ams_inputs.balance, 0)) {
-				ams_inputs.balance = 0;
+				//ams_inputs.balance = 0;
 			}
 
 			ams_state_t state = ams_function(); // _step
+
+#ifdef STREAM_DATA
+			SEGGER_SYSVIEW_PrintfHost("state %i", state);
+#endif
 			xQueueOverwrite(state_queue, &state);
 		}
 
 		/* If any error was produced by the state machine (1xx), then raise them */
-		if (ams_outputs.set_error) {
-			__raise_error((error_t) ams_outputs.set_error);
-
+		if (ams_outputs.error) {
+			__raise_ams_error((error_t) ams_outputs.error);
 		}
 
 		charger.charger_current_limit = 6.6 * 2; 		// 2 * C
@@ -564,7 +571,19 @@ void start_GPIO_task(void *argument) {
 		GPIO.precharge_closed = get_precharge_ext();
 
 		if (!GPIO.IMD_ok) {
-			__raise_error(ERROR_IMD);
+			__raise_imd_error(ERROR_IMD);
+		}
+
+		if (ams_outputs.air_minus_closed_s != ams_inputs.air_minus_closed) {
+			__raise_ams_error(ERROR_AIR_MINUS);
+		}
+
+		if (ams_outputs.air_plus_closed_s != ams_inputs.air_plus_closed) {
+			__raise_ams_error(ERROR_AIR_PLUS);
+		}
+
+		if (ams_outputs.precharge_closed_s != ams_inputs.precharge_closed) {
+			__raise_ams_error(ERROR_PRECHARGE);
 		}
 
 		xQueueOverwrite(GPIO_queue, &GPIO);
@@ -601,6 +620,10 @@ void start_ADC_task(void *argument) {
 		osDelayUntil(next_tick);
 	}
 }
+
+#ifdef STREAM_DATA
+uint8_t __k = 0;
+#endif
 
 void start_COM_task(void *argument) {
 	/* Set up task-specific timing parameters */
@@ -668,12 +691,24 @@ void start_COM_task(void *argument) {
 		cell_data_valid = LTC_data_valid;
 #endif
 
+#ifdef STREAM_DATA
+		SEGGER_SYSVIEW_PrintfHost("cell_voltages %i %i %i %i %i %i %i %i", __k,
+				(uint16_t) (10000 * cell_voltages[__k]),
+				(uint16_t) (10000 * cell_voltages[__k + 1]),
+				(uint16_t) (10000 * cell_voltages[__k + 2]),
+				(uint16_t) (10000 * cell_voltages[__k + 3]),
+				(uint16_t) (10000 * cell_voltages[__k + 4]),
+				(uint16_t) (10000 * cell_voltages[__k + 5]),
+				(uint16_t) (10000 * cell_voltages[__k + 6]));
+		__k = (__k + 7) % 126;
+#endif
+
 		/* If new cell data is available, supply the system with it */
 		if (cell_data_valid) {
 			xQueueOverwrite(cell_voltages_queue, &cell_voltages);
 			xQueueOverwrite(cell_temperatures_queue, &cell_temperatures);
 		} else {
-			__raise_error(ERROR_NO_LTC_DATA);
+			__raise_ams_error(ERROR_NO_LTC_DATA);
 		}
 
 		/* Raise an error if cell voltage time constraints are not met,
@@ -682,7 +717,7 @@ void start_COM_task(void *argument) {
 				voltage_sample_constraint);
 
 		if (cell_voltages_error) {
-			__raise_error(cell_voltages_error);
+			__raise_ams_error(cell_voltages_error);
 		}
 
 		/* Raise an error if cell temperature time constraints are not met,
@@ -691,12 +726,12 @@ void start_COM_task(void *argument) {
 				!temperature_sample_constraint);
 
 		if (cell_temperatures_error) {
-			__raise_error(cell_temperatures_error);
+			__raise_ams_error(cell_temperatures_error);
 		}
 
 		/* If no new accumulator current was gathered, raise an error */
 		if (!accumulator_current_valid) {
-			__raise_error(ERROR_NO_CURRENT_DATA);
+			__raise_ams_error(ERROR_NO_CURRENT_DATA);
 		}
 
 		/* Raise an error if accumulator current time constraints are not met,
@@ -705,7 +740,7 @@ void start_COM_task(void *argument) {
 				current_sample_constraint);
 
 		if (accumulator_current_error) {
-			__raise_error(accumulator_current_error);
+			__raise_ams_error(accumulator_current_error);
 		}
 		/* Wait until next period */
 		while (next_tick < osKernelGetTickCount()) {
@@ -883,6 +918,9 @@ void start_event_handler_task(void *argument) {
 				set_ams_error_ext(1);
 				break;
 			}
+#ifdef STREAM_DATA
+			SEGGER_SYSVIEW_PrintfHost("error %i", error);
+#endif
 		}
 
 		/* Latch the ams_error for 500 ms */
@@ -927,15 +965,15 @@ void start_SIM_task(void *argument) {
 	uint16_t k = 0;
 
 	uint8_t SC = 1;
-	uint8_t start_drive = 0;
-	uint8_t start_charge = 1;
+	uint8_t start_drive = 1;
+	uint8_t start_charge = 0;
 	uint8_t start_balance = 0;
 
 	SIM0_P.Ts = SIM_task_info.periodicity;
 	SIM0_U.SC = SC;
 	SIM0_U.drive = start_drive ^ start_balance;
 	SIM0_U.charge = start_charge ^ start_balance;
-	SIM0_U.drive_current = -5;
+	SIM0_U.drive_current = -10;
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * SIM_task_info.offset;
@@ -946,10 +984,8 @@ void start_SIM_task(void *argument) {
 
 		if (k == 10) {
 			xQueueOverwrite(start_drive_queue, &start_drive);
-			xQueueOverwrite(start_charge_queue, &start_charge);
-			xQueueOverwrite(start_balance_queue, &start_balance);
 		}
-		k++;
+
 
 		xQueuePeek(charger_queue, &charger, 0);
 		SIM0_U.CurrentLimit = charger.charger_current_limit;

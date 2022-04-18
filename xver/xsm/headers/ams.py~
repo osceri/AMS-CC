@@ -84,7 +84,6 @@ def get_statements(state):
     return statements_list
 
 functions = []
-parameters = []
 inputs = []
 outputs = []
 _codec = []
@@ -102,8 +101,10 @@ with open(f"databases/{SM}.sm") as sm:
 
     state_machine_tree = StateMachine(0, f"{SM}", content, [])
 
-    all_conditionals = '{' + "}{".join([condition for condition in get_conditionals(state_machine_tree) ]) + '}'
+    all_conditionals = '[' + "][".join([condition for condition in get_conditionals(state_machine_tree) ]) + ']'
     all_statements = '{' + "}{".join([statement for statement in get_statements(state_machine_tree) ]) + '}'
+    all_conditionals += '[Ts_f32]'
+    print(all_conditionals)
 
     def _rec_datas(arg):
         _variables = []
@@ -166,20 +167,16 @@ with open(f"databases/{SM}.sm") as sm:
     _get_variables, _get_functions = _rec_datas(all_conditionals)
     _set_variables, _set_functions = _rec_datas(all_statements)
     _functions = list(set(_get_functions + _set_functions))
-    _inputs = set(_get_variables)
     _outputs = set(_set_variables)
-    _parameters = _inputs.intersection(_outputs)
+    _inputs = set(_get_variables).difference(_outputs)
 
-    inputs = _make_vars(_inputs.difference(_parameters))
-    outputs = _make_vars(_outputs.difference(_parameters))
-    parameters = _make_vars(_parameters)
+    inputs = _make_vars(_inputs)
+    outputs = _make_vars(_outputs)
     functions = _make_funs(_functions)
-    parameters += [("Ts", "Ts", 1, "float")]
 
 
     _codec += [ (_data_name, f"{SM}_inputs." + data_name) for _data_name, data_name, data_size, data_type in inputs ]
     _codec += [ (_data_name, f"{SM}_outputs." + data_name) for _data_name, data_name, data_size, data_type in outputs ]
-    _codec += [ (_data_name, f"{SM}_parameters." + data_name) for _data_name, data_name, data_size, data_type in parameters ]
 
     state_machines = get_states(state_machine_tree)
 

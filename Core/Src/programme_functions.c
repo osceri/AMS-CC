@@ -109,7 +109,11 @@ uint8_t get_imd_ok_ext() {
 
 
 void set_balance_ext(uint8_t closed, uint8_t index, void *settings) {
+#ifdef SIMULATION
 	SIM0_U.BalanceOut[index] = closed;
+#elif
+
+#endif
 
 }
 

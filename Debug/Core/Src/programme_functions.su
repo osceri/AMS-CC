@@ -10,7 +10,4 @@ programme_functions.c:78:6:set_imd_error_ext	16	static
 programme_functions.c:86:9:get_imd_error_latched_ext	4	static
 programme_functions.c:94:9:get_sc_probe_ext	8	static
 programme_functions.c:102:9:get_imd_ok_ext	4	static
-programme_functions.c:110:6:set_charger_voltage_limit_ext	16	static
-programme_functions.c:114:6:set_charger_current_limit_ext	16	static
-programme_functions.c:118:6:set_enable_charge_ext	16	static
-programme_functions.c:122:6:set_balance_ext	24	static
+programme_functions.c:111:6:set_balance_ext	24	static

@@ -2,9 +2,9 @@
 (precharge_drive -> error) : [error||ams_error||imd_error] {} {}
 (precharge_charge -> charge) : [precharge_charge_complete] {precharge_charge_complete = 0;} {}
 (precharge_charge -> error) : [error||ams_error||imd_error] {} {}
-(charge -> error) : [ams_error||imd_error||charge_error] {} {}
+(charge -> error) : [ams_error||imd_error||error] {} {}
 (charge -> idle) : [charge_complete] {charge_complete = 0;enable_charger=0;} {}
-(drive -> error) : [ams_error||imd_error||drive_error] {} {}
+(drive -> error) : [ams_error||imd_error||error] {} {}
 (drive -> idle) : [drive_complete] {drive_complete = 0;} {}
 (error -> idle) : [!(error||ams_error||imd_error)] {} {}
 (idle -> precharge_drive) : [SC&&drive] {} {}
@@ -13,30 +13,30 @@
 (balance -> idle) : [SC||(!balance)||(cell_voltages_variance_f64 < 0.005)] {end_cell_balancing();} {}
 (0 -> idle) : [] {} {}
 (precharge_drive -> precharge_drive) : [] {} {
-    (close_air_minus -> close_precharge) : [before(2)&&air_minus_closed] {close_precharge = 1;} {}
+    (close_air_minus -> close_precharge) : [before(2)&&air_minus_closed] {close_precharge = 1; air_minus_closed_s = 1;} {}
     (close_air_minus -> error) : [after(2)] {error=111;} {}
-    (close_precharge -> wait) : [before(2)&&precharge_closed] {} {}
+    (close_precharge -> wait) : [before(2)&&precharge_closed] {precharge_closed_s = 1;} {}
     (close_precharge -> error) : [after(2)] {error=112;} {}
     (wait -> close_air_plus) : [after(5)&&before(30)&&(accumulator_voltage_f64*0.95 < vehicle_voltage_f64)] {close_air_plus = 1;} {}
     (wait -> error) : [after(30)] {error=113;} {}
-    (close_air_plus -> open_precharge) : [before(2)&&air_plus_closed] {close_precharge = 0;} {}
+    (close_air_plus -> open_precharge) : [before(2)&&air_plus_closed] {close_precharge = 0; air_plus_closed_s = 1;} {}
     (close_air_plus -> error) : [after(2)] {error=114;} {}
     (open_precharge -> error) : [after(2)] {error=115;} {}
-    (open_precharge -> exit) : [before(2)&&!precharge_closed] {precharge_drive_complete=1;} {}
+    (open_precharge -> exit) : [before(2)&&!precharge_closed] {precharge_drive_complete=1; precharge_closed_s = 0;} {}
     (0 -> entry) : [] {} {}
     (entry -> close_air_minus) : [] {close_air_minus = 1;} {}
 }
 (precharge_charge -> precharge_charge) : [] {} {
-    (close_air_minus -> close_precharge) : [before(2)&&air_minus_closed] {close_precharge=1;} {}
+    (close_air_minus -> close_precharge) : [before(2)&&air_minus_closed] {close_precharge=1; air_minus_closed_s = 1;} {}
     (close_air_minus -> error) : [after(2)] {error=122;} {}
-    (close_precharge -> wait) : [before(2)&&precharge_closed] {} {}
+    (close_precharge -> wait) : [before(2)&&precharge_closed] {precharge_closed_s = 1;} {}
     (close_precharge -> error) : [after(2)] {error=123;} {}
     (wait -> close_air_plus) : [after(5)&&before(30)&&(accumulator_voltage_f64*0.95 < vehicle_voltage_f64)] {close_air_plus=1;} {}
     (wait -> error) : [after(30)] {error=124;} {}
-    (close_air_plus -> open_precharge) : [before(2)&&air_plus_closed] {close_precharge=0;} {}
+    (close_air_plus -> open_precharge) : [before(2)&&air_plus_closed] {close_precharge=0; air_plus_closed_s = 1;} {}
     (close_air_plus -> error) : [after(2)] {error=125;} {}
     (open_precharge -> error) : [after(2)] {error=126;} {}
-    (open_precharge -> exit) : [before(2)&&!precharge_closed] {precharge_charge_complete=1;} {}
+    (open_precharge -> exit) : [before(2)&&!precharge_closed] {precharge_charge_complete=1; precharge_closed_s = 0;} {}
     (0 -> wake_charger) : [] {} {}
     (wake_charger -> close_air_minus) : [before(10)&&charger_is_awake] {close_air_minus=1;} {}
     (wake_charger -> error) : [after(10)] {error=121;} {}
@@ -44,19 +44,19 @@
 (charge -> charge) : [] {} {
     (0 -> charge) : [] {} {}
     (charge -> end_charge) : [(maximum_cell_voltage_f64 > 4.15)||!charge] {enable_charger = 0;} {}
-    (end_charge -> exit) : [before(7)&&(fabsf(accumulator_current_f64) < 0.001)] {close_air_plus = 0;close_air_minus = 0;close_precharge = 0;charge_complete = 1;} {}
-    (end_charge -> force_quit) : [after(7)] {close_air_plus = 0;close_air_minus = 0;close_precharge = 0;error = 141;} {}
+    (end_charge -> exit) : [before(7)&&(fabsf(accumulator_current_f64) < 0.001)] {close_air_plus = 0; air_plus_closed_s = 0;close_air_minus = 0; air_minus_closed_s = 0;close_precharge = 0; precharge_closed_s = 0;charge_complete = 1;} {}
+    (end_charge -> force_quit) : [after(7)] {close_air_plus = 0; air_plus_closed_s = 0;close_air_minus = 0; air_minus_closed_s = 0;close_precharge = 0; precharge_closed_s = 0;error = 141;} {}
 }
 (drive -> drive) : [] {} {
     (0 -> drive) : [] {} {}
     (drive -> end_drive) : [(minimum_cell_voltage_f64 < 2.85)||!drive] {} {}
-    (end_drive -> exit) : [before(7)&&(fabsf(accumulator_current_f64) < 0.001)] {close_air_plus = 0;close_air_minus = 0;close_precharge = 0;drive_complete = 1;} {}
-    (end_drive -> force_quit) : [after(7)] {close_air_plus= 0;close_air_minus = 0;close_precharge = 0;error = 131;} {}
+    (end_drive -> exit) : [before(7)&&(fabsf(accumulator_current_f64) < 0.001)] {close_air_plus = 0; air_plus_closed_s = 0;close_air_minus = 0; air_minus_closed_s = 0;close_precharge = 0; precharge_closed_s = 0;drive_complete = 1;} {}
+    (end_drive -> force_quit) : [after(7)] {close_air_plus = 0; air_plus_closed_s = 0;close_air_minus = 0; air_minus_closed_s = 0;close_precharge = 0; precharge_closed_s = 0;error = 131;} {}
 }
 (error -> error) : [] {} {
     (0 -> error_detected) : [] {} {}
-    (error_detected -> relays_opened) : [] {close_air_plus = 0;close_air_minus = 0;close_precharge = 0;set_error = error;} {}
-    (relays_opened -> awaiting_error_resolution) : [after(5)] {set_error = 0;error = 0;} {}
+    (error_detected -> relays_opened) : [] {close_air_plus = 0; air_plus_closed_s = 0;close_air_minus = 0; air_minus_closed_s = 0;close_precharge = 0; precharge_closed_s = 0;} {}
+    (relays_opened -> awaiting_error_resolution) : [after(5)] {error = 0;} {}
 }
 (balance -> balance) : [] {} {
     (0 -> balance) : [] {} {}
