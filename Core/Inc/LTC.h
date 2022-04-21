@@ -5,8 +5,10 @@
  *      Author: oscar
  */
 
-#ifndef INC_RTOS_LTC_H_
-#define INC_RTOS_LTC_H_
+#ifndef INC_LTC_H_
+#define INC_LTC_H_
+
+#include "main.h"
 
 /*
  * @brief	Is used to calculated the PEC.
@@ -70,7 +72,6 @@ uint8_t LTC_write_command(uint8_t wake, uint16_t command);
 /*
  * @brief	The function which acquires all of the cell temperatures and voltages, and places them in cell_voltages and cell_temperatures
  * @param	Whether or not to wake the isoSPI port beforehand
- * @param	This pointer will be filled with ccv[0:12] for every successfully retrieved cellstack data point
  * @retval	1 if successful
  */
 uint8_t LTC_acquire_data(uint8_t wake);
@@ -87,4 +88,4 @@ uint8_t LTC_make_voltages(void);
  */
 uint8_t LTC_make_temperatures(void);
 
-#endif /* INC_RTOS_LTC_H_ */
+#endif /* INC_LTC_H_ */

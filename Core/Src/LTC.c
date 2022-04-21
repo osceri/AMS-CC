@@ -8,7 +8,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 
-#include "rtos_LTC.h"
+#include "LTC.h"
 
 #define cellstack_address_map(x) x
 #define LTC_COM_TIMEOUT 0
@@ -19,8 +19,6 @@ uint8_t LTC_read_buffer[10], LTC_write_buffer[10], LTC_command_buffer[4];
 uint16_t LTC_data[12 * 6 * 3];
 double LTC_voltages[126];
 double LTC_temperatures[60];
-
-uint8_t LTC_data_valid;
 
 static const unsigned int crc15Table[256] = { 0x0, 0xc599, 0xceab, 0xb32,
 		0xd8cf, 0x1d56, 0x1664, 0xd3fd, 0xf407, 0x319e,
@@ -234,18 +232,12 @@ uint8_t LTC_write_command(uint8_t wake, uint16_t command) {
  */
 uint8_t LTC_acquire_data(uint8_t wake) {
 	int p, k, i, j, command;
-	uint16_t all_read; /* LTC_data_valid[n] might only be high if slave n was read (PEC correct, among other things) */
-	uint16_t all_zeros; /* LTC_data_valid[n] might only be high if the bits are not all zero, as this would constitute a zero voltage reference (or zeroed/floating cell voltages) */
-	uint16_t all_ones; /* LTC_data_valid[n] might only be high if the bits are not all ones, as this is indicative of the message being corrupted */
-
-	LTC_data_valid = 0;
 
 	/* ADCV, MD = 10, PUP = 1, DCP = 0, CH = 000 */
 	command = 0b0000001101110000;
 
 	LTC_command(wake, command);
 
-	//osDelay(configTICK_RATE_HZ * 0.02); // ~2 ms
 	HAL_Delay(2);
 
 	/* ADAX : MD = 10, PUP = 1, CH = 000 */
@@ -260,34 +252,35 @@ uint8_t LTC_acquire_data(uint8_t wake) {
 	p = 0;
 
 	for (k = 0; k < 12; k++) { // 12 segments
-		all_read = 1;
-		all_zeros = 1;
-		all_ones = 1;
-
 		for (i = 0; i < 6; i++) {
 			// We use the RDCVA command and increment it every pass to get RDCVB, RDCVC .. RDAUXB
 			command = 0b1000000000000100 | (cellstack_address_map(k) << 11);
 			command += 2 * i;
 
-			all_read &= LTC_read_command(0, command);
+			if(!LTC_read_command(0, command)) {
+				/* Data wasn't to be read */
+				return 0;
+			}
 
 			for (j = 0; j < 3; j++) {
 				LTC_data[p] = LTC_read_buffer[2 * j]
 						| (LTC_read_buffer[2 * j + 1] << 8);
-
-				//all_zeros &= (LTC_data[p] == 0);
-				//all_ones &= (LTC_data[p] == -1);
-
 				p++;
 			}
 		}
 
-		LTC_data_valid = (all_read && !all_zeros && !all_ones);
 	}
 
-	LTC_make_voltages();
-	LTC_make_temperatures();
+	if(!LTC_make_voltages()) {
+		/* Data was corrupted, or voltage reference was off */
+		return 0;
+	}
+	if(!LTC_make_temperatures()) {
+		/* Data was corrupted, or voltage reference was off */
+		return 0;
+	}
 
+	/* Everything is fine ! */
 	return 1;
 }
 
@@ -298,12 +291,20 @@ uint8_t LTC_acquire_data(uint8_t wake) {
  */
 uint8_t LTC_make_voltages(void) {
 	uint16_t cellstack, K, k, p;
-
 	p = 0;
 
 	for (cellstack = 0; cellstack < 12; cellstack++) {
 		K = cellstack_voltage_count(cellstack);
 		for (k = 0; k < K; k++) {
+			if(LTC_data[18 * cellstack + k] == 0) {
+				/* The voltage reference is not on */
+				return 0;
+			}
+			if(LTC_data[18 * cellstack + k] == 0xffff) {
+				/* The data is corrupted */
+				return 0;
+			}
+
 			LTC_voltages[p] = 0.0001 * LTC_data[18 * cellstack + k];
 		}
 	}
@@ -317,7 +318,6 @@ uint8_t LTC_make_voltages(void) {
  */
 uint8_t LTC_make_temperatures(void) {
 	uint16_t cellstack, K, k, p;
-
 	double beta = 3500;
 	double temp = 25 + 273.15;
 	double R0 = 10000 * exp(-beta / temp);

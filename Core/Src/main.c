@@ -17,6 +17,7 @@
  */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <LTC.h>
 #include "main.h"
 #include "cmsis_os.h"
 #include "adc.h"
@@ -39,12 +40,12 @@
 #include "programme_data.h"
 #include "programme_functions.h"
 
-#include "rtos_LTC.h"
 #include "COM.h"
 #include "PID.h"
 #include "FAN.h"
 #include "IMD.h"
 #include "CSE.h"
+#include "LTC.h"
 #include "queue.h"
 #include "SIM0.h"
 #include "smile_data.h"
@@ -90,47 +91,47 @@ void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN 0 */
 
 const task_info SM_task_info = { { .name = "SM_task", .stack_size = 1024 * 4,
-		.priority = (osPriority_t) osPriorityLow3, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityLow3, }, .periodicity = 0.5,
 		.offset = 0 * 0.000, .execution_time = 0.010, };
 
 const task_info SIM_task_info = { { .name = "SIM_task", .stack_size = 3000 * 4,
-		.priority = (osPriority_t) osPriorityLow1, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityLow1, }, .periodicity = 0.5,
 		.offset = 0 * 0.230, .execution_time = 0.1, };
 
 const task_info COOL_task_info = { { .name = "COOL_task", .stack_size = 160 * 4,
-		.priority = (osPriority_t) osPriorityNormal6, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityNormal6, }, .periodicity = 0.5,
 		.offset = 0 * 0.220, .execution_time = 0.001, };
 
 const task_info CSE_task_info = { { .name = "CSE_task", .stack_size = 1024 * 4,
-		.priority = (osPriority_t) osPriorityNormal5, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityNormal5, }, .periodicity = 0.5,
 		.offset = 0 * 0.170, .execution_time = 0.035, };
 
 const task_info CAN_task_info = { { .name = "CAN_task", .stack_size = 512 * 4,
 		.priority = (osPriority_t) osPriorityBelowNormal2, },
-		.periodicity = 0.1, .offset = 0 * 0.140, .execution_time = 0.020, };
+		.periodicity = 0.5, .offset = 0 * 0.140, .execution_time = 0.020, };
 
 const task_info COM_task_info = { { .name = "COM_task", .stack_size = 2048 * 4,
-		.priority = (osPriority_t) osPriorityLow4, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityLow4, }, .periodicity = 0.5,
 		.offset = 0 * 0.060, .execution_time = 0.040, };
 
 const task_info ADC_task_info = { { .name = "ADC_task", .stack_size = 160 * 4,
-		.priority = (osPriority_t) osPriorityNormal3, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityNormal3, }, .periodicity = 0.5,
 		.offset = 0 * 0.050, .execution_time = 0.001, };
 
 const task_info GPIO_task_info = { { .name = "GPIO_task", .stack_size = 160 * 4,
-		.priority = (osPriority_t) osPriorityNormal2, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityNormal2, }, .periodicity = 0.5,
 		.offset = 0 * 0.040, .execution_time = 0.001, };
 
 const task_info IMD_task_info = { { .name = "IMD_task", .stack_size = 256 * 4,
-		.priority = (osPriority_t) osPriorityLow5, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityLow5, }, .periodicity = 0.5,
 		.offset = 0 * 0.60, .execution_time = 0.001, };
 
 const task_info event_handler_task_info = { { .name = "event_handler_task",
 		.stack_size = 128 * 4, .priority = (osPriority_t) osPriorityLow, },
-		.periodicity = 0.1, .offset = 5, .execution_time = 0.001, };
+		.periodicity = 0.5, .offset = 5, .execution_time = 0.001, };
 
 const task_info IWDG_task_info = { { .name = "IWDG_task", .stack_size = 160 * 4,
-		.priority = (osPriority_t) osPriorityLow2, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityLow2, }, .periodicity = 0.5,
 		.offset = 0 * 0.010, .execution_time = 0.001, };
 
 const queue_info GPIO_queue_info = { .element_count = 1, .element_size =
@@ -395,12 +396,18 @@ void __wait_for_data(uint16_t FLAGS) {
 void __raise_ams_error(error_t error) {
 	set_ams_error_ext(1);
 	__error = error;
+#ifdef STREAM_DATA
+	SEGGER_SYSVIEW_PrintfHost("error %i", error);
+#endif
 	xQueueOverwrite(error_queue, &error);
 }
 
 void __raise_imd_error(error_t error) {
 	set_imd_error_ext(1);
 	__error = error;
+#ifdef STREAM_DATA
+	SEGGER_SYSVIEW_PrintfHost("error %i", error);
+#endif
 	xQueueOverwrite(error_queue, &error);
 }
 
@@ -598,10 +605,6 @@ void start_ADC_task(void *argument) {
 	}
 }
 
-#ifdef STREAM_DATA
-uint8_t __k = 0;
-#endif
-
 void start_COM_task(void *argument) {
 	/* Set up task-specific timing parameters */
 	uint32_t next_tick = first_tick;
@@ -616,19 +619,22 @@ void start_COM_task(void *argument) {
 	error_t accumulator_current_error;
 	uint8_t cell_data_valid;
 	uint8_t accumulator_current_valid;
+#ifdef STREAM_DATA
+	uint8_t __k = 0;
+#endif
 
 	const float voltage_time_constraint = 0.5;
 	const float temperature_time_constraint = 1.0;
 	const float current_time_constraint = 0.5;
 
-	uint16_t voltage_sample_constraint = 1 + (voltage_time_constraint
-			/ COM_task_info.periodicity);
+	uint16_t voltage_sample_constraint = 1
+			+ (voltage_time_constraint / COM_task_info.periodicity);
 
-	uint16_t temperature_sample_constraint = 1 + (temperature_time_constraint
-			/ COM_task_info.periodicity);
+	uint16_t temperature_sample_constraint = 1
+			+ (temperature_time_constraint / COM_task_info.periodicity);
 
-	uint16_t current_sample_constraint = 1 + (current_time_constraint
-			/ COM_task_info.periodicity);
+	uint16_t current_sample_constraint = 1
+			+ (current_time_constraint / COM_task_info.periodicity);
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * COM_task_info.offset;
@@ -639,16 +645,12 @@ void start_COM_task(void *argument) {
 	for (;;) {
 		/* Enter periodic behaviour */
 
-		/* Take the queue elements so that other tasks may not */
-		xQueueReceive(cell_voltages_queue, &cell_voltages, 0);
-		xQueueReceive(cell_temperatures_queue, &cell_temperatures, 0);
-
 		/* Get new data (indirectly) form CAN */
 		can2_ivt_msg_result_i_receive();
 		accumulator_current_valid = xQueuePeek(accumulator_current_queue,
 				&accumulator_current, 0);
 		/* Get new data over isoSPI */
-		LTC_acquire_data(1);
+		cell_data_valid = LTC_acquire_data(1);
 
 		/* Get data from the program */
 #ifdef SIMULATION
@@ -656,22 +658,23 @@ void start_COM_task(void *argument) {
 		cell_temperatures = SIM0_Y.cell_temperatures;
 		cell_data_valid = 1;
 #else
-		cell_voltages = cell_voltages;
-		cell_temperatures = cell_temperatures;
-		cell_data_valid = cell_data_valid;
+		cell_voltages = LTC_voltages;
+		cell_temperatures = LTC_temperatures;
 #endif
 
-#ifdef STREAM_DATA
-		SEGGER_SYSVIEW_PrintfHost("cell_voltages %i %i %i %i %i %i %i %i", __k,
-				(uint16_t) (10000 * cell_voltages[__k]),
-				(uint16_t) (10000 * cell_voltages[__k + 1]),
-				(uint16_t) (10000 * cell_voltages[__k + 2]),
-				(uint16_t) (10000 * cell_voltages[__k + 3]),
-				(uint16_t) (10000 * cell_voltages[__k + 4]),
-				(uint16_t) (10000 * cell_voltages[__k + 5]),
-				(uint16_t) (10000 * cell_voltages[__k + 6]));
-		__k = (__k + 7) % 126;
-#endif
+		/*
+		 #ifdef STREAM_DATA
+		 SEGGER_SYSVIEW_PrintfHost("cell_voltages %i %i %i %i %i %i %i %i", __k,
+		 (uint16_t) (10000 * cell_voltages[__k]),
+		 (uint16_t) (10000 * cell_voltages[__k + 1]),
+		 (uint16_t) (10000 * cell_voltages[__k + 2]),
+		 (uint16_t) (10000 * cell_voltages[__k + 3]),
+		 (uint16_t) (10000 * cell_voltages[__k + 4]),
+		 (uint16_t) (10000 * cell_voltages[__k + 5]),
+		 (uint16_t) (10000 * cell_voltages[__k + 6]));
+		 __k = (__k + 7) % 126;
+		 #endif
+		 */
 
 		/* If new cell data is available, supply the system with it */
 		if (cell_data_valid) {
@@ -861,18 +864,24 @@ void start_COOL_task(void *argument) {
 		osDelayUntil(next_tick);
 	}
 }
-void start_event_handler_task(void *argument) {
-	__wait_for_data(WAIT_FOR_ALL);
 
+void start_event_handler_task(void *argument) {
+	/* Set up task-specific timing parameters */
+	uint32_t next_tick = first_tick;
+	uint32_t tick_increment = TICK2HZ * IWDG_task_info.periodicity;
+
+	/* Make task-specific structures */
 	error_t error;
 
+	/* Wait until offset */
+	next_tick += TICK2HZ * IWDG_task_info.offset;
+	osDelayUntil(next_tick);
+
+	__wait_for_data(WAIT_FOR_ALL);
+
 	for (;;) {
-		/* Always unlatch the errors after this time has ended
-		 * -- this will of course not affect the actual XXX_error_latched signal */
-		set_ams_error_ext(0);
-		set_imd_error_ext(0);
-		/* Wait forever for an error to be raised */
-		if (xQueueReceive(error_queue, &error, portMAX_DELAY)) {
+		/* Enter periodic behaviour */
+		if (xQueueReceive(error_queue, &error, 0)) {
 			switch (error) {
 			case ERROR_IMD:
 				set_imd_error_ext(1);
@@ -881,13 +890,17 @@ void start_event_handler_task(void *argument) {
 				set_ams_error_ext(1);
 				break;
 			}
-#ifdef STREAM_DATA
-			SEGGER_SYSVIEW_PrintfHost("error %i", error);
-#endif
+		} else {
+			set_ams_error_ext(0);
+			set_imd_error_ext(0);
+			__error = 0;
 		}
 
-		/* Latch the ams_error for 500 ms */
-		osDelay(0.500 * TICK2HZ);
+		/* Wait until next period */
+		while (next_tick < osKernelGetTickCount()) {
+			next_tick += tick_increment;
+		}
+		osDelayUntil(next_tick);
 	}
 }
 
@@ -952,11 +965,22 @@ void start_SIM_task(void *argument) {
 
 		SIM0_step();
 
-		can1_dbu_status_1_transmit();
-		can2_ivt_msg_result_i_transmit();
-		can2_ivt_msg_result_u1_transmit();
-		can2_ivt_msg_result_u3_transmit();
+		if ((k % 4) == 0) {
+			can1_dbu_status_1_transmit();
+		}
+		if ((k % 4) == 1) {
+			can2_ivt_msg_result_i_transmit();
 
+		}
+		if ((k % 4) == 2) {
+			can2_ivt_msg_result_u1_transmit();
+
+		}
+		if ((k % 4) == 3) {
+			can2_ivt_msg_result_u3_transmit();
+
+		}
+		k++;
 
 		/* Wait until next period */
 		while (next_tick < osKernelGetTickCount()) {

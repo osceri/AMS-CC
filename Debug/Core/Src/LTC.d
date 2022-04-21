@@ -1,4 +1,4 @@
-Core/Src/rtos_LTC.o: ../Core/Src/rtos_LTC.c ../Core/Inc/main.h \
+Core/Src/LTC.o: ../Core/Src/LTC.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -52,7 +52,7 @@ Core/Src/rtos_LTC.o: ../Core/Src/rtos_LTC.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- ../Core/Inc/rtos_LTC.h
+ ../Core/Inc/LTC.h ../Core/Inc/main.h
 
 ../Core/Inc/main.h:
 
@@ -162,4 +162,6 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_RTT
 
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 
-../Core/Inc/rtos_LTC.h:
+../Core/Inc/LTC.h:
+
+../Core/Inc/main.h:
