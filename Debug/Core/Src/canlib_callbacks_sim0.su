@@ -1,0 +1,6 @@
+canlib_callbacks_sim0.c:18:9:can2_ivt_msg_result_i_tx_callback	16	static
+canlib_callbacks_sim0.c:23:9:can2_ivt_msg_result_u1_tx_callback	16	static
+canlib_callbacks_sim0.c:28:9:can2_ivt_msg_result_u3_tx_callback	16	static
+canlib_callbacks_sim0.c:33:9:can2_cc_status_tx_callback	16	static
+canlib_callbacks_sim0.c:38:9:can1_dbu_status_1_tx_callback	16	static
+canlib_callbacks_sim0.c:43:6:can2_charger_config_rx_callback	16	static

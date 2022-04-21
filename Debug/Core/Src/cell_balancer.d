@@ -33,6 +33,8 @@ Core/Src/cell_balancer.o: ../Core/Src/cell_balancer.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
+ ../Core/Inc/programme_data.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile_data.h \
  ../Core/Inc/programme_queues.h ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
@@ -126,6 +128,10 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile_callbacks.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
+
+../Core/Inc/programme_data.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile_data.h:
 

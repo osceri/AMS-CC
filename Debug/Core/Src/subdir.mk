@@ -14,6 +14,7 @@ C_SRCS += \
 ../Core/Src/adc.c \
 ../Core/Src/can.c \
 ../Core/Src/canlib_callbacks.c \
+../Core/Src/canlib_callbacks_sim0.c \
 ../Core/Src/cell_balancer.c \
 ../Core/Src/dma.c \
 ../Core/Src/freertos.c \
@@ -41,6 +42,7 @@ OBJS += \
 ./Core/Src/adc.o \
 ./Core/Src/can.o \
 ./Core/Src/canlib_callbacks.o \
+./Core/Src/canlib_callbacks_sim0.o \
 ./Core/Src/cell_balancer.o \
 ./Core/Src/dma.o \
 ./Core/Src/freertos.o \
@@ -68,6 +70,7 @@ C_DEPS += \
 ./Core/Src/adc.d \
 ./Core/Src/can.d \
 ./Core/Src/canlib_callbacks.d \
+./Core/Src/canlib_callbacks_sim0.d \
 ./Core/Src/cell_balancer.d \
 ./Core/Src/dma.d \
 ./Core/Src/freertos.d \
@@ -93,7 +96,7 @@ Core/Src/%.o: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/COM.d ./Core/Src/COM.o ./Core/Src/FAN.d ./Core/Src/FAN.o ./Core/Src/IMD.d ./Core/Src/IMD.o ./Core/Src/PID.d ./Core/Src/PID.o ./Core/Src/SEGGER_SYSVIEW_Config_FreeRTOS.d ./Core/Src/SEGGER_SYSVIEW_Config_FreeRTOS.o ./Core/Src/SEGGER_SYSVIEW_FreeRTOS.d ./Core/Src/SEGGER_SYSVIEW_FreeRTOS.o ./Core/Src/adc.d ./Core/Src/adc.o ./Core/Src/can.d ./Core/Src/can.o ./Core/Src/canlib_callbacks.d ./Core/Src/canlib_callbacks.o ./Core/Src/cell_balancer.d ./Core/Src/cell_balancer.o ./Core/Src/dma.d ./Core/Src/dma.o ./Core/Src/freertos.d ./Core/Src/freertos.o ./Core/Src/gpio.d ./Core/Src/gpio.o ./Core/Src/iwdg.d ./Core/Src/iwdg.o ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/programme_functions.d ./Core/Src/programme_functions.o ./Core/Src/rtos_LTC.d ./Core/Src/rtos_LTC.o ./Core/Src/spi.d ./Core/Src/spi.o ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_timebase_tim.d ./Core/Src/stm32f4xx_hal_timebase_tim.o ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/tim.d ./Core/Src/tim.o
+	-$(RM) ./Core/Src/COM.d ./Core/Src/COM.o ./Core/Src/FAN.d ./Core/Src/FAN.o ./Core/Src/IMD.d ./Core/Src/IMD.o ./Core/Src/PID.d ./Core/Src/PID.o ./Core/Src/SEGGER_SYSVIEW_Config_FreeRTOS.d ./Core/Src/SEGGER_SYSVIEW_Config_FreeRTOS.o ./Core/Src/SEGGER_SYSVIEW_FreeRTOS.d ./Core/Src/SEGGER_SYSVIEW_FreeRTOS.o ./Core/Src/adc.d ./Core/Src/adc.o ./Core/Src/can.d ./Core/Src/can.o ./Core/Src/canlib_callbacks.d ./Core/Src/canlib_callbacks.o ./Core/Src/canlib_callbacks_sim0.d ./Core/Src/canlib_callbacks_sim0.o ./Core/Src/cell_balancer.d ./Core/Src/cell_balancer.o ./Core/Src/dma.d ./Core/Src/dma.o ./Core/Src/freertos.d ./Core/Src/freertos.o ./Core/Src/gpio.d ./Core/Src/gpio.o ./Core/Src/iwdg.d ./Core/Src/iwdg.o ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/programme_functions.d ./Core/Src/programme_functions.o ./Core/Src/rtos_LTC.d ./Core/Src/rtos_LTC.o ./Core/Src/spi.d ./Core/Src/spi.o ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_timebase_tim.d ./Core/Src/stm32f4xx_hal_timebase_tim.o ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/tim.d ./Core/Src/tim.o
 
 .PHONY: clean-Core-2f-Src
 

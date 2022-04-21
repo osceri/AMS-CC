@@ -21,25 +21,30 @@ typedef struct {
 	uint8_t IMD_error_latched;
 	uint8_t SC_probe;
 	uint8_t IMD_ok;
-	uint8_t AIR_plus_closed;
-	uint8_t AIR_minus_closed;
 	uint8_t precharge_closed;
+	uint8_t AIR_minus_closed;
+	uint8_t AIR_plus_closed;
+	uint8_t enable_precharge;
+	uint8_t enable_AIR_minus;
+	uint8_t enable_AIR_plus;
 } GPIO_t;
+GPIO_t _GPIO;
 
 typedef struct {
 	double duty_cycle;
 	double frequency;
 } IMD_t;
+IMD_t _IMD;
 
 typedef struct {
 	double duty_cycle;
 } pPID_t;
 
 typedef struct {
-   double precharge_resistor;
-   double fuse;
-   double aux_1;
-   double aux_2;
+	double precharge_resistor;
+	double fuse;
+	double aux_1;
+	double aux_2;
 } temperatures_t;
 
 typedef struct {
@@ -52,7 +57,6 @@ typedef struct {
 	double SOC;
 	double SOH;
 } CSE_t;
-
 
 typedef enum {
 	ERROR_NO_ERROR = 0,
@@ -84,7 +88,5 @@ typedef enum {
 	ERROR_SM_DRIVE_FORCE_QUIT = 131,
 	ERROR_SM_CHARGE_FORCE_QUIT = 141
 } error_t;
-
-
 
 #endif /* INC_PROGRAMME_DATA_H_ */

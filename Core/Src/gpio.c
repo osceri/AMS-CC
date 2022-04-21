@@ -1,27 +1,28 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file    gpio.c
-  * @brief   This file provides code for the configuration
-  *          of all used GPIO pins.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    gpio.c
+ * @brief   This file provides code for the configuration
+ *          of all used GPIO pins.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2022 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
+#include "canlib_data.h"
 
 /* USER CODE END 0 */
 
@@ -63,8 +64,8 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PEPin PEPin PEPin */
   GPIO_InitStruct.Pin = AIR_plus_closed_Pin|AIR_minus_closed_Pin|precharge_closed_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PAPin PAPin PAPin */
@@ -81,11 +82,17 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PBPin PBPin */
-  GPIO_InitStruct.Pin = SC_probe_Pin|IMD_ok_Pin;
+  /*Configure GPIO pin : PtPin */
+  GPIO_InitStruct.Pin = SC_probe_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(SC_probe_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PtPin */
+  GPIO_InitStruct.Pin = IMD_ok_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(IMD_ok_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PCPin PCPin */
   GPIO_InitStruct.Pin = AMS_error_latched_Pin|IMD_error_latched_Pin;
@@ -93,8 +100,47 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
 }
 
 /* USER CODE BEGIN 2 */
+
+/* RELAY MONITORING */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+#ifdef SIMULATION
+	switch (GPIO_Pin) {
+	case IMD_ok_Pin:
+		_GPIO.IMD_ok = get_imd_ok_ext();
+		__raise_imd_error(ERROR_IMD);
+		break;
+	case precharge_closed_Pin:
+		_GPIO.precharge_closed = get_precharge_ext();
+		_GPIO.enable_AIR_minus = get_set_precharge_ext();
+		if (_GPIO.precharge_closed != _GPIO.enable_precharge) {
+			__raise_ams_error(ERROR_PRECHARGE);
+		}
+	case AIR_minus_closed_Pin:
+		_GPIO.AIR_minus_closed = get_air_minus_ext();
+		_GPIO.enable_AIR_minus = get_set_air_minus_ext();
+		if (_GPIO.AIR_minus_closed != _GPIO.enable_AIR_minus) {
+			__raise_ams_error(ERROR_AIR_MINUS);
+		}
+		break;
+	case AIR_plus_closed_Pin:
+		_GPIO.AIR_plus_closed = get_air_plus_ext();
+		_GPIO.enable_AIR_plus = get_set_air_plus_ext();
+		if (_GPIO.AIR_plus_closed != _GPIO.enable_AIR_plus) {
+			__raise_ams_error(ERROR_AIR_PLUS);
+		}
+		break;
+	}
+#endif
+}
 
 /* USER CODE END 2 */

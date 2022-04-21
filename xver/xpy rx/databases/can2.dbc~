@@ -1,0 +1,208 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: MCU AMK1 AMK2 AMK3 AMK4 IVT AMS charger CC
+
+
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ NewSignal_0002 : 1|7@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 643 amk1_actual_values_1: 8 AMK1
+ SG_ amk1_status_system_ready : 8|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk1_status_error : 9|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk1_status_warning : 10|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk1_status_quit_dc_on : 11|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk1_status_dc_on : 12|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk1_status_quit_inverter_on : 13|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk1_status_inverter_on : 14|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk1_derating : 15|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk1_actual_velocity : 16|16@1- (1,0) [0|0] "rpm" Vector__XXX
+ SG_ amk1_torque_current : 32|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ amk1_magnetizing_current : 48|16@1- (1,0) [0|0] "" Vector__XXX
+
+BO_ 645 amk1_actual_values_2: 8 AMK1
+ SG_ amk1_temp_motor : 0|16@1- (0.1,0) [0|0] "C" Vector__XXX
+ SG_ amk1_temp_inverter : 16|16@1- (0.1,0) [0|0] "C" Vector__XXX
+ SG_ amk1_error_info : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk1_temp_igbt : 48|16@1- (0.1,0) [0|0] "C" Vector__XXX
+
+BO_ 388 amk1_setpoints_1: 8 MCU
+ SG_ amk1_control_inverter_on : 8|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
+ SG_ amk1_control_dc_on : 9|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
+ SG_ amk1_control_enable : 10|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
+ SG_ amk1_control_error_reset : 11|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
+ SG_ amk1_target_velocity : 16|16@1- (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
+ SG_ amk1_torque_limit_positiv : 32|16@1- (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
+ SG_ amk1_torque_limit_negativ : 48|16@1- (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
+
+BO_ 644 amk2_actual_values_1: 8 AMK2
+ SG_ amk2_system_ready : 8|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_error : 9|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_warning : 10|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_status_quit_dc_on : 11|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_status_dc_on : 12|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_status_quit_inverter_on : 13|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_status_inverter_on : 14|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_status_derating : 15|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_actual_velocity : 16|16@1- (1,0) [0|0] "rpm" Vector__XXX
+ SG_ amk2_torque_current : 32|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_magnetizing_current : 48|16@1- (1,0) [0|0] "" Vector__XXX
+
+BO_ 646 amk2_actual_values_2: 8 AMK2
+ SG_ amk2_temp_motor : 0|16@1- (0.1,0) [0|0] "C" Vector__XXX
+ SG_ amk2_temp_inverter : 16|16@1- (0.1,0) [0|0] "C" Vector__XXX
+ SG_ amk2_error_info : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_temp_igbt : 48|16@1- (0.1,0) [0|0] "C" Vector__XXX
+
+BO_ 389 amk2_setpoints_1: 8 MCU
+ SG_ amk2_control_inverter_on : 8|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_control_dc_on : 9|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_control_enable : 10|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_control_error_reset : 11|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_target_velocity : 16|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_torque_limit_positiv : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ amk2_torque_limit_negativ : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 647 amk3_actual_values_1: 8 AMK3
+
+BO_ 649 amk3_actual_values_2: 8 AMK3
+
+BO_ 392 amk3_setpoints_1: 8 MCU
+
+BO_ 648 amk4_actual_values_1: 8 AMK4
+
+BO_ 656 amk4_actual_values_2: 8 AMK4
+
+BO_ 393 amk4_setpoints_1: 8 MCU
+
+BO_ 1041 IVT_msg_command: 8 IVT
+
+BO_ 1297 IVT_msg_response: 8 IVT
+
+BO_ 1313 IVT_msg_result_I: 6 AMS
+ SG_ I_ts : 7|48@0- (0.001,0) [0|0] "A" AMS
+
+BO_ 1314 IVT_msg_result_U1: 6 AMS
+ SG_ U_cells : 7|48@0- (0.001,0) [0|0] "V" AMS
+
+BO_ 1315 IVT_msg_result_U2: 6 IVT
+ SG_ U_fuse : 7|48@0- (0.001,0) [0|0] "V" Vector__XXX
+
+BO_ 1316 IVT_msg_result_U3: 6 AMS
+ SG_ U_vehicle : 7|48@0- (0.001,0) [0|0] "V" AMS
+
+BO_ 1317 IVT_msg_result_T: 6 IVT
+ SG_ IVT_temperature : 7|48@0- (0.1,0) [0|0] "C" Vector__XXX
+
+BO_ 1318 IVT_msg_result_W: 6 IVT
+ SG_ W_ts : 7|48@0- (1,0) [0|0] "W" Vector__XXX
+
+BO_ 1319 IVT_msg_result_As: 6 IVT
+ SG_ TSA_available_capacity : 7|48@0- (1,0) [0|0] "As" Vector__XXX
+
+BO_ 1320 IVT_msg_result_Wh: 6 IVT
+ SG_ TSA_used_energy : 7|48@0- (1,0) [0|0] "Wh" Vector__XXX
+
+BO_ 624 charger_config: 4 AMS
+ SG_ set_mux M : 0|8@1+ (1,0) [0|0] "" AMS
+ SG_ MsgSetVoltageLimit m64 : 15|16@0+ (1,0) [0|900] "V" Vector__XXX
+ SG_ MsgSetCurrentLimit m65 : 15|16@0+ (0.1,0) [0|13.3] "A" Vector__XXX
+ SG_ MsgSetPowerLimit m66 : 15|16@0+ (1,0) [0|2559] "W" Vector__XXX
+ SG_ MsgSetEnabled m68 : 23|8@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ MsgSetTimeOut m68 : 31|8@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 592 cc_status: 1 CC,AMS
+ SG_ enable_ams_charging : 0|1@1+ (1,0) [0|1] "" AMS
+
+
+
+CM_ BO_ 643 "Periodic 5ms.";
+CM_ SG_ 643 amk1_status_system_ready "System ready (SBM).";
+CM_ SG_ 643 amk1_status_error "Error.";
+CM_ SG_ 643 amk1_status_warning "Warning.";
+CM_ SG_ 643 amk1_status_quit_dc_on "HV activation acknowledgment.";
+CM_ SG_ 643 amk1_status_dc_on "HV activation level.";
+CM_ SG_ 643 amk1_status_quit_inverter_on "Controller enable acknowledgment.";
+CM_ SG_ 643 amk1_status_inverter_on "Controller enable level.";
+CM_ SG_ 643 amk1_derating "Derating (torque limitation active).";
+CM_ SG_ 643 amk1_actual_velocity "Actual speed value.";
+CM_ SG_ 643 amk1_torque_current "Raw data for calculating 'actual torque current'.";
+CM_ SG_ 643 amk1_magnetizing_current "Raw data for calculating 'actual magnetizing current'.";
+CM_ BO_ 645 "Periodic 5ms.";
+CM_ SG_ 645 amk1_temp_motor "Motor temperature.";
+CM_ SG_ 645 amk1_temp_inverter "Cold plate temperature.";
+CM_ SG_ 645 amk1_error_info "Diagnostic number.";
+CM_ SG_ 645 amk1_temp_igbt "IGBT temperature.";
+CM_ BO_ 388 "Periodic< 50ms.";
+CM_ SG_ 388 amk1_control_inverter_on "Controller enable.";
+CM_ SG_ 388 amk1_control_dc_on "HV activation.";
+CM_ SG_ 388 amk1_control_enable "Driver enable.";
+CM_ SG_ 388 amk1_control_error_reset "Remove error (Setpoints must have value 0).";
+CM_ SG_ 388 amk1_target_velocity "Speed setpoint.";
+CM_ SG_ 388 amk1_torque_limit_positiv "Positive torque limit.";
+CM_ SG_ 388 amk1_torque_limit_negativ "Negative torque limit.";
+CM_ BO_ 644 "Periodic 5ms.";
+CM_ BO_ 646 "Periodic 5ms.";
+CM_ BO_ 389 "Periodic< 50ms.";
+CM_ BO_ 647 "Periodic 5ms.";
+CM_ BO_ 649 "Periodic 5ms.";
+CM_ BO_ 392 "Periodic< 50ms.";
+CM_ BO_ 648 "Periodic 5ms.";
+CM_ BO_ 656 "Periodic 5ms.";
+CM_ BO_ 393 "Periodic< 50ms.";
+CM_ BO_ 1041 "Event. IVT Initialization.";
+CM_ BO_ 1297 "Event. After IVT Initialization.";
+CM_ BO_ 1313 "Periodic 20ms.";
+CM_ BO_ 1314 "Periodic 60ms.";
+CM_ BO_ 1315 "Periodic 60ms.";
+CM_ BO_ 1316 "Periodic 60ms.";
+CM_ BO_ 1317 "Periodic 100ms.";
+CM_ BO_ 1318 "Periodic 30ms.";
+CM_ BO_ 1319 "Event. Reset by AMS after charging.";
+CM_ BO_ 1320 "Event. Reset by AMS after charging.";
+CM_ SG_ 624 MsgSetVoltageLimit "Chargers in series should be treated as one unit";
+CM_ SG_ 624 MsgSetCurrentLimit "Chargers in series should be treated as one unit";
+CM_ SG_ 624 MsgSetPowerLimit "Chargers in series should be treated as one unit";
+CM_ SG_ 624 MsgSetTimeOut "TODO: what is tome out time?";
+CM_ BO_ 592 "";
+CM_ SG_ 592 enable_ams_charging "signal that enables/informs AMS to start charging sequence";
+VAL_ 624 MsgSetEnabled 1 "enable" 0 "disable" ;
+VAL_ 592 enable_ams_charging 0 "DISABLE" 1 "ENABLE" ;
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 65535;
+BA_DEF_DEF_  "GenMsgCycleTime" 0;
+BA_ "GenMsgCycleTime" BO_ 32 400;
+BA_ "GenMsgCycleTime" BO_ 33 800;
+BA_ "GenMsgCycleTime" BO_ 34 1200;
+BA_ "GenMsgCycleTime" BO_ 35 1200;

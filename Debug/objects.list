@@ -10,6 +10,7 @@
 "./Core/Src/adc.o"
 "./Core/Src/can.o"
 "./Core/Src/canlib_callbacks.o"
+"./Core/Src/canlib_callbacks_sim0.o"
 "./Core/Src/cell_balancer.o"
 "./Core/Src/dma.o"
 "./Core/Src/freertos.o"

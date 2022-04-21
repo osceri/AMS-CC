@@ -34,7 +34,6 @@ static float timer_r2;
 ams_state_t ams_precharge_drive_close_air_minus_function() {
    if((timer_r2 < 2)&&ams_inputs.air_minus_closed) {
        ams_outputs.close_precharge=1;
-       ams_outputs.air_minus_closed_s=1;
        timer_r2 = 0;
        return STATE_AMS_PRECHARGE_DRIVE_CLOSE_PRECHARGE;
    }
@@ -51,7 +50,6 @@ ams_state_t ams_precharge_drive_close_air_minus_function() {
 
 ams_state_t ams_precharge_drive_close_precharge_function() {
    if((timer_r2 < 2)&&ams_inputs.precharge_closed) {
-       ams_outputs.precharge_closed_s=1;
        timer_r2 = 0;
        return STATE_AMS_PRECHARGE_DRIVE_WAIT;
    }
@@ -91,7 +89,6 @@ ams_state_t ams_precharge_drive_wait_function() {
 ams_state_t ams_precharge_drive_close_air_plus_function() {
    if((timer_r2 < 2)&&ams_inputs.air_plus_closed) {
        ams_outputs.close_precharge=0;
-       ams_outputs.air_plus_closed_s=1;
        timer_r2 = 0;
        return STATE_AMS_PRECHARGE_DRIVE_OPEN_PRECHARGE;
    }
@@ -115,7 +112,6 @@ ams_state_t ams_precharge_drive_open_precharge_function() {
 
    if((timer_r2 < 2)&&!ams_inputs.precharge_closed) {
        ams_outputs.precharge_drive_complete=1;
-       ams_outputs.precharge_closed_s=0;
        timer_r2 = 0;
        return STATE_AMS_PRECHARGE_DRIVE_EXIT;
    }
@@ -227,11 +223,8 @@ ams_state_t ams_drive_drive_function() {
 ams_state_t ams_drive_end_drive_function() {
    if((timer_r2 < 7)&&(fabsf(ams_inputs.accumulator_current)<0.001)) {
        ams_outputs.close_air_plus=0;
-       ams_outputs.air_plus_closed_s=0;
        ams_outputs.close_air_minus=0;
-       ams_outputs.air_minus_closed_s=0;
        ams_outputs.close_precharge=0;
-       ams_outputs.precharge_closed_s=0;
        ams_outputs.drive_complete=1;
        timer_r2 = 0;
        return STATE_AMS_DRIVE_EXIT;
@@ -239,11 +232,8 @@ ams_state_t ams_drive_end_drive_function() {
 
    if((timer_r2 > 7)) {
        ams_outputs.close_air_plus=0;
-       ams_outputs.air_plus_closed_s=0;
        ams_outputs.close_air_minus=0;
-       ams_outputs.air_minus_closed_s=0;
        ams_outputs.close_precharge=0;
-       ams_outputs.precharge_closed_s=0;
        ams_outputs.error=131;
        timer_r2 = 0;
        return STATE_AMS_DRIVE_FORCE_QUIT;
@@ -318,11 +308,8 @@ ams_state_t ams_error_0_function() {
 ams_state_t ams_error_error_detected_function() {
    if(1) {
        ams_outputs.close_air_plus=0;
-       ams_outputs.air_plus_closed_s=0;
        ams_outputs.close_air_minus=0;
-       ams_outputs.air_minus_closed_s=0;
        ams_outputs.close_precharge=0;
-       ams_outputs.precharge_closed_s=0;
        timer_r2 = 0;
        return STATE_AMS_ERROR_RELAYS_OPENED;
    }
@@ -383,7 +370,6 @@ ams_state_t ams_error_function() {
 ams_state_t ams_precharge_charge_close_air_minus_function() {
    if((timer_r2 < 2)&&ams_inputs.air_minus_closed) {
        ams_outputs.close_precharge=1;
-       ams_outputs.air_minus_closed_s=1;
        timer_r2 = 0;
        return STATE_AMS_PRECHARGE_CHARGE_CLOSE_PRECHARGE;
    }
@@ -400,7 +386,6 @@ ams_state_t ams_precharge_charge_close_air_minus_function() {
 
 ams_state_t ams_precharge_charge_close_precharge_function() {
    if((timer_r2 < 2)&&ams_inputs.precharge_closed) {
-       ams_outputs.precharge_closed_s=1;
        timer_r2 = 0;
        return STATE_AMS_PRECHARGE_CHARGE_WAIT;
    }
@@ -440,7 +425,6 @@ ams_state_t ams_precharge_charge_wait_function() {
 ams_state_t ams_precharge_charge_close_air_plus_function() {
    if((timer_r2 < 2)&&ams_inputs.air_plus_closed) {
        ams_outputs.close_precharge=0;
-       ams_outputs.air_plus_closed_s=1;
        timer_r2 = 0;
        return STATE_AMS_PRECHARGE_CHARGE_OPEN_PRECHARGE;
    }
@@ -464,7 +448,6 @@ ams_state_t ams_precharge_charge_open_precharge_function() {
 
    if((timer_r2 < 2)&&!ams_inputs.precharge_closed) {
        ams_outputs.precharge_charge_complete=1;
-       ams_outputs.precharge_closed_s=0;
        timer_r2 = 0;
        return STATE_AMS_PRECHARGE_CHARGE_EXIT;
    }
@@ -583,11 +566,8 @@ ams_state_t ams_charge_charge_function() {
 ams_state_t ams_charge_end_charge_function() {
    if((timer_r2 < 7)&&(fabsf(ams_inputs.accumulator_current)<0.001)) {
        ams_outputs.close_air_plus=0;
-       ams_outputs.air_plus_closed_s=0;
        ams_outputs.close_air_minus=0;
-       ams_outputs.air_minus_closed_s=0;
        ams_outputs.close_precharge=0;
-       ams_outputs.precharge_closed_s=0;
        ams_outputs.charge_complete=1;
        timer_r2 = 0;
        return STATE_AMS_CHARGE_EXIT;
@@ -595,11 +575,8 @@ ams_state_t ams_charge_end_charge_function() {
 
    if((timer_r2 > 7)) {
        ams_outputs.close_air_plus=0;
-       ams_outputs.air_plus_closed_s=0;
        ams_outputs.close_air_minus=0;
-       ams_outputs.air_minus_closed_s=0;
        ams_outputs.close_precharge=0;
-       ams_outputs.precharge_closed_s=0;
        ams_outputs.error=141;
        timer_r2 = 0;
        return STATE_AMS_CHARGE_FORCE_QUIT;

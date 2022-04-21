@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "programme_data.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -63,10 +63,13 @@ void Error_Handler(void);
 #define enable_AIR_minus_GPIO_Port GPIOE
 #define AIR_plus_closed_Pin GPIO_PIN_4
 #define AIR_plus_closed_GPIO_Port GPIOE
+#define AIR_plus_closed_EXTI_IRQn EXTI4_IRQn
 #define AIR_minus_closed_Pin GPIO_PIN_5
 #define AIR_minus_closed_GPIO_Port GPIOE
+#define AIR_minus_closed_EXTI_IRQn EXTI9_5_IRQn
 #define precharge_closed_Pin GPIO_PIN_6
 #define precharge_closed_GPIO_Port GPIOE
+#define precharge_closed_EXTI_IRQn EXTI9_5_IRQn
 #define precharge_resistor_temperature_Pin GPIO_PIN_1
 #define precharge_resistor_temperature_GPIO_Port GPIOA
 #define fuse_resistor_temperature_Pin GPIO_PIN_2
@@ -110,6 +113,12 @@ void Error_Handler(void);
 #define SIMULATION
 
 #define STREAM_DATA
+
+error_t __error;
+
+void __raise_ams_error(error_t error);
+
+void __raise_imd_error(error_t error);
 
 /* USER CODE END Private defines */
 
