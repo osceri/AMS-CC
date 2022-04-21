@@ -31,12 +31,13 @@ uint8_t can2_ivt_msg_result_u3_tx_callback(ivt_msg_result_u3_t* ivt_msg_result_u
 }
 
 uint8_t can2_cc_status_tx_callback(cc_status_t* cc_status) {
-	cc_status->enable_ams_charging = 0;
+	cc_status->enable_ams_charging = SIM0_U.charge && !SIM0_U.drive;
 	return 1;
 }
 
 uint8_t can1_dbu_status_1_tx_callback(dbu_status_1_t* dbu_status_1) {
-	dbu_status_1->activate_ts_button = 0;
+	dbu_status_1->activate_ts_button = SIM0_U.drive && !SIM0_U.charge;
+	dbu_status_1->ready_to_drive_button = SIM0_U.charge && SIM0_U.drive;
 	return 1;
 }
 

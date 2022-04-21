@@ -23,6 +23,7 @@
 
 /* USER CODE BEGIN 0 */
 #include "canlib_data.h"
+#include "programme_data.h"
 
 /* USER CODE END 0 */
 
@@ -116,26 +117,26 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 #ifdef SIMULATION
 	switch (GPIO_Pin) {
 	case IMD_ok_Pin:
-		_GPIO.IMD_ok = get_imd_ok_ext();
+		GPIO.IMD_ok = get_imd_ok_ext();
 		__raise_imd_error(ERROR_IMD);
 		break;
 	case precharge_closed_Pin:
-		_GPIO.precharge_closed = get_precharge_ext();
-		_GPIO.enable_AIR_minus = get_set_precharge_ext();
-		if (_GPIO.precharge_closed != _GPIO.enable_precharge) {
+		GPIO.precharge_closed = get_precharge_ext();
+		GPIO.enable_AIR_minus = get_set_precharge_ext();
+		if (GPIO.precharge_closed != GPIO.enable_precharge) {
 			__raise_ams_error(ERROR_PRECHARGE);
 		}
 	case AIR_minus_closed_Pin:
-		_GPIO.AIR_minus_closed = get_air_minus_ext();
-		_GPIO.enable_AIR_minus = get_set_air_minus_ext();
-		if (_GPIO.AIR_minus_closed != _GPIO.enable_AIR_minus) {
+		GPIO.AIR_minus_closed = get_air_minus_ext();
+		GPIO.enable_AIR_minus = get_set_air_minus_ext();
+		if (GPIO.AIR_minus_closed != GPIO.enable_AIR_minus) {
 			__raise_ams_error(ERROR_AIR_MINUS);
 		}
 		break;
 	case AIR_plus_closed_Pin:
-		_GPIO.AIR_plus_closed = get_air_plus_ext();
-		_GPIO.enable_AIR_plus = get_set_air_plus_ext();
-		if (_GPIO.AIR_plus_closed != _GPIO.enable_AIR_plus) {
+		GPIO.AIR_plus_closed = get_air_plus_ext();
+		GPIO.enable_AIR_plus = get_set_air_plus_ext();
+		if (GPIO.AIR_plus_closed != GPIO.enable_AIR_plus) {
 			__raise_ams_error(ERROR_AIR_PLUS);
 		}
 		break;

@@ -16,6 +16,8 @@
 void can1_dbu_status_1_rx_callback(dbu_status_1_t *dbu_status_1) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	xQueueOverwriteFromISR(start_drive_queue,
+			&dbu_status_1->activate_ts_button, &xHigherPriorityTaskWoken);
+	xQueueOverwriteFromISR(start_balance_queue,
 			&dbu_status_1->ready_to_drive_button, &xHigherPriorityTaskWoken);
 	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }

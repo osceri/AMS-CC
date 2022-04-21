@@ -7,17 +7,20 @@
 C_SRCS += \
 ../Core/Src/CANC/can1.c \
 ../Core/Src/CANC/can2.c \
-../Core/Src/CANC/canlib.c 
+../Core/Src/CANC/canlib.c \
+../Core/Src/CANC/canlib_callbacks.c 
 
 OBJS += \
 ./Core/Src/CANC/can1.o \
 ./Core/Src/CANC/can2.o \
-./Core/Src/CANC/canlib.o 
+./Core/Src/CANC/canlib.o \
+./Core/Src/CANC/canlib_callbacks.o 
 
 C_DEPS += \
 ./Core/Src/CANC/can1.d \
 ./Core/Src/CANC/can2.d \
-./Core/Src/CANC/canlib.d 
+./Core/Src/CANC/canlib.d \
+./Core/Src/CANC/canlib_callbacks.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -27,7 +30,7 @@ Core/Src/CANC/%.o: ../Core/Src/CANC/%.c Core/Src/CANC/subdir.mk
 clean: clean-Core-2f-Src-2f-CANC
 
 clean-Core-2f-Src-2f-CANC:
-	-$(RM) ./Core/Src/CANC/can1.d ./Core/Src/CANC/can1.o ./Core/Src/CANC/can2.d ./Core/Src/CANC/can2.o ./Core/Src/CANC/canlib.d ./Core/Src/CANC/canlib.o
+	-$(RM) ./Core/Src/CANC/can1.d ./Core/Src/CANC/can1.o ./Core/Src/CANC/can2.d ./Core/Src/CANC/can2.o ./Core/Src/CANC/canlib.d ./Core/Src/CANC/canlib.o ./Core/Src/CANC/canlib_callbacks.d ./Core/Src/CANC/canlib_callbacks.o
 
 .PHONY: clean-Core-2f-Src-2f-CANC
 

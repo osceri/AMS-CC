@@ -17,30 +17,13 @@
 #static uint32_t tx_mailbox;
 #static uint8_t rx_data[8];
 #
-
 for system in systems:
-    for message in system.rx_messages:
-        #/*
-        # * @Brief  
-        # * @Param  A pointer to the message which was received
-        # * @Retval None
-        # */
-        #__weak void $system.name$_$message.name$_rx_callback($message.name$_t* $message.name$) {
-        #
-        #}
-        #
-
-for system in systems:
-    for message in system.tx_messages:
-        #/*
-        # * @Brief  
-        # * @Param  A pointer to a message which should be sent
-        # * @Retval Return 1 if the data entered in $message.name$ should be sent
-        # */
-        #__weak uint8_t $system.name$_$message.name$_tx_callback($message.name$_t* $message.name$) {
-        #
-        #}
-        #
+    max_len = round(1.5*sum(len(msg.multiplexer_ids) for msg in system.tx_messages))
+    #static $system.name$_tx_filo_max = $max_len$;
+    #static $system.name$_tx_filo_index = 0;
+    #static can_queue_element_t $system.name$_tx_filo[$max_len$];
+    #
+#
 
 for system in systems:
     for message in system.rx_messages:
@@ -126,17 +109,15 @@ for system in systems:
             for multiplexer_id in message.multiplexer_ids:
                 #       $system.name$_$message.name$.$message.multiplexer$ = $multiplexer_id$;
                 #       $system.name$_$message.name$_pack(tx_data, &$system.name$_$message.name$, $message.length$);
-                #       while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_h$system.name$)) {
-                #           if (HAL_CAN_AddTxMessage(_h$system.name$, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+                #       while(!HAL_CAN_GetTxMailboxesFreeLevel(_h$system.name$));
+                #       if (HAL_CAN_AddTxMessage(_h$system.name$, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
                 #           Error_Handler();
-                #           }
                 #       }
         else:
             #   $system.name$_$message.name$_pack(tx_data, &$system.name$_$message.name$, $message.length$);
-            #   while(0 < HAL_CAN_GetTxMailboxesFreeLevel(_h$system.name$)) {
-            #       if (HAL_CAN_AddTxMessage(_h$system.name$, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
+            #   while(!HAL_CAN_GetTxMailboxesFreeLevel(_h$system.name$));
+            #   if (HAL_CAN_AddTxMessage(_h$system.name$, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
             #       Error_Handler();
-            #       }
             #   }
 
         #}
@@ -162,7 +143,6 @@ for system in systems:
 
 #void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 #   CAN_RxHeaderTypeDef rx_header;
-#   static uint8_t rx_data[8];
 #
 #   if (HAL_OK == HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data)) {
 #       switch(rx_header.StdId) {
@@ -178,7 +158,6 @@ for system in systems:
 
 #void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 #   CAN_RxHeaderTypeDef rx_header;
-#   static uint8_t rx_data[8];
 #
 #   if (HAL_OK == HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO1, &rx_header, rx_data)) {
 #       switch(rx_header.StdId) {
@@ -190,6 +169,9 @@ for system in systems:
 #        }
 #    }
 #}
+#
+
+
 #
 #void simple_filter() {
 #   CAN_FilterTypeDef filter_config;

@@ -76,7 +76,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/LTC.h ../Core/Inc/main.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_callbacks.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h \
- C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib.h
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/can1.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/can2.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_callbacks.h
 
 ../Core/Inc/LTC.h:
 
@@ -255,3 +258,9 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_callbacks.h:
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/can1.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/can2.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_callbacks.h:

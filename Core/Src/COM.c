@@ -17,7 +17,6 @@ static uint8_t under_temperatures[60];
 static uint8_t over_current;
 static uint8_t under_current;
 
-
 /*
  * @Brief	Increments if true, resets (to zero) otherwise
  * @Param	A conditional statement which evaluates to true or false

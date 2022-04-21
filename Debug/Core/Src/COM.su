@@ -1,4 +1,4 @@
-COM.c:27:13:inc_res	16	static
-COM.c:41:9:COM_voltages_ok	48	static
-COM.c:69:9:COM_temperatures_ok	48	static
-COM.c:99:9:COM_current_ok	40	static
+COM.c:26:13:inc_res	16	static
+COM.c:40:9:COM_voltages_ok	48	static
+COM.c:68:9:COM_temperatures_ok	48	static
+COM.c:98:9:COM_current_ok	40	static

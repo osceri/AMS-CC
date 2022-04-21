@@ -28,13 +28,12 @@ typedef struct {
 	uint8_t enable_AIR_minus;
 	uint8_t enable_AIR_plus;
 } GPIO_t;
-GPIO_t _GPIO;
+GPIO_t GPIO;
 
 typedef struct {
 	double duty_cycle;
 	double frequency;
 } IMD_t;
-IMD_t _IMD;
 
 typedef struct {
 	double duty_cycle;

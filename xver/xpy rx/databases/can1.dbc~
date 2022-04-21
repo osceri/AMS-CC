@@ -105,9 +105,10 @@ BO_ 56 swu_status: 8 SWU
  SG_ encoder_1_button : 18|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ encoder_2_button : 19|1@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 64 dbu_status_1: 8 DBU
+BO_ 64 dbu_status_1: 8 AMS
  SG_ activate_ts_button : 0|1@1+ (1,0) [0|0] "" AMS
  SG_ ready_to_drive_button : 1|1@1+ (1,0) [0|0] "" CCU
+ SG_ enable_ams_balancing : 2|1@1+ (1,0) [0|0] "" AMS
  SG_ dbu_temperature : 4|12@1- (0.04884,-10) [-10|190] "C" Vector__XXX
 
 BO_ 35 ams_temperatures: 6 AMS

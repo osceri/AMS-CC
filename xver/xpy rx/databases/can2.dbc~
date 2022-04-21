@@ -59,13 +59,13 @@ BO_ 645 amk1_actual_values_2: 8 AMK1
  SG_ amk1_temp_igbt : 48|16@1- (0.1,0) [0|0] "C" Vector__XXX
 
 BO_ 388 amk1_setpoints_1: 8 MCU
- SG_ amk1_control_inverter_on : 8|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
- SG_ amk1_control_dc_on : 9|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
- SG_ amk1_control_enable : 10|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
- SG_ amk1_control_error_reset : 11|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
- SG_ amk1_target_velocity : 16|16@1- (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
- SG_ amk1_torque_limit_positiv : 32|16@1- (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
- SG_ amk1_torque_limit_negativ : 48|16@1- (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,AMS
+ SG_ amk1_control_inverter_on : 8|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,IVT,AMS
+ SG_ amk1_control_dc_on : 9|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,IVT,AMS
+ SG_ amk1_control_enable : 10|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,IVT,AMS
+ SG_ amk1_control_error_reset : 11|1@1+ (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,IVT,AMS
+ SG_ amk1_target_velocity : 16|16@1- (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,IVT,AMS
+ SG_ amk1_torque_limit_positiv : 32|16@1- (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,IVT,AMS
+ SG_ amk1_torque_limit_negativ : 48|16@1- (1,0) [0|0] ""  AMK1,AMK2,AMK3,AMK4,IVT,AMS
 
 BO_ 644 amk2_actual_values_1: 8 AMK2
  SG_ amk2_system_ready : 8|1@1+ (1,0) [0|0] "" Vector__XXX
@@ -143,8 +143,9 @@ BO_ 624 charger_config: 4 AMS
  SG_ MsgSetEnabled m68 : 23|8@0+ (1,0) [0|1] "" Vector__XXX
  SG_ MsgSetTimeOut m68 : 31|8@0+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 592 cc_status: 1 CC,AMS
+BO_ 592 cc_status: 1 AMS
  SG_ enable_ams_charging : 0|1@1+ (1,0) [0|1] "" AMS
+ SG_ enable_ams_balancing : 1|1@1+ (1,0) [0|1] "" AMS
 
 
 

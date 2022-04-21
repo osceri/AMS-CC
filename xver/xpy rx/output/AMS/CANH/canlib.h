@@ -7,6 +7,11 @@
 #ifndef INC_CANLIB_H_
 #define INC_CANLIB_H_
 
+#include "can1.h"
+#include "can2.h"
+#include "canlib_data.h"
+#include "canlib_callbacks.h"
+
 void initialize_CAN(CAN_HandleTypeDef* __hcan1, CAN_HandleTypeDef* __hcan2);
 
 /*
