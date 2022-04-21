@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-04-21T14:33:18.500Z" agent="5.0 (Windows)" etag="hYUVOPRTANzwxDC_M_L2" version="17.4.6" type="github" pages="8">
+<mxfile host="app.diagrams.net" modified="2022-04-21T14:34:57.789Z" agent="5.0 (Windows)" etag="94xLW_s86FoM5maKs7sR" version="17.4.6" type="github" pages="8">
   <diagram id="lIlviWQBLWVIYCWAqPnO" name="ams">
     <mxGraphModel dx="1153" dy="466" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -12,7 +12,7 @@
             <mxPoint x="18" as="offset" />
           </mxGeometry>
         </mxCell>
-        <UserObject label="error" id="Wpq-41JyHvb9T43JqeFV-1">
+        <UserObject label="error" link="data:page/id,4Eal9zZOS9WOm3qdCi38" id="Wpq-41JyHvb9T43JqeFV-1">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
             <mxGeometry x="390" y="210" width="120" height="60" as="geometry" />
           </mxCell>
@@ -56,7 +56,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <UserObject label="precharge_drive" id="BY5I_ytqbqJdd58V6ZN4-5">
+        <UserObject label="precharge_drive" link="data:page/id,uZr323zTnWptXHUSKYWT" id="BY5I_ytqbqJdd58V6ZN4-5">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
             <mxGeometry x="140" y="80" width="120" height="60" as="geometry" />
           </mxCell>
@@ -69,7 +69,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <UserObject label="precharge_charge" id="BY5I_ytqbqJdd58V6ZN4-10">
+        <UserObject label="precharge_charge" link="data:page/id,Ef1t-dHHU9oMEyzxMcuo" id="BY5I_ytqbqJdd58V6ZN4-10">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
             <mxGeometry x="140" y="340" width="120" height="60" as="geometry" />
           </mxCell>
@@ -88,7 +88,7 @@
             <mxPoint x="-89" y="6" as="offset" />
           </mxGeometry>
         </mxCell>
-        <UserObject label="charge" id="BY5I_ytqbqJdd58V6ZN4-15">
+        <UserObject label="charge" link="data:page/id,o0BBDSF6INu3mvJSLO7V" id="BY5I_ytqbqJdd58V6ZN4-15">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
             <mxGeometry x="470" y="340" width="120" height="60" as="geometry" />
           </mxCell>
@@ -107,7 +107,7 @@
             <mxPoint x="-80" y="-2" as="offset" />
           </mxGeometry>
         </mxCell>
-        <UserObject label="drive" id="BY5I_ytqbqJdd58V6ZN4-20">
+        <UserObject label="drive" link="data:page/id,-CS63IcI1riEPQ8zZ3c_" id="BY5I_ytqbqJdd58V6ZN4-20">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
             <mxGeometry x="470" y="80" width="120" height="60" as="geometry" />
           </mxCell>
@@ -172,7 +172,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <object label="balance" state="" id="8AC7MR8CE7blZJ-sdWgz-5">
+        <object label="balance" state="" link="data:page/id,DzXCORfQ2eGAM-OcjKNi" id="8AC7MR8CE7blZJ-sdWgz-5">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
             <mxGeometry x="540" y="210" width="120" height="60" as="geometry" />
           </mxCell>
