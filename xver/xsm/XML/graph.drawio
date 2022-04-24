@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-04-24T16:10:09.852Z" agent="5.0 (Windows)" etag="IDAxY_MEIqDGZlmbMfIe" version="17.4.6" type="github" pages="8">
+<mxfile host="app.diagrams.net" modified="2022-04-24T16:44:59.761Z" agent="5.0 (Windows)" etag="pkJoqIktkl0MUMHZ09tf" version="17.4.6" type="github" pages="8">
   <diagram id="lIlviWQBLWVIYCWAqPnO" name="ams">
     <mxGraphModel dx="1038" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -115,11 +115,11 @@
         <mxCell id="BY5I_ytqbqJdd58V6ZN4-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="BY5I_ytqbqJdd58V6ZN4-30" target="BY5I_ytqbqJdd58V6ZN4-5" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="105" y="110" />
+              <mxPoint x="105" y="90" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="BY5I_ytqbqJdd58V6ZN4-25" value="[SC&amp;amp;&amp;amp;drive&amp;amp;&amp;amp;(2.85 &amp;lt; minimum_cell_voltage_f64)]{}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="BY5I_ytqbqJdd58V6ZN4-24" vertex="1" connectable="0">
+        <mxCell id="BY5I_ytqbqJdd58V6ZN4-25" value="[SC&amp;amp;&amp;amp;drive&amp;amp;&amp;amp;(2.95 &amp;lt; minimum_cell_voltage_f64)]{}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="BY5I_ytqbqJdd58V6ZN4-24" vertex="1" connectable="0">
           <mxGeometry x="-0.0874" y="1" relative="1" as="geometry">
             <mxPoint x="6" y="1" as="offset" />
           </mxGeometry>
@@ -131,7 +131,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="BY5I_ytqbqJdd58V6ZN4-27" value="&lt;div&gt;[SC&amp;amp;&amp;amp;charge&amp;amp;&amp;amp;(maximum_cell_voltage_f64 &amp;lt; 4.15)]{&lt;/div&gt;&lt;div&gt;enable_charger = 1;}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="BY5I_ytqbqJdd58V6ZN4-26" vertex="1" connectable="0">
+        <mxCell id="BY5I_ytqbqJdd58V6ZN4-27" value="&lt;div&gt;[SC&amp;amp;&amp;amp;charge&amp;amp;&amp;amp;(maximum_cell_voltage_f64 &amp;lt; 4.05)]{&lt;/div&gt;&lt;div&gt;enable_charger = 1;}&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="BY5I_ytqbqJdd58V6ZN4-26" vertex="1" connectable="0">
           <mxGeometry x="0.2731" relative="1" as="geometry">
             <mxPoint x="15" y="-28" as="offset" />
           </mxGeometry>
@@ -181,7 +181,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="uZr323zTnWptXHUSKYWT" name="precharge_drive">
-    <mxGraphModel dx="1326" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1038" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -329,7 +329,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="Ef1t-dHHU9oMEyzxMcuo" name="precharge_charge">
-    <mxGraphModel dx="1326" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1038" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -487,7 +487,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="-CS63IcI1riEPQ8zZ3c_" name="drive">
-    <mxGraphModel dx="1326" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1038" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -562,7 +562,7 @@
         <mxCell id="PsCbVwXv-jA8KolUmENP-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="PsCbVwXv-jA8KolUmENP-5" target="PsCbVwXv-jA8KolUmENP-10" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="PsCbVwXv-jA8KolUmENP-4" value="[(maximum_cell_voltage_f64 &amp;gt; 4.19)||!charge]{enable_charger = 0;}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PsCbVwXv-jA8KolUmENP-3" vertex="1" connectable="0">
+        <mxCell id="PsCbVwXv-jA8KolUmENP-4" value="[(maximum_cell_voltage_f64 &amp;gt; 4.15)||!charge]{enable_charger = 0;}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PsCbVwXv-jA8KolUmENP-3" vertex="1" connectable="0">
           <mxGeometry x="-0.1333" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -651,7 +651,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="4Eal9zZOS9WOm3qdCi38" name="error">
-    <mxGraphModel dx="1326" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1038" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
