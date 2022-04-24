@@ -1,4 +1,4 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/LTC.h ../Core/Inc/main.h \
+Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -34,7 +34,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/LTC.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Core/Inc/programme_data.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h \
- ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  ../Core/Inc/FreeRTOSConfig.h \
@@ -53,8 +52,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/LTC.h ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- ../Core/Inc/adc.h ../Core/Inc/can.h ../Core/Inc/dma.h ../Core/Inc/iwdg.h \
- ../Core/Inc/spi.h ../Core/Inc/tim.h ../Core/Inc/gpio.h \
+ ../Core/Inc/adc.h ../Core/Inc/main.h ../Core/Inc/can.h ../Core/Inc/dma.h \
+ ../Core/Inc/iwdg.h ../Core/Inc/spi.h ../Core/Inc/tim.h \
+ ../Core/Inc/gpio.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_SYSVIEW.h \
@@ -68,6 +68,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/LTC.h ../Core/Inc/main.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE_types.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rt_nonfinite.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtGetInf.h \
+ ../Core/Inc/LTC.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0_types.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/SMILEH/smile_data.h \
@@ -80,8 +81,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/LTC.h ../Core/Inc/main.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/can1.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/can2.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_callbacks.h
-
-../Core/Inc/LTC.h:
 
 ../Core/Inc/main.h:
 
@@ -155,8 +154,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/LTC.h ../Core/Inc/main.h \
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h:
 
-../Core/Inc/main.h:
-
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
@@ -194,6 +191,8 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_RTT
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 
 ../Core/Inc/adc.h:
+
+../Core/Inc/main.h:
 
 ../Core/Inc/can.h:
 
@@ -240,6 +239,8 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE_types.h:
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rt_nonfinite.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtGetInf.h:
+
+../Core/Inc/LTC.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/SIM0.h:
 

@@ -16,9 +16,6 @@
 SPI_HandleTypeDef *hltc;
 
 uint8_t LTC_read_buffer[10], LTC_write_buffer[10], LTC_command_buffer[4];
-uint16_t LTC_data[12 * 6 * 3];
-double LTC_voltages[126];
-double LTC_temperatures[60];
 
 static const unsigned int crc15Table[256] = { 0x0, 0xc599, 0xceab, 0xb32,
 		0xd8cf, 0x1d56, 0x1664, 0xd3fd, 0xf407, 0x319e,

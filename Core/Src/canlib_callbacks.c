@@ -12,6 +12,7 @@
 #include "programme_queues.h"
 #include "canlib_data.h"
 #include "canlib_callbacks.h"
+#include "CSE.h"
 
 void can1_dbu_status_1_rx_callback(dbu_status_1_t *dbu_status_1) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -51,16 +52,12 @@ void can2_cc_status_rx_callback(cc_status_t *cc_status) {
 }
 
 uint8_t can2_charger_config_tx_callback(charger_config_t *charger_config) {
-	charger_t charger;
-	if (xQueuePeek(charger_queue, &charger, 0)) {
-		charger_config->msg_set_current_limit = charger.charger_current_limit;
-		charger_config->msg_set_voltage_limit = charger.charger_voltage_limit;
-		charger_config->msg_set_power_limit = charger.charger_current_limit
-				* charger.charger_voltage_limit;
-		charger_config->msg_set_time_out = 60;
-		charger_config->msg_set_enabled = charger.enable_charger;
-		return 1;
-	}
+	charger_config->msg_set_current_limit = charger.charger_current_limit;
+	charger_config->msg_set_voltage_limit = charger.charger_voltage_limit;
+	charger_config->msg_set_power_limit = charger.charger_current_limit * charger.charger_voltage_limit;
+	charger_config->msg_set_time_out = 60;
+	charger_config->msg_set_enabled = charger.enable_charger;
+	return 1;
 }
 
 uint8_t can1_ams_status_1_tx_callback(ams_status_1_t *ams_status_1) {
@@ -71,18 +68,10 @@ uint8_t can1_ams_status_1_tx_callback(ams_status_1_t *ams_status_1) {
 	double maximum_cell_voltage;
 	double minimum_cell_voltage;
 	temperatures_t temperatures;
-	charger_t charger;
-	GPIO_t GPIO;
-	pPID_t PID;
-	CSE_t CSE;
 
 	if (xQueuePeek(cell_voltages_queue, &cell_voltages, 0)
 			&& xQueuePeek(cell_temperatures_queue, &cell_temperatures, 0)
-			&& xQueuePeek(temperatures_queue, &temperatures, 0)
-			&& xQueuePeek(charger_queue, &charger, 0)
-			&& xQueuePeek(GPIO_queue, &GPIO, 0)
-			&& xQueuePeek(PID_queue, &PID, 0)
-			&& xQueuePeek(CSE_queue, &CSE, 0)) {
+			&& xQueuePeek(temperatures_queue, &temperatures, 0)) {
 		maximum_cell_temperature = cell_temperatures[0];
 		minimum_cell_temperature = cell_temperatures[0];
 		maximum_cell_voltage = cell_voltages[0];
@@ -103,19 +92,19 @@ uint8_t can1_ams_status_1_tx_callback(ams_status_1_t *ams_status_1) {
 
 		}
 
-		ams_status_1->air1_closed = GPIO.AIR_minus_closed;
-		ams_status_1->air2_closed = GPIO.AIR_plus_closed;
-		ams_status_1->ams_error = GPIO.AMS_error_latched;
-		ams_status_1->imd_error = GPIO.IMD_error_latched;
+		ams_status_1->air1_closed = get_air_minus_ext();
+		ams_status_1->air2_closed = get_air_plus_ext();
+		ams_status_1->ams_error = get_ams_error_latched_ext();
+		ams_status_1->imd_error = get_imd_error_latched_ext();
 		ams_status_1->charging_status = charger.enable_charger;
-		ams_status_1->fan_speed = PID.duty_cycle;
+		ams_status_1->fan_speed = pPID.duty_cycle;
 		ams_status_1->max_cell_temperature = maximum_cell_temperature;
 		ams_status_1->max_cell_voltage = maximum_cell_voltage;
 		ams_status_1->min_cell_temperature = minimum_cell_temperature;
 		ams_status_1->min_cell_voltage = minimum_cell_voltage;
 		ams_status_1->pre_charge_status = 1;
-		ams_status_1->sc_closed = GPIO.SC_probe;
-		ams_status_1->state_of_charge = CSE.SOC * 100;
+		ams_status_1->sc_closed = get_sc_probe_ext();
+		ams_status_1->state_of_charge = CSE_Y.soc;
 
 		return 1;
 	} else {

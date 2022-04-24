@@ -1,7 +1,7 @@
-adc.c:34:6:MX_ADC1_Init	24	static
-adc.c:103:6:HAL_ADC_MspInit	48	static
-adc.c:155:6:HAL_ADC_MspDeInit	16	static
-adc.c:189:6:interpret_ADC_buffer	80	static
-adc.c:230:6:ADC_initialize	16	static
-adc.c:236:6:ADC_step	16	static
-adc.c:243:6:HAL_ADC_ConvCpltCallback	16	static
+adc.c:33:6:MX_ADC1_Init	24	static
+adc.c:102:6:HAL_ADC_MspInit	48	static
+adc.c:154:6:HAL_ADC_MspDeInit	16	static
+adc.c:189:6:interpret_ADC_buffer	72	static
+adc.c:229:6:initialize_TEM	24	static
+adc.c:237:6:HAL_ADC_ConvHalfCpltCallback	24	static,ignoring_inline_asm
+adc.c:247:6:HAL_ADC_ConvCpltCallback	24	static,ignoring_inline_asm

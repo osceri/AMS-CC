@@ -57,7 +57,12 @@ Core/Src/canlib_callbacks.o: ../Core/Src/canlib_callbacks.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_callbacks.h \
- C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtwtypes.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE_types.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rt_nonfinite.h \
+ C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtGetInf.h
 
 ../Core/Inc/main.h:
 
@@ -182,3 +187,13 @@ C:/Users/oscar/Documents/GitHub/AMS-CC/Middlewares/Third_Party/SEGGER/SEGGER_RTT
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_callbacks.h:
 
 C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CANH/canlib_data.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtwtypes.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/CSE_types.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rt_nonfinite.h:
+
+C:/Users/oscar/Documents/GitHub/AMS-CC/Core/Inc/CSEH/rtGetInf.h:

@@ -10,6 +10,10 @@
 
 #include "main.h"
 
+uint16_t LTC_data[12 * 6 * 3];
+double LTC_voltages[126];
+double LTC_temperatures[60];
+
 /*
  * @brief	Is used to calculated the PEC.
  * @param	Length of the input data sequence with which to calculate the PEC

@@ -209,8 +209,8 @@ void SIM0_initialize(void)
     for (i = 0; i < 126; i++) {
       SIM0_DW.Memory15_PreviousInput[i] = SIM0_P.Memory15_InitialCondition;
       SIM0_DW.Memory12_PreviousInput[i] = SIM0_P.Memory12_InitialCondition[i];
-      SIM0_DW.Memory_PreviousInput[i] = SIM0_P.cQur[i];
-      SIM0_DW.Memory10_PreviousInput[i] = SIM0_P.cCap[i];
+      SIM0_DW.Memory_PreviousInput[i] = SIM0_P.cQur[0];
+      SIM0_DW.Memory10_PreviousInput[i] = SIM0_P.cCap[0];
       SIM0_DW.Memory19_PreviousInput[i] = SIM0_P.Memory19_InitialCondition;
       SIM0_DW.Memory21_PreviousInput[i] = SIM0_P.Memory21_InitialCondition;
     }

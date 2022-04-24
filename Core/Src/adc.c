@@ -24,7 +24,6 @@
 #include "programme_data.h"
 #include "programme_queues.h"
 
-
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;
@@ -46,7 +45,7 @@ void MX_ADC1_Init(void)
   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
   */
   hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.ScanConvMode = ENABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
@@ -55,7 +54,7 @@ void MX_ADC1_Init(void)
   hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T3_TRGO;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.NbrOfConversion = 4;
-  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.DMAContinuousRequests = ENABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
   {
@@ -133,7 +132,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
     hdma_adc1.Init.MemInc = DMA_MINC_ENABLE;
     hdma_adc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_adc1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_adc1.Init.Mode = DMA_NORMAL;
+    hdma_adc1.Init.Mode = DMA_CIRCULAR;
     hdma_adc1.Init.Priority = DMA_PRIORITY_HIGH;
     hdma_adc1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_adc1) != HAL_OK)
@@ -184,10 +183,10 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 
 /* USER CODE BEGIN 1 */
 
-uint16_t ADC_FLAG = 1;
+static temperatures_t temperatures;
+static uint16_t adcBuffer[128];
 
-void interpret_ADC_buffer(temperatures_t *temperatures,
-		uint16_t *adcBuffer, uint8_t L) {
+void interpret_ADC_buffer(uint16_t *_adcBuffer, uint8_t L) {
 	uint16_t i, j;
 	float adcAverageBuffer[4];
 
@@ -199,10 +198,10 @@ void interpret_ADC_buffer(temperatures_t *temperatures,
 
 	for (i = 0; i < 4; i++) {
 		adcAverageBuffer[i] = 0;
-		for (j = 0; j < L; j++) {
-			adcAverageBuffer[i] += adcBuffer[4 * j + i];
+		for (j = 0; j < L/4; j++) {
+			adcAverageBuffer[i] += _adcBuffer[4 * j + i];
 		}
-		adcAverageBuffer[i] /= L;
+		adcAverageBuffer[i] /= L/4;
 
 		/* The adc value shouldn't be negative, nor should it be 0 */
 		if (adcAverageBuffer[i] < 0.25) {
@@ -212,37 +211,46 @@ void interpret_ADC_buffer(temperatures_t *temperatures,
 	/* temperature = beta / (log(R0 * ( resolution / adcAverageBuffer[i] - 1) ) - log(R)); */
 	/* v/vt = ((2^n - 1)*v/vref)/((2^n - 1)*vt/vref) = ((2^n - 1)*v/vref)/adcAverageBuffer[i] */
 	/* Assume v = vref, n = 12 */
-	temperatures->precharge_resistor = beta
+	temperatures.precharge_resistor = beta
 			/ (log(R0 * (resolution / adcAverageBuffer[0] - 1)) - log(R))
 			- 273.15;
-	temperatures->fuse = beta
+	temperatures.fuse = beta
 			/ (log(R0 * (resolution / adcAverageBuffer[1] - 1)) - log(R))
 			- 273.15;
-	temperatures->aux_1 = beta
+	temperatures.aux_1 = beta
 			/ (log(R0 * (resolution / adcAverageBuffer[2] - 1)) - log(R))
 			- 273.15;
-	temperatures->aux_2 = beta
+	temperatures.aux_2 = beta
 			/ (log(R0 * (resolution / adcAverageBuffer[3] - 1)) - log(R))
 			- 273.15;
 
 }
 
-void ADC_initialize(TIM_HandleTypeDef* htim) {
-	htim->Instance->ARR = 65535 / 1000; // 100 Hz sample rate
+void initialize_TEM(TIM_HandleTypeDef *htim) {
+	htim->Instance->PSC = 100;
+	htim->Instance->ARR = (64000000 / htim->Instance->PSC) * (0.18 / 64);
 	HAL_TIM_Base_Start(htim);
-	ADC_FLAG = 1;
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adcBuffer, 128);
+
 }
 
-void ADC_step(uint32_t *buf, uint16_t len) {
-	if (ADC_FLAG == 1) {
-		ADC_FLAG = 0;
-		HAL_ADC_Start_DMA(&hadc1, buf, len);
-	}
+void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) {
+	interpret_ADC_buffer(&adcBuffer[0], 64);
+
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	xQueueOverwriteFromISR(temperatures_queue, &temperatures,
+			&xHigherPriorityTaskWoken);
+	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
-	ADC_FLAG = 1;
+	interpret_ADC_buffer(&adcBuffer[64], 64);
 
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	xQueueOverwriteFromISR(temperatures_queue, &temperatures,
+			&xHigherPriorityTaskWoken);
+	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
 
 /* USER CODE END 1 */

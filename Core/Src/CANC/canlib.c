@@ -66,21 +66,50 @@ static uint8_t can2_cc_status_flag = 0;
 static CAN_HandleTypeDef* _hcan1;
 static CAN_HandleTypeDef* _hcan2;
 
-static void can1_ams_cell_voltages_array_raise(uint8_t index) {
-    static uint8_t array[1 +  23 / 8];
-    static uint8_t count = 0;
+static void can1_ams_cell_voltages_array_raise(uint16_t _index) {
+   static uint8_t array[1 +  24 / 8];
+   static uint8_t count = 0;
+   uint8_t index;
 
-    if(index < 23) {
+   switch(_index) {
+       case 0: index = 0; break;
+       case 1: index = 1; break;
+       case 2: index = 2; break;
+       case 3: index = 3; break;
+       case 4: index = 4; break;
+       case 5: index = 5; break;
+       case 6: index = 6; break;
+       case 7: index = 7; break;
+       case 8: index = 8; break;
+       case 9: index = 9; break;
+       case 10: index = 10; break;
+       case 11: index = 11; break;
+       case 12: index = 12; break;
+       case 13: index = 13; break;
+       case 14: index = 14; break;
+       case 15: index = 15; break;
+       case 16: index = 16; break;
+       case 17: index = 17; break;
+       case 18: index = 18; break;
+       case 19: index = 19; break;
+       case 20: index = 20; break;
+       case 21: index = 21; break;
+       case 22: index = 22; break;
+       case 23: index = 23; break;
+       default: return;
+   }
+
+    if(index < 24) {
         uint8_t div = index / 8;
         uint8_t rem = index % 8;
         uint8_t flag = (1 << rem);
         
         if(!(array[div] & flag)) {
             array[div] |= flag;
-            count = (count + 1) % 23;
+            count = (count + 1) % 24;
 
             if(count == 0) {
-                for(int i = 0; i < (1 + 23 / 8); i++) {
+                for(int i = 0; i < (1 + 24 / 8); i++) {
                     array[i] = 0;
                 }
                 can1_ams_cell_voltages_flag = 1;
@@ -88,21 +117,38 @@ static void can1_ams_cell_voltages_array_raise(uint8_t index) {
         }
     }
 }
-static void can1_ams_cell_temperatures_array_raise(uint8_t index) {
-    static uint8_t array[1 +  11 / 8];
-    static uint8_t count = 0;
+static void can1_ams_cell_temperatures_array_raise(uint16_t _index) {
+   static uint8_t array[1 +  12 / 8];
+   static uint8_t count = 0;
+   uint8_t index;
 
-    if(index < 11) {
+   switch(_index) {
+       case 0: index = 0; break;
+       case 1: index = 1; break;
+       case 2: index = 2; break;
+       case 3: index = 3; break;
+       case 4: index = 4; break;
+       case 5: index = 5; break;
+       case 6: index = 6; break;
+       case 7: index = 7; break;
+       case 8: index = 8; break;
+       case 9: index = 9; break;
+       case 10: index = 10; break;
+       case 11: index = 11; break;
+       default: return;
+   }
+
+    if(index < 12) {
         uint8_t div = index / 8;
         uint8_t rem = index % 8;
         uint8_t flag = (1 << rem);
         
         if(!(array[div] & flag)) {
             array[div] |= flag;
-            count = (count + 1) % 11;
+            count = (count + 1) % 12;
 
             if(count == 0) {
-                for(int i = 0; i < (1 + 11 / 8); i++) {
+                for(int i = 0; i < (1 + 12 / 8); i++) {
                     array[i] = 0;
                 }
                 can1_ams_cell_temperatures_flag = 1;
@@ -110,21 +156,30 @@ static void can1_ams_cell_temperatures_array_raise(uint8_t index) {
         }
     }
 }
-static void can2_charger_config_array_raise(uint8_t index) {
-    static uint8_t array[1 +  68 / 8];
-    static uint8_t count = 0;
+static void can2_charger_config_array_raise(uint16_t _index) {
+   static uint8_t array[1 +  4 / 8];
+   static uint8_t count = 0;
+   uint8_t index;
 
-    if(index < 68) {
+   switch(_index) {
+       case 64: index = 0; break;
+       case 65: index = 1; break;
+       case 66: index = 2; break;
+       case 68: index = 3; break;
+       default: return;
+   }
+
+    if(index < 4) {
         uint8_t div = index / 8;
         uint8_t rem = index % 8;
         uint8_t flag = (1 << rem);
         
         if(!(array[div] & flag)) {
             array[div] |= flag;
-            count = (count + 1) % 68;
+            count = (count + 1) % 4;
 
             if(count == 0) {
-                for(int i = 0; i < (1 + 68 / 8); i++) {
+                for(int i = 0; i < (1 + 4 / 8); i++) {
                     array[i] = 0;
                 }
                 can2_charger_config_flag = 1;

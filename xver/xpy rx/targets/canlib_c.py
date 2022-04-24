@@ -44,22 +44,32 @@ for system in systems:
 
 for system in systems:
     for message in system.rx_messages:
+        msize = len(message.multiplexer_ids)
         if message.multiplexer:
-            #static void $system.name$_$message.name$_array_raise(uint8_t index) {
-            #    static uint8_t array[1 +  $message.multiplexer_size$ / 8];
-            #    static uint8_t count = 0;
+            #static void $system.name$_$message.name$_array_raise(uint16_t _index) {
+            #   static uint8_t array[1 +  $msize$ / 8];
+            #   static uint8_t count = 0;
+            #   uint8_t index;
             #
-            #    if(index < $message.multiplexer_size$) {
+            #   switch(_index) {
+            _q = 0
+            for multiplexer_id in message.multiplexer_ids:
+                #       case $multiplexer_id$: index = $_q$; break;
+                _q = _q + 1;
+            #       default: return;
+            #   }
+            #
+            #    if(index < $msize$) {
             #        uint8_t div = index / 8;
             #        uint8_t rem = index % 8;
             #        uint8_t flag = (1 << rem);
             #        
             #        if(!(array[div] & flag)) {
             #            array[div] |= flag;
-            #            count = (count + 1) % $message.multiplexer_size$;
+            #            count = (count + 1) % $msize$;
             #
             #            if(count == 0) {
-            #                for(int i = 0; i < (1 + $message.multiplexer_size$ / 8); i++) {
+            #                for(int i = 0; i < (1 + $msize$ / 8); i++) {
             #                    array[i] = 0;
             #                }
             #                $system.name$_$message.name$_flag = 1;

@@ -1,2 +1,2 @@
-IMD.c:16:6:HAL_TIM_IC_CaptureCallback	32	static,ignoring_inline_asm
-IMD.c:34:6:initialize_IMD	16	static
+IMD.c:15:6:HAL_TIM_IC_CaptureCallback	24	static
+IMD.c:29:6:initialize_IMD	16	static

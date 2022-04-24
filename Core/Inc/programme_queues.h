@@ -20,16 +20,6 @@ typedef struct {
 	uint16_t element_size;		// The size of every individual element
 } queue_info;
 
-QueueHandle_t GPIO_queue;
-
-QueueHandle_t IMD_queue;
-
-QueueHandle_t charger_queue;
-
-QueueHandle_t PID_queue;
-
-QueueHandle_t CSE_queue;
-
 QueueHandle_t cell_voltages_queue;
 
 QueueHandle_t cell_temperatures_queue;

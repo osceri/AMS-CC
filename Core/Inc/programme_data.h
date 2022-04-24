@@ -17,27 +17,15 @@ typedef struct {
 } can_queue_element_t;
 
 typedef struct {
-	uint8_t AMS_error_latched;
-	uint8_t IMD_error_latched;
-	uint8_t SC_probe;
-	uint8_t IMD_ok;
-	uint8_t precharge_closed;
-	uint8_t AIR_minus_closed;
-	uint8_t AIR_plus_closed;
-	uint8_t enable_precharge;
-	uint8_t enable_AIR_minus;
-	uint8_t enable_AIR_plus;
-} GPIO_t;
-GPIO_t GPIO;
-
-typedef struct {
 	double duty_cycle;
 	double frequency;
 } IMD_t;
+IMD_t IMD;
 
 typedef struct {
 	double duty_cycle;
 } pPID_t;
+pPID_t pPID;
 
 typedef struct {
 	double precharge_resistor;
@@ -51,11 +39,7 @@ typedef struct {
 	double charger_voltage_limit;
 	uint8_t enable_charger;
 } charger_t;
-
-typedef struct {
-	double SOC;
-	double SOH;
-} CSE_t;
+charger_t charger;
 
 typedef enum {
 	ERROR_NO_ERROR = 0,

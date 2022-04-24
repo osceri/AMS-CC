@@ -90,63 +90,42 @@ void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN 0 */
 
 const task_info SM_task_info = { { .name = "SM_task", .stack_size = 1024 * 4,
-		.priority = (osPriority_t) osPriorityLow3, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityBelowNormal, }, .periodicity = 0.2,
 		.offset = 0 * 0.000, .execution_time = 0.010, };
 
-const task_info SIM_task_info = { { .name = "SIM_task", .stack_size = 3000 * 4,
-		.priority = (osPriority_t) osPriorityLow1, }, .periodicity = 0.1,
-		.offset = 0 * 0.230, .execution_time = 0.1, };
-
 const task_info COOL_task_info = { { .name = "COOL_task", .stack_size = 160 * 4,
-		.priority = (osPriority_t) osPriorityNormal6, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityNormal5, }, .periodicity = 0.2,
 		.offset = 0 * 0.220, .execution_time = 0.001, };
 
 const task_info CSE_task_info = { { .name = "CSE_task", .stack_size = 1024 * 4,
-		.priority = (osPriority_t) osPriorityNormal5, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityNormal4, }, .periodicity = 0.2,
 		.offset = 0 * 0.170, .execution_time = 0.035, };
 
 const task_info CAN_task_info = { { .name = "CAN_task", .stack_size = 512 * 4,
-		.priority = (osPriority_t) osPriorityBelowNormal2, },
-		.periodicity = 0.1, .offset = 0 * 0.140, .execution_time = 0.020, };
+		.priority = (osPriority_t) osPriorityNormal3, },
+		.periodicity = 0.2, .offset = 0 * 0.140, .execution_time = 0.020, };
 
 const task_info COM_task_info = { { .name = "COM_task", .stack_size = 2048 * 4,
-		.priority = (osPriority_t) osPriorityLow4, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityNormal2, }, .periodicity = 0.2,
 		.offset = 0 * 0.060, .execution_time = 0.040, };
 
-const task_info ADC_task_info = { { .name = "ADC_task", .stack_size = 160 * 4,
-		.priority = (osPriority_t) osPriorityNormal3, }, .periodicity = 0.1,
-		.offset = 0 * 0.050, .execution_time = 0.001, };
+const task_info SIM_task_info = { { .name = "SIM_task", .stack_size = 3000 * 4,
+		.priority = (osPriority_t) osPriorityNormal1, }, .periodicity = 0.2,
+		.offset = 0 * 0.230, .execution_time = 0.1, };
 
-const task_info GPIO_task_info = { { .name = "GPIO_task", .stack_size = 160 * 4,
-		.priority = (osPriority_t) osPriorityNormal2, }, .periodicity = 0.1,
-		.offset = 0 * 0.040, .execution_time = 0.001, };
-
-const task_info IMD_task_info = { { .name = "IMD_task", .stack_size = 256 * 4,
-		.priority = (osPriority_t) osPriorityLow5, }, .periodicity = 0.1,
-		.offset = 0 * 0.60, .execution_time = 0.001, };
-
-const task_info event_handler_task_info = { { .name = "event_handler_task",
-		.stack_size = 128 * 4, .priority = (osPriority_t) osPriorityLow, },
-		.periodicity = 0.1, .offset = 5, .execution_time = 0.001, };
+const task_info error_handler_task_info = { { .name = "error_handler_task",
+		.stack_size = 128 * 4, .priority = (osPriority_t) osPriorityLow1, },
+		.periodicity = 0.2, .offset = 5, .execution_time = 0.001, };
 
 const task_info IWDG_task_info = { { .name = "IWDG_task", .stack_size = 160 * 4,
-		.priority = (osPriority_t) osPriorityLow2, }, .periodicity = 0.1,
+		.priority = (osPriority_t) osPriorityLow, }, .periodicity = 0.2,
 		.offset = 0 * 0.010, .execution_time = 0.001, };
-
-const queue_info GPIO_queue_info = { .element_count = 1, .element_size =
-		sizeof(GPIO_t), };
 
 const queue_info IMD_queue_info = { .element_count = 1, .element_size =
 		sizeof(IMD_t), };
 
-const queue_info CSE_queue_info = { .element_count = 1, .element_size =
-		sizeof(CSE_t), };
-
 const queue_info temperatures_queue_info = { .element_count = 1, .element_size =
 		sizeof(temperatures_t), };
-
-const queue_info PID_queue_info = { .element_count = 1, .element_size =
-		sizeof(pPID_t), };
 
 const queue_info charger_queue_info = { .element_count = 1, .element_size =
 		sizeof(charger_t), };
@@ -198,9 +177,9 @@ int main() {
 	MX_CAN2_Init();
 	MX_TIM1_Init();
 	MX_DMA_Init();
+	MX_ADC1_Init();
 	MX_TIM3_Init();
 	MX_TIM2_Init();
-	MX_ADC1_Init();
 
 	initialize_CAN(&hcan1, &hcan2);
 	initialize_LTC(&hspi2);
@@ -210,23 +189,8 @@ int main() {
 
 	/* INITIALIZE QUEUES */
 
-	GPIO_queue = xQueueCreate(GPIO_queue_info.element_count,
-			GPIO_queue_info.element_size);
-
-	IMD_queue = xQueueCreate(IMD_queue_info.element_count,
-			IMD_queue_info.element_size);
-
-	CSE_queue = xQueueCreate(CSE_queue_info.element_count,
-			CSE_queue_info.element_size);
-
 	temperatures_queue = xQueueCreate(temperatures_queue_info.element_count,
 			temperatures_queue_info.element_size);
-
-	PID_queue = xQueueCreate(PID_queue_info.element_count,
-			PID_queue_info.element_size);
-
-	charger_queue = xQueueCreate(charger_queue_info.element_count,
-			charger_queue_info.element_size);
 
 	accumulator_voltage_queue = xQueueCreate(
 			accumulator_voltage_queue_info.element_count,
@@ -276,15 +240,6 @@ int main() {
 	CSE_task_handle = osThreadNew(start_CSE_task, NULL,
 			&CSE_task_info.attributes);
 
-	IMD_task_handle = osThreadNew(start_IMD_task, NULL,
-			&IMD_task_info.attributes);
-
-	GPIO_task_handle = osThreadNew(start_GPIO_task, NULL,
-			&GPIO_task_info.attributes);
-
-	ADC_task_handle = osThreadNew(start_ADC_task, NULL,
-			&ADC_task_info.attributes);
-
 	COOL_task_handle = osThreadNew(start_COOL_task, NULL,
 			&COOL_task_info.attributes);
 
@@ -297,8 +252,8 @@ int main() {
 	IWDG_task_handle = osThreadNew(start_IWDG_task, NULL,
 			&IWDG_task_info.attributes);
 
-	event_handler_task_handle = osThreadNew(start_event_handler_task, NULL,
-			&event_handler_task_info.attributes);
+	error_handler_task_handle = osThreadNew(start_error_handler_task, NULL,
+			&error_handler_task_info.attributes);
 
 	/* Launch RTOS ! */
 	osKernelStart();
@@ -310,51 +265,53 @@ int main() {
 /* USER CODE END 0 */
 
 /**
- * @brief  The application entry point.
- * @retval int
- */
+  * @brief  The application entry point.
+  * @retval int
+  */
 
 /**
- * @brief System Clock Configuration
- * @retval None
- */
-void SystemClock_Config(void) {
-	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
-	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-	/** Configure the main internal regulator output voltage
-	 */
-	__HAL_RCC_PWR_CLK_ENABLE();
-	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-	/** Initializes the RCC Oscillators according to the specified parameters
-	 * in the RCC_OscInitTypeDef structure.
-	 */
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI
-			| RCC_OSCILLATORTYPE_LSI;
-	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-	RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-	RCC_OscInitStruct.LSIState = RCC_LSI_ON;
-	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-	RCC_OscInitStruct.PLL.PLLM = 8;
-	RCC_OscInitStruct.PLL.PLLN = 160;
-	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-	RCC_OscInitStruct.PLL.PLLQ = 4;
-	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
-		Error_Handler();
-	}
-	/** Initializes the CPU, AHB and APB buses clocks
-	 */
-	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
-			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
-	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV8;
-	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 128;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = 4;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK) {
-		Error_Handler();
-	}
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
+  {
+    Error_Handler();
+  }
 }
 
 /* USER CODE BEGIN 4 */
@@ -373,7 +330,7 @@ void __wait_for_data(uint16_t FLAGS) {
 	double *_dptr;
 	uint8_t _u8;
 	while (NOT_OK) {
-		osDelay(0.500 * TICK2HZ);
+		osDelay(2.00 * TICK2HZ);
 		if (FLAGS & WAIT_FOR_CELL_VOLTAGES) {
 			if (xQueuePeek(cell_voltages_queue, &_dptr, 0)) {
 				NOT_OK &= ~WAIT_FOR_CELL_VOLTAGES;
@@ -429,13 +386,15 @@ void start_SM_task(void *argument) {
 	uint32_t tick_increment = TICK2HZ * SM_task_info.periodicity;
 
 	/* Make task-specific structures */
-	charger_t charger;
 	ams_inputs.Ts = SM_task_info.periodicity;
 	double *cell_voltages;
 	double minimum;
 	double mean;
 	double variance;
 	double maximum;
+
+	initialize_TEM(&htim3); // This has to be inside a task
+	initialize_IMD(&htim2); // This has to be inside a task
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * SM_task_info.offset;
@@ -512,7 +471,6 @@ void start_SM_task(void *argument) {
 		charger.charger_voltage_limit = 4.15 * 126;	// sought cell voltage times count of cells
 		charger.enable_charger = ams_outputs.enable_charger;
 
-		xQueueOverwrite(charger_queue, &charger);
 
 		set_air_minus_ext(ams_outputs.close_air_minus);
 		set_air_plus_ext(ams_outputs.close_air_plus);
@@ -524,86 +482,6 @@ void start_SM_task(void *argument) {
 	}
 }
 
-void start_IMD_task(void *argument) {
-	/* Set up task-specific timing parameters */
-	uint32_t next_tick = first_tick;
-	uint32_t tick_increment = TICK2HZ * IMD_task_info.periodicity;
-
-	/* Make task-specific structures */
-	IMD_t IMD;
-	initialize_IMD(&htim2);
-
-	/* Wait until offset */
-	next_tick += TICK2HZ * IMD_task_info.offset;
-	osDelayUntil(next_tick);
-
-	for (;;) {
-		/* Enter periodic behaviour */
-
-		if (xQueuePeek(IMD_queue, &IMD, 0)) {
-			uint8_t frequency_range = (uint8_t) (IMD.frequency / 10);
-
-		}
-
-		/* Wait until next period */
-		next_tick += tick_increment;
-		osDelayUntil(next_tick);
-	}
-}
-
-void start_GPIO_task(void *argument) {
-	/* Set up task-specific timing parameters */
-	uint32_t next_tick = first_tick;
-	uint32_t tick_increment = TICK2HZ * GPIO_task_info.periodicity;
-
-	/* Make task-specific structures */
-
-	/* Wait until offset */
-	next_tick += TICK2HZ * GPIO_task_info.offset;
-	osDelayUntil(next_tick);
-
-	for (;;) {
-		/* Enter periodic behaviour */
-		GPIO.AMS_error_latched = get_ams_error_latched_ext();
-		GPIO.IMD_error_latched = get_imd_error_latched_ext();
-		GPIO.SC_probe = get_sc_probe_ext();
-		GPIO.IMD_ok = get_imd_ok_ext();
-		GPIO.AIR_plus_closed = get_air_plus_ext();
-		GPIO.AIR_minus_closed = get_air_minus_ext();
-		GPIO.precharge_closed = get_precharge_ext();
-
-		/* Wait until next period */
-		next_tick += tick_increment;
-		osDelayUntil(next_tick);
-	}
-}
-
-void start_ADC_task(void *argument) {
-	/* Set up task-specific timing parameters */
-	uint32_t next_tick = first_tick;
-	uint32_t tick_increment = TICK2HZ * ADC_task_info.periodicity;
-
-	/* Make task-specific structures */
-	uint16_t adc_readings[4 * 16];
-	ADC_initialize(&htim3);
-	temperatures_t temperatures;
-
-	/* Wait until offset */
-	next_tick += TICK2HZ * ADC_task_info.offset;
-	osDelayUntil(next_tick);
-
-	for (;;) {
-		/* Enter periodic behaviour */
-		ADC_step((uint32_t*) &adc_readings, sizeof((uint32_t*) adc_readings));
-		interpret_ADC_buffer(&temperatures, adc_readings, 16);
-
-		xQueueOverwrite(temperatures_queue, &temperatures);
-
-		/* Wait until next period */
-		next_tick += tick_increment;
-		osDelayUntil(next_tick);
-	}
-}
 
 void start_COM_task(void *argument) {
 	/* Set up task-specific timing parameters */
@@ -702,7 +580,7 @@ void start_COM_task(void *argument) {
 			__raise_ams_error(accumulator_current_error);
 		}
 
-		/*
+
 		 #ifdef STREAM_DATA
 		 SEGGER_SYSVIEW_PrintfHost("cell_voltages %i %i %i %i %i %i %i %i", __k,
 		 (uint16_t) (10000 * cell_voltages[__k]),
@@ -714,7 +592,7 @@ void start_COM_task(void *argument) {
 		 (uint16_t) (10000 * cell_voltages[__k + 6]));
 		 __k = (__k + 7) % 126;
 		 #endif
-		 */
+
 
 		/* Wait until next period */
 		while (next_tick < osKernelGetTickCount()) {
@@ -767,7 +645,6 @@ void start_CSE_task(void *argument) {
 
 	/* Make task-specific structures */
 	CSE_initialize();
-	CSE_t CSE;
 	double *cell_voltages;
 	double accumulator_current;
 	double mean_cell_voltage;
@@ -799,9 +676,6 @@ void start_CSE_task(void *argument) {
 
 			CSE_step();
 
-			CSE.SOC = CSE_Y.soc;
-			CSE.SOH = CSE_Y.capacity / (6.6 * 3600);
-			xQueueOverwrite(CSE_queue, &CSE);
 
 		}
 
@@ -820,7 +694,6 @@ void start_COOL_task(void *argument) {
 
 	/* Make task-specific structures */
 	PID_t PID;
-	pPID_t pPID;
 
 	PID_initialize(&PID, // *ptr
 			20,			// Reference temperature (sought)
@@ -858,7 +731,6 @@ void start_COOL_task(void *argument) {
 			FAN_duty_cycle(&htim1, PID.output);
 
 			pPID.duty_cycle = PID.output;
-			xQueueOverwrite(PID_queue, &pPID);
 		}
 
 		/* Wait until next period */
@@ -869,7 +741,7 @@ void start_COOL_task(void *argument) {
 	}
 }
 
-void start_event_handler_task(void *argument) {
+void start_error_handler_task(void *argument) {
 	/* Set up task-specific timing parameters */
 	uint32_t next_tick = first_tick;
 	uint32_t tick_increment = TICK2HZ * IWDG_task_info.periodicity;
@@ -880,8 +752,6 @@ void start_event_handler_task(void *argument) {
 	/* Wait until offset */
 	next_tick += TICK2HZ * IWDG_task_info.offset;
 	osDelayUntil(next_tick);
-
-	__wait_for_data(WAIT_FOR_ALL);
 
 	for (;;) {
 		/* Enter periodic behaviour */
@@ -923,7 +793,7 @@ void start_IWDG_task(void *argument) {
 
 	__wait_for_data(WAIT_FOR_ALL);
 
-	initialize_IWDG(&hiwdg, IWDG_task_info.periodicity);
+	//initialize_IWDG(&hiwdg, IWDG_task_info.periodicity);
 
 	for (;;) {
 		/* Enter periodic behaviour */
@@ -944,19 +814,23 @@ void start_SIM_task(void *argument) {
 
 	/* Make task-specific structures */
 	SIM0_initialize();
-	charger_t charger;
 	uint16_t k = 0;
 
 	uint8_t SC = 1;
-	uint8_t start_drive = 1;
-	uint8_t start_charge = 0;
+	uint8_t start_drive = 0;
+	uint8_t start_charge = 1;
 	uint8_t start_balance = 0;
 
 	SIM0_P.Ts = SIM_task_info.periodicity;
 	SIM0_U.SC = SC;
 	SIM0_U.drive = start_drive ^ start_balance;
 	SIM0_U.charge = start_charge ^ start_balance;
-	SIM0_U.drive_current = -10;
+	SIM0_U.drive_current = 0;
+
+	for(int i = 0; i < 126; i++) {
+		float m = fabsf(cos(i) + cos(i + 1) + cos(i + 2) + cos(i + 3)) / 4;
+	    SIM0_DW.Memory_PreviousInput[i] = SIM0_P.cQur[0] * (1 - 0.4 * m);
+	}
 
 	/* Wait until offset */
 	next_tick += TICK2HZ * SIM_task_info.offset;
@@ -966,14 +840,6 @@ void start_SIM_task(void *argument) {
 		/* Enter periodic behaviour */
 
 		SIM0_step();
-		if (k == 4000) {
-			SIM0_U.drive = 0;
-			SIM0_U.charge = 1;
-		}
-		if (k == 8000) {
-			SIM0_U.drive = 1;
-			SIM0_U.charge = 1;
-		}
 		if ((k % 5) == 0) {
 			can1_dbu_status_1_transmit();
 		}
@@ -1005,36 +871,38 @@ void start_SIM_task(void *argument) {
 /* USER CODE END 4 */
 
 /**
- * @brief  Period elapsed callback in non blocking mode
- * @note   This function is called  when TIM5 interrupt took place, inside
- * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
- * a global variable "uwTick" used as application time base.
- * @param  htim : TIM handle
- * @retval None
- */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	/* USER CODE BEGIN Callback 0 */
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM5 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
 
-	/* USER CODE END Callback 0 */
-	if (htim->Instance == TIM5) {
-		HAL_IncTick();
-	}
-	/* USER CODE BEGIN Callback 1 */
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM5) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
 
-	/* USER CODE END Callback 1 */
+  /* USER CODE END Callback 1 */
 }
 
 /**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
-void Error_Handler(void) {
-	/* USER CODE BEGIN Error_Handler_Debug */
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1) {
 	}
-	/* USER CODE END Error_Handler_Debug */
+  /* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT

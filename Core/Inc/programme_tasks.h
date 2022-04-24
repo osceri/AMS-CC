@@ -20,7 +20,7 @@ void initialize_LTC(SPI_HandleTypeDef *hspi);
 /* TASK ENTRY POINT DECLARATIONS */
 void start_SM_task(void *argument);
 void start_IWDG_task(void *argument);
-void start_event_handler_task(void *argument);
+void start_error_handler_task(void *argument);
 void start_IMD_task(void *argument);
 void start_GPIO_task(void *argument);
 void start_ADC_task(void *argument);
@@ -47,14 +47,10 @@ osThreadId_t SM_task_handle;
 /* Programme safety tasks */
 osThreadId_t IWDG_task_handle;
 
-osThreadId_t event_handler_task_handle;
+osThreadId_t error_handler_task_handle;
 
 /* Data generating tasks */
 osThreadId_t IMD_task_handle;
-
-osThreadId_t GPIO_task_handle;
-
-osThreadId_t ADC_task_handle;
 
 osThreadId_t COM_task_handle;
 
