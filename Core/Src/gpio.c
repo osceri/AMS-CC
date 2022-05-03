@@ -114,23 +114,26 @@ void MX_GPIO_Init(void)
 
 /* RELAY MONITORING */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-#ifdef SIMULATION
+
+#ifndef SIMULATION
 	switch (GPIO_Pin) {
 	case IMD_ok_Pin:
-		__raise_imd_error(ERROR_IMD);
+		if (!get_imd_ok_ext()) {
+			__raise_imd_error_isr(ERROR_IMD);
+		}
 		break;
 	case precharge_closed_Pin:
 		if (get_precharge_ext() != get_set_precharge_ext()) {
-			__raise_ams_error(ERROR_PRECHARGE);
+			__raise_ams_error_isr(ERROR_PRECHARGE);
 		}
 	case AIR_minus_closed_Pin:
 		if (get_air_minus_ext() != get_set_air_minus_ext()) {
-			__raise_ams_error(ERROR_AIR_MINUS);
+			__raise_ams_error_isr(ERROR_AIR_MINUS);
 		}
 		break;
 	case AIR_plus_closed_Pin:
 		if (get_air_plus_ext() != get_set_air_plus_ext()) {
-			__raise_ams_error(ERROR_AIR_PLUS);
+			__raise_ams_error_isr(ERROR_AIR_PLUS);
 		}
 		break;
 	}

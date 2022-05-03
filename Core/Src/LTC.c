@@ -7,11 +7,9 @@
 
 #include "main.h"
 #include "cmsis_os.h"
-
 #include "LTC.h"
 
-#define cellstack_address_map(x) x
-#define LTC_COM_TIMEOUT 0
+#define LTC_COM_TIMEOUT 2
 
 SPI_HandleTypeDef *hltc;
 
@@ -178,8 +176,8 @@ uint8_t LTC_read_command(uint8_t wake, uint16_t command) {
 	pec = pec15_calc(8, LTC_read_buffer);
 
 	// If there is a discrepancy we return an error code
-	if (!((((pec >> 8) & 0xff) != LTC_read_buffer[8])
-			&& (((pec >> 0) & 0xff) != LTC_read_buffer[9]))) {
+	if (!((((pec >> 8) & 0xff) == LTC_read_buffer[8])
+			&& (((pec >> 0) & 0xff) == LTC_read_buffer[9]))) {
 		return 0;
 	}
 
@@ -221,6 +219,14 @@ uint8_t LTC_write_command(uint8_t wake, uint16_t command) {
 
 }
 
+const uint8_t slave_count = 12;
+const uint8_t slave_address[] = {
+		0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+};
+const uint8_t slave_cell_count[] = {
+		11, 10, 11, 10, 11, 10, 11, 10, 11, 10, 11, 10,
+};
+
 /*
  * @brief	The function which acquires all of the cell temperatures and voltages, and places them in cell_voltages and cell_temperatures
  * @param	Whether or not to wake the isoSPI port beforehand
@@ -235,28 +241,27 @@ uint8_t LTC_acquire_data(uint8_t wake) {
 
 	LTC_command(wake, command);
 
-	HAL_Delay(2);
+	HAL_Delay(20);
 
 	/* ADAX : MD = 10, PUP = 1, CH = 000 */
 	command = 0b0000010101100000;
 
-	LTC_command(0, command);
-
-	//osDelay(configTICK_RATE_HZ * 0.02); // ~2 ms
-	HAL_Delay(2);
+	LTC_command(wake, command);
 
 	// First we fill the cell_voltage buffer with the integer values
 	p = 0;
 
-	for (k = 0; k < 12; k++) { // 12 segments
+	for (k = 0; k < slave_count; k++) { // 12 segments
 		for (i = 0; i < 6; i++) {
 			// We use the RDCVA command and increment it every pass to get RDCVB, RDCVC .. RDAUXB
-			command = 0b1000000000000100 | (cellstack_address_map(k) << 11);
+			command = 0b1000000000000100 | (slave_address[k] << 11);
 			command += 2 * i;
 
-			if(!LTC_read_command(0, command)) {
+
+			if (!LTC_read_command(0, command)) {
 				/* Data wasn't to be read */
-				return 0;
+				//return 0;
+
 			}
 
 			for (j = 0; j < 3; j++) {
@@ -268,20 +273,19 @@ uint8_t LTC_acquire_data(uint8_t wake) {
 
 	}
 
-	if(!LTC_make_voltages()) {
+	if (!LTC_make_voltages()) {
 		/* Data was corrupted, or voltage reference was off */
-		return 0;
+		//return 0;
 	}
-	if(!LTC_make_temperatures()) {
+	if (!LTC_make_temperatures()) {
 		/* Data was corrupted, or voltage reference was off */
-		return 0;
+		//return 0;
 	}
 
 	/* Everything is fine ! */
 	return 1;
 }
 
-#define cellstack_voltage_count(cellstack) (11 - (cellstack % 2))
 /*
  * @brief	A function which takes data from LTC_data and translates it into LTC_voltages
  * @retval	1 if successful
@@ -290,19 +294,20 @@ uint8_t LTC_make_voltages(void) {
 	uint16_t cellstack, K, k, p;
 	p = 0;
 
-	for (cellstack = 0; cellstack < 12; cellstack++) {
-		K = cellstack_voltage_count(cellstack);
+	for (cellstack = 0; cellstack < slave_count; cellstack++) {
+		K = slave_cell_count[cellstack];
 		for (k = 0; k < K; k++) {
-			if(LTC_data[18 * cellstack + k] == 0) {
+			if (LTC_data[18 * cellstack + k] == 0) {
 				/* The voltage reference is not on */
-				return 0;
+				//return 0;
 			}
-			if(LTC_data[18 * cellstack + k] == 0xffff) {
+			if (LTC_data[18 * cellstack + k] == 0xffff) {
 				/* The data is corrupted */
-				return 0;
+				//return 0;
 			}
 
 			LTC_voltages[p] = 0.0001 * LTC_data[18 * cellstack + k];
+			p++;
 		}
 	}
 
@@ -322,10 +327,19 @@ uint8_t LTC_make_temperatures(void) {
 
 	p = 0;
 
-	for (cellstack = 0; cellstack < 12; cellstack++) {
+	for (cellstack = 0; cellstack < slave_count; cellstack++) {
 		K = 5;
 
 		for (k = 0; k < K; k++) {
+			if (LTC_data[18 * cellstack + k] == 0) {
+				/* The voltage reference is not on */
+				//return 0;
+			}
+			if (LTC_data[18 * cellstack + k] == 0xffff) {
+				/* The data is corrupted */
+				//return 0;
+			}
+
 			LTC_temperatures[p] = beta
 					/ (log(R * LTC_data[18 * cellstack + 12 + k])
 							- log(
@@ -334,6 +348,7 @@ uint8_t LTC_make_temperatures(void) {
 													- LTC_data[18 * cellstack
 															+ 12 + K])))
 					- 273.15;
+			p++;
 
 		}
 	}

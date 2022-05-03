@@ -8,9 +8,9 @@ programme_functions.c:61:6:set_precharge_ext	16	static
 programme_functions.c:69:9:get_precharge_ext	8	static
 programme_functions.c:78:9:get_set_precharge_ext	8	static
 programme_functions.c:86:6:set_ams_error_ext	16	static
-programme_functions.c:94:9:get_ams_error_latched_ext	4	static
+programme_functions.c:94:9:get_ams_error_latched_ext	8	static
 programme_functions.c:102:6:set_imd_error_ext	16	static
-programme_functions.c:110:9:get_imd_error_latched_ext	4	static
+programme_functions.c:110:9:get_imd_error_latched_ext	8	static
 programme_functions.c:118:9:get_sc_probe_ext	8	static
-programme_functions.c:126:9:get_imd_ok_ext	4	static
-programme_functions.c:135:6:set_balance_ext	24	static
+programme_functions.c:126:9:get_imd_ok_ext	8	static
+programme_functions.c:135:6:set_balance_ext	16	static

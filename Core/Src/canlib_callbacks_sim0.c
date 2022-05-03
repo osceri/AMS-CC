@@ -16,17 +16,17 @@
 
 
 uint8_t can2_ivt_msg_result_i_tx_callback(ivt_msg_result_i_t* ivt_msg_result_i){
-	ivt_msg_result_i->i_ts = SIM0_Y.current;
+	ivt_msg_result_i->ivt_result_i = SIM0_Y.current;
 	return 1;
 }
 
 uint8_t can2_ivt_msg_result_u1_tx_callback(ivt_msg_result_u1_t* ivt_msg_result_u1) {
-	ivt_msg_result_u1->u_cells = SIM0_Y.accumulator_voltage;
+	ivt_msg_result_u1->ivt_result_u1 = SIM0_Y.accumulator_voltage;
 	return 1;
 }
 
 uint8_t can2_ivt_msg_result_u3_tx_callback(ivt_msg_result_u3_t* ivt_msg_result_u3) {
-	ivt_msg_result_u3->u_vehicle = SIM0_Y.vehicle_voltage;
+	ivt_msg_result_u3->ivt_result_u3 = SIM0_Y.vehicle_voltage;
 	return 1;
 }
 

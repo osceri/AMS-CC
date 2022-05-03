@@ -19,15 +19,15 @@ def makeHr(x):
     else:
         return 0
 
-start = 14200
-end = 15400
-s = 1000*0.2 * 200/320
+start = 1000
+end = -1
+s = 1000 * 0.2 * 200/320
 
 t = []
 v = []
 T = 0
 
-with open("s1.csv", "r") as record:
+with open("s2.csv", "r") as record:
     content = record.read()
     events = []
     for line in content.split('\n')[start:end]:
@@ -41,27 +41,35 @@ with open("s1.csv", "r") as record:
     cell_voltages = [ log for log in logs if "cell_voltages" in log[4] ]
     over_voltages = [ log for log in logs if "error 22" in log[4] ]
 
-    k = False
+    k = 0
+    h = 0
+    J = 30
+    t = []
+    v = [[] for i in range(J)]
+    _v = [ 0 for i in range(126)]
+    __tr = lambda x: float(x) / 10000
     for cv in cell_voltages:
         _, i, v1, v2, v3, v4, v5, v6, v7 = cv[4].split(" ")
-        t += [ s * makeHr(cv[1]) / 1000 ]
-        v += [ float(v1) / 10000 ]
-        if v[-1] > 4.189:
-            if k == False:
-                T0 = s * makeHr(cv[1]) / 1000
-                k = True
-    T = s*makeHr(over_voltages[0][1]) / 1000
+        i = int(i)
+        _v[i+0] = __tr(v1)
+        _v[i+1] = __tr(v2)
+        _v[i+2] = __tr(v3)
+        _v[i+3] = __tr(v4)
+        _v[i+4] = __tr(v5)
+        _v[i+5] = __tr(v6)
+        _v[i+6] = __tr(v7[:-1])
+        if i == 0:
+            h = h + 1
+            if h < 100:
+                continue
+            for j in range(J):
+                v[j].append(_v[j])
+            t += [ s * makeHr(cv[1]) / 1000 ]
 
-print(T0)
-plt.plot(t, v)
-plt.plot([T0 - 0.01, T0], [min(v), max(v)])
-plt.plot([T - 0.01, T], [min(v), max(v)])
-plt.legend(["Cell voltage", "Time of first over voltage", "Time of AMS error"])
-plt.xticks(t, rotation=45)
-plt.yticks([4.14, 4.15, 4.16, 4.17, 4.18, 4.19, 4.20, 4.21, 4.22, 4.23])
-plt.grid('minor')
+for g in v:
+    plt.plot(t, g, linewidth=0.8)
 plt.xlabel("Time [s]")
-plt.ylabel("Cell voltage")
+plt.ylabel("Cell voltages [V]")
 plt.show()
         
 

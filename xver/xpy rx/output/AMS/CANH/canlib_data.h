@@ -9,6 +9,13 @@
 #define INC_CANLIB_DATA_H_
 
 typedef struct {
+   double aux_1_temperature;
+   double aux_2_temperature;
+   double fuse_resistor_temperature;
+   double pre_charge_resistor_temperature;
+} ams_temperatures_t;
+
+typedef struct {
    uint8_t air1_closed;
    uint8_t air2_closed;
    uint8_t ams_error;
@@ -23,83 +30,6 @@ typedef struct {
    uint8_t sc_closed;
    double state_of_charge;
 } ams_status_1_t;
-
-typedef struct {
-   uint8_t activate_ts_button;
-   double dbu_temperature;
-   uint8_t ready_to_drive_button;
-} dbu_status_1_t;
-
-typedef struct {
-   double t1s1;
-   double t1s2;
-   double t1s3;
-   double t1s4;
-   double t1s5;
-   double t1s6;
-   double t1s7;
-   double t1s8;
-   double t1s9;
-   double t1s10;
-   double t1s11;
-   double t1s12;
-   double t2s1;
-   double t2s2;
-   double t2s3;
-   double t2s4;
-   double t2s5;
-   double t2s6;
-   double t2s7;
-   double t2s8;
-   double t2s9;
-   double t2s10;
-   double t2s11;
-   double t2s12;
-   double t3s1;
-   double t3s2;
-   double t3s3;
-   double t3s4;
-   double t3s5;
-   double t3s6;
-   double t3s7;
-   double t3s8;
-   double t3s9;
-   double t3s10;
-   double t3s11;
-   double t3s12;
-   double t4s1;
-   double t4s2;
-   double t4s3;
-   double t4s4;
-   double t4s5;
-   double t4s6;
-   double t4s7;
-   double t4s8;
-   double t4s9;
-   double t4s10;
-   double t4s11;
-   double t4s12;
-   double t5s1;
-   double t5s2;
-   double t5s3;
-   double t5s4;
-   double t5s5;
-   double t5s6;
-   double t5s7;
-   double t5s8;
-   double t5s9;
-   double t5s10;
-   double t5s11;
-   double t5s12;
-   uint8_t temperature_multiplexor;
-} ams_cell_temperatures_t;
-
-typedef struct {
-   double aux_1_temperature;
-   double aux_2_temperature;
-   double fuse_resistor_temperature;
-   double pre_charge_resistor_temperature;
-} ams_temperatures_t;
 
 typedef struct {
    double v1s1;
@@ -231,6 +161,76 @@ typedef struct {
    uint8_t voltage_multiplexor;
 } ams_cell_voltages_t;
 
+typedef struct {
+   uint8_t activate_ts_button;
+   double dbu_temperature;
+   uint8_t ready_to_drive_button;
+} dbu_status_1_t;
+
+typedef struct {
+   double t1s1;
+   double t1s2;
+   double t1s3;
+   double t1s4;
+   double t1s5;
+   double t1s6;
+   double t1s7;
+   double t1s8;
+   double t1s9;
+   double t1s10;
+   double t1s11;
+   double t1s12;
+   double t2s1;
+   double t2s2;
+   double t2s3;
+   double t2s4;
+   double t2s5;
+   double t2s6;
+   double t2s7;
+   double t2s8;
+   double t2s9;
+   double t2s10;
+   double t2s11;
+   double t2s12;
+   double t3s1;
+   double t3s2;
+   double t3s3;
+   double t3s4;
+   double t3s5;
+   double t3s6;
+   double t3s7;
+   double t3s8;
+   double t3s9;
+   double t3s10;
+   double t3s11;
+   double t3s12;
+   double t4s1;
+   double t4s2;
+   double t4s3;
+   double t4s4;
+   double t4s5;
+   double t4s6;
+   double t4s7;
+   double t4s8;
+   double t4s9;
+   double t4s10;
+   double t4s11;
+   double t4s12;
+   double t5s1;
+   double t5s2;
+   double t5s3;
+   double t5s4;
+   double t5s5;
+   double t5s6;
+   double t5s7;
+   double t5s8;
+   double t5s9;
+   double t5s10;
+   double t5s11;
+   double t5s12;
+   uint8_t temperature_multiplexor;
+} ams_cell_temperatures_t;
+
 
 typedef struct {
    uint8_t amk1_control_dc_on;
@@ -243,8 +243,24 @@ typedef struct {
 } amk1_setpoints_1_t;
 
 typedef struct {
-   double u_vehicle;
+   uint8_t ivt_id_result_u3;
+   uint8_t ivt_msg_count_result_u3;
+   double ivt_result_u3;
+   uint8_t ivt_result_u3_channel_error;
+   uint8_t ivt_result_u3_measurement_error;
+   uint8_t ivt_result_u3_ocs;
+   uint8_t ivt_result_u3_system_error;
 } ivt_msg_result_u3_t;
+
+typedef struct {
+   uint8_t ivt_id_result_i;
+   uint8_t ivt_msg_count_result_i;
+   double ivt_result_i;
+   uint8_t ivt_result_i_channel_error;
+   uint8_t ivt_result_i_measurement_error;
+   uint8_t ivt_result_i_ocs;
+   uint8_t ivt_result_i_system_error;
+} ivt_msg_result_i_t;
 
 typedef struct {
    double msg_set_current_limit;
@@ -256,16 +272,28 @@ typedef struct {
 } charger_config_t;
 
 typedef struct {
+   uint8_t ivt_id_result_u1;
+   uint8_t ivt_msg_count_result_u1;
+   double ivt_result_u1;
+   uint8_t ivt_result_u1_channel_error;
+   uint8_t ivt_result_u1_measurement_error;
+   uint8_t ivt_result_u1_ocs;
+   uint8_t ivt_result_u1_system_error;
+} ivt_msg_result_u1_t;
+
+typedef struct {
    uint8_t enable_ams_charging;
 } cc_status_t;
 
 typedef struct {
-   double i_ts;
-} ivt_msg_result_i_t;
-
-typedef struct {
-   double u_cells;
-} ivt_msg_result_u1_t;
+   uint8_t ivt_id_result_u2;
+   uint8_t ivt_msg_count_result_u2;
+   double ivt_result_u2;
+   uint8_t ivt_result_u2_channel_error;
+   uint8_t ivt_result_u2_measurement_error;
+   uint8_t ivt_result_u2_ocs;
+   uint8_t ivt_result_u2_system_error;
+} ivt_msg_result_u2_t;
 
 
 #endif

@@ -56,7 +56,14 @@ void can2_amk1_setpoints_1_rx_callback(amk1_setpoints_1_t* amk1_setpoints_1);
  * @Param  A pointer to the message which was received
  * @Retval None
  */
-void can2_ivt_msg_result_i_rx_callback(ivt_msg_result_i_t* ivt_msg_result_i);
+void can2_ivt_msg_result_u3_rx_callback(ivt_msg_result_u3_t* ivt_msg_result_u3);
+
+/*
+ * @Brief  
+ * @Param  A pointer to the message which was received
+ * @Retval None
+ */
+void can2_ivt_msg_result_u2_rx_callback(ivt_msg_result_u2_t* ivt_msg_result_u2);
 
 /*
  * @Brief  
@@ -70,7 +77,7 @@ void can2_ivt_msg_result_u1_rx_callback(ivt_msg_result_u1_t* ivt_msg_result_u1);
  * @Param  A pointer to the message which was received
  * @Retval None
  */
-void can2_ivt_msg_result_u3_rx_callback(ivt_msg_result_u3_t* ivt_msg_result_u3);
+void can2_ivt_msg_result_i_rx_callback(ivt_msg_result_i_t* ivt_msg_result_i);
 
 /*
  * @Brief  
@@ -124,9 +131,16 @@ uint8_t can1_ams_cell_temperatures_tx_callback(ams_cell_temperatures_t* ams_cell
 /*
  * @Brief  
  * @Param  A pointer to a message which should be sent
- * @Retval Return 1 if the data entered in ivt_msg_result_i should be sent
+ * @Retval Return 1 if the data entered in ivt_msg_result_u3 should be sent
  */
-uint8_t can2_ivt_msg_result_i_tx_callback(ivt_msg_result_i_t* ivt_msg_result_i);
+uint8_t can2_ivt_msg_result_u3_tx_callback(ivt_msg_result_u3_t* ivt_msg_result_u3);
+
+/*
+ * @Brief  
+ * @Param  A pointer to a message which should be sent
+ * @Retval Return 1 if the data entered in ivt_msg_result_u2 should be sent
+ */
+uint8_t can2_ivt_msg_result_u2_tx_callback(ivt_msg_result_u2_t* ivt_msg_result_u2);
 
 /*
  * @Brief  
@@ -138,9 +152,9 @@ uint8_t can2_ivt_msg_result_u1_tx_callback(ivt_msg_result_u1_t* ivt_msg_result_u
 /*
  * @Brief  
  * @Param  A pointer to a message which should be sent
- * @Retval Return 1 if the data entered in ivt_msg_result_u3 should be sent
+ * @Retval Return 1 if the data entered in ivt_msg_result_i should be sent
  */
-uint8_t can2_ivt_msg_result_u3_tx_callback(ivt_msg_result_u3_t* ivt_msg_result_u3);
+uint8_t can2_ivt_msg_result_i_tx_callback(ivt_msg_result_i_t* ivt_msg_result_i);
 
 /*
  * @Brief  

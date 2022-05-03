@@ -37,7 +37,7 @@ for state in state_machines:
     uses_timer = state.states or ('before' in allcond) or ('after' in allcond)
     #$SM$_state_t $state.name$_function() {
     if state.states:
-        #   if(timer_r$state.depth$ < 0.001*Ts_f32) {
+        #   if(timer_r$state.depth$ < 0.001*$SM$_inputs.Ts) {
         #       state_r$state.depth+1$ = STATE_$state.name.upper()$_0;
         #   }
         #
@@ -68,7 +68,7 @@ for state in state_machines:
                 #       $statement$;
             #   }
         #
-    #   timer_r$state.depth$ += Ts_f32;
+    #   timer_r$state.depth$ += $SM$_inputs.Ts;
     #   return STATE_$state.name.upper()$;
     #}
     #

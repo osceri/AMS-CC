@@ -27,10 +27,10 @@ for system in systems:
 
 for system in systems:
     for message in system.rx_messages:
-        #static struct $system.name$_$message.name$_t $system.name$_$message.name$;
+        #static struct $system.name$_$message.name$_t $system.name$_rx_$message.name$;
     #
     for message in system.tx_messages:
-        #static struct $system.name$_$message.name$_t $system.name$_$message.name$;
+        #static struct $system.name$_$message.name$_t $system.name$_tx_$message.name$;
     #
 
 for system in systems:
@@ -85,9 +85,9 @@ for system in systems:
         # * @Retval None
         # */
         #void $system.name$_$message.name$_decode() {
-        #   $system.name$_$message.name$_unpack(&$system.name$_$message.name$, rx_data, $message.length$);
+        #   $system.name$_$message.name$_unpack(&$system.name$_rx_$message.name$, rx_data, $message.length$);
         if message.multiplexer:
-            #   $system.name$_$message.name$_array_raise($system.name$_$message.name$.$message.multiplexer$);
+            #   $system.name$_$message.name$_array_raise($system.name$_rx_$message.name$.$message.multiplexer$);
         else:
             #   $system.name$_$message.name$_flag = 1;
         #   $system.name$_$message.name$_receive();
@@ -113,18 +113,18 @@ for system in systems:
         #   $system.name$_$message.name$_tx_callback(&$message.name$);
         #
         for signal in message.signals:
-            #   $system.name$_$message.name$.$signal.name$ = $system.name$_$message.name$_$signal.name$_encode($message.name$.$signal.name$);
+            #   $system.name$_tx_$message.name$.$signal.name$ = $system.name$_$message.name$_$signal.name$_encode($message.name$.$signal.name$);
         #
         if message.multiplexer:
             for multiplexer_id in message.multiplexer_ids:
-                #       $system.name$_$message.name$.$message.multiplexer$ = $multiplexer_id$;
-                #       $system.name$_$message.name$_pack(tx_data, &$system.name$_$message.name$, $message.length$);
+                #       $system.name$_tx_$message.name$.$message.multiplexer$ = $multiplexer_id$;
+                #       $system.name$_$message.name$_pack(tx_data, &$system.name$_tx_$message.name$, $message.length$);
                 #       while(!HAL_CAN_GetTxMailboxesFreeLevel(_h$system.name$));
                 #       if (HAL_CAN_AddTxMessage(_h$system.name$, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
                 #           Error_Handler();
                 #       }
         else:
-            #   $system.name$_$message.name$_pack(tx_data, &$system.name$_$message.name$, $message.length$);
+            #   $system.name$_$message.name$_pack(tx_data, &$system.name$_tx_$message.name$, $message.length$);
             #   while(!HAL_CAN_GetTxMailboxesFreeLevel(_h$system.name$));
             #   if (HAL_CAN_AddTxMessage(_h$system.name$, &tx_header, tx_data, &tx_mailbox) != HAL_OK) {
             #       Error_Handler();
@@ -144,7 +144,7 @@ for system in systems:
         #       $message.name$_t $message.name$;
         for signal in message.signals:
             if not signal.is_multiplexer:
-                #       $message.name$.$signal.name$ = $system.name$_$message.name$_$signal.name$_decode($system.name$_$message.name$.$signal.name$);
+                #       $message.name$.$signal.name$ = $system.name$_$message.name$_$signal.name$_decode($system.name$_rx_$message.name$.$signal.name$);
         #       $system.name$_$message.name$_rx_callback(&$message.name$);
         #       $system.name$_$message.name$_flag = 0;
         #   }

@@ -129,17 +129,17 @@ void SIM0_step(void)
     }
   } else if (rtb_Memory22 != 0.0) {
     if (rtb_Product1_n != 0.0) {
-      rtb_Exp = (rtb_y - SIM0_DW.Memory_PreviousInput_a) * 0.8 +
+      rtb_Exp = (rtb_y - SIM0_DW.Memory_PreviousInput_a) * 0.95 +
         SIM0_DW.Memory_PreviousInput_a;
-      rtb_current = rtb_is_drive - (rtb_y - rtb_Exp) / 0.5;
+      rtb_current = rtb_is_drive - (rtb_y - rtb_Exp) / (0.5 * SIM0_P.Ts);
     } else if (rtb_Exp != 0.0) {
-      rtb_Exp = (rtb_y - SIM0_DW.Memory_PreviousInput_a) / 50.0 +
+      rtb_Exp = (rtb_y - SIM0_DW.Memory_PreviousInput_a) / (50.0 * SIM0_P.Ts) +
         SIM0_DW.Memory_PreviousInput_a;
-      rtb_current = rtb_is_drive - (rtb_y - rtb_Exp) / 100.0;
+      rtb_current = rtb_is_drive - (rtb_y - rtb_Exp) / (100.0  * SIM0_P.Ts);
     } else {
-      rtb_Exp = (0.0 - SIM0_DW.Memory_PreviousInput_a) / 5.0 +
+      rtb_Exp = (0.0 - SIM0_DW.Memory_PreviousInput_a) / (5.0 * SIM0_P.Ts) +
         SIM0_DW.Memory_PreviousInput_a;
-      rtb_current = -(0.0 - rtb_Exp) / 10.0;
+      rtb_current = -(0.0 - rtb_Exp) / (10.0 * SIM0_P.Ts);
     }
   } else {
     rtb_Exp = -1.0;

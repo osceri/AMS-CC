@@ -7,18 +7,7 @@ class Signal:
     def __init__(self, signal):
         # String descriptors
         self.name = signal.name.lower()
-        self.name = ""
-        Ks = []
-        for token in signal.name.split("_"):
-            Ls = []
-            for part in regex.findall('[A-Z]?[a-z0-9]*', token):
-                if part:
-                    Ls += [part.lower()]
-            ls = "_".join(Ls)
-            if ls:
-                Ks += [ls]
-        self.name = "_".join(Ks)
-
+        self.name = regex.sub(r"([a-z0-9])([A-Z])([a-z0-9])([A-Z])", r"\1\_\2", signal.name).lower()
         self.comment = signal.comment
         self.is_multiplexer = signal.is_multiplexer
 
@@ -69,6 +58,7 @@ class Message:
         self.length = message.length
         self.is_extended = message.is_extended_frame
         self.multiplexer = [ signal.name for signal in self.signals if signal.is_multiplexer ]
+        self.multiplexer_ids = []
         if self.multiplexer:
             self.multiplexer = self.multiplexer[0]
             self.multiplexer_ids = list(set(reduce(lambda x, y: x + y, [signal.multiplexer_ids for signal in self.signals if signal.multiplexer_ids])))

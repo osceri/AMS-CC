@@ -67,10 +67,9 @@ with open("s3.csv", "r") as record:
             v.append(__v)
             t += [ s * makeHr(cv[1]) / 1000 ]
 
-for g in v:
-    plt.plot(t, g)
+plt.plot(t, v)
 plt.xlabel("Time [s]")
-plt.ylabel("Cell voltages")
+plt.ylabel("Accumulator voltage [V]")
 plt.show()
         
 

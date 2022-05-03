@@ -27,7 +27,7 @@ t = []
 v = []
 T = 0
 
-with open("s2.csv", "r") as record:
+with open("s4.csv", "r") as record:
     content = record.read()
     events = []
     for line in content.split('\n')[start:end]:
@@ -38,38 +38,51 @@ with open("s2.csv", "r") as record:
             pass
 
     logs = [ event for event in events if event[3] == '"Log"' ]
-    cell_voltages = [ log for log in logs if "cell_voltages" in log[4] ]
-    over_voltages = [ log for log in logs if "error 22" in log[4] ]
+    CSE = [ log for log in logs if "CSE" in log[4] ]
+    CST = [ log for log in logs if "CST" in log[4] ]
 
-    k = 0
-    h = 0
-    t = []
-    v = [[] for i in range(126)]
-    _v = [ 0 for i in range(126)]
-    __tr = lambda x: float(x) / 10000
-    for cv in cell_voltages:
-        _, i, v1, v2, v3, v4, v5, v6, v7 = cv[4].split(" ")
-        i = int(i)
-        _v[i+0] = __tr(v1)
-        _v[i+1] = __tr(v2)
-        _v[i+2] = __tr(v3)
-        _v[i+3] = __tr(v4)
-        _v[i+4] = __tr(v5)
-        _v[i+5] = __tr(v6)
-        _v[i+6] = __tr(v7[:-1])
-        if i == 0:
-            h = h + 1
-            if h < 100:
-                continue
-            for j in range(126):
-                v[j].append(_v[j])
-            t += [ s * makeHr(cv[1]) / 1000 ]
+    se = []
+    ce = []
+    te = []
+    for cv in CSE:
+        _, soc, cap = cv[4].split(" ")
+        se += [ float(soc)/1000 ]
+        ce += [ float(cap[:-1]) ]
+        te += [ s * makeHr(cv[1]) / 1000 ]
 
-for g in v:
-    plt.plot(t, g)
+    st = []
+    ct = []
+    tt = []
+    for cv in CST:
+        _, soc, cap = cv[4].split(" ")
+        st += [ float(soc)/1000 ]
+        ct += [ float(cap[:-1]) ]
+        tt += [ s * makeHr(cv[1]) / 1000 ]
+
+
+plt.plot(te, se)
+plt.plot(tt, st)
+print("Est, True, Diff")
+print(se[-1], st[-1], (se[-1] - st[-1])/se[-1])
 plt.xlabel("Time [s]")
-plt.ylabel("Cell voltages")
+plt.ylabel("SOC [%]")
+plt.legend(["Estimated", "True"])
 plt.show()
-        
+
+fig, ax1 = plt.subplots()
+ax1.plot(te, ce)
+ax1.plot(tt, ct)
+ax1.set_xlabel("Time [s]")
+yhys = 0.01*(ce[0] - ce[-1])
+ax1.set_ylim(ymax = ce[0] + yhys, ymin = ce[-1] - yhys)
+ax1.set_ylabel("Capacity [As]")
+
+ax2 = ax1.twinx()
+yhys = 0.01*(1 - ce[-1]/28350)
+ax2.set_ylim(ymax = 1 + yhys, ymin = ce[-1]/28350 - yhys)
+ax2.set_ylabel("SOH")
+
+ax1.legend(["Estimated", "True"])
+plt.show()
 
 

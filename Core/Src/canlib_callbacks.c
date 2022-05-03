@@ -13,11 +13,12 @@
 #include "canlib_data.h"
 #include "canlib_callbacks.h"
 #include "CSE.h"
+#include "string.h"
 
 void can1_dbu_status_1_rx_callback(dbu_status_1_t *dbu_status_1) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-	xQueueOverwriteFromISR(start_drive_queue,
-			&dbu_status_1->activate_ts_button, &xHigherPriorityTaskWoken);
+	xQueueOverwriteFromISR(start_drive_queue, &dbu_status_1->activate_ts_button,
+			&xHigherPriorityTaskWoken);
 	xQueueOverwriteFromISR(start_balance_queue,
 			&dbu_status_1->ready_to_drive_button, &xHigherPriorityTaskWoken);
 	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
@@ -25,21 +26,24 @@ void can1_dbu_status_1_rx_callback(dbu_status_1_t *dbu_status_1) {
 
 void can2_ivt_msg_result_i_rx_callback(ivt_msg_result_i_t *ivt_msg_result_i) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-	xQueueOverwriteFromISR(accumulator_current_queue, &ivt_msg_result_i->i_ts,
+	double accumulator_current = ivt_msg_result_i->ivt_result_i/1000;
+	xQueueOverwriteFromISR(accumulator_current_queue, &accumulator_current,
 			&xHigherPriorityTaskWoken);
 	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
 
 void can2_ivt_msg_result_u1_rx_callback(ivt_msg_result_u1_t *ivt_msg_result_u1) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-	xQueueOverwriteFromISR(accumulator_voltage_queue,
-			&ivt_msg_result_u1->u_cells, &xHigherPriorityTaskWoken);
+	double vehicle_voltage = ivt_msg_result_u1->ivt_result_u1/1000;
+	xQueueOverwriteFromISR(vehicle_voltage_queue,
+			&vehicle_voltage, &xHigherPriorityTaskWoken);
 	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
 
 void can2_ivt_msg_result_u3_rx_callback(ivt_msg_result_u3_t *ivt_msg_result_u3) {
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-	xQueueOverwriteFromISR(vehicle_voltage_queue, &ivt_msg_result_u3->u_vehicle,
+	double accumulator_voltage= ivt_msg_result_u3->ivt_result_u3/1000;
+	xQueueOverwriteFromISR(accumulator_voltage_queue, &accumulator_voltage,
 			&xHigherPriorityTaskWoken);
 	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
@@ -54,7 +58,8 @@ void can2_cc_status_rx_callback(cc_status_t *cc_status) {
 uint8_t can2_charger_config_tx_callback(charger_config_t *charger_config) {
 	charger_config->msg_set_current_limit = charger.charger_current_limit;
 	charger_config->msg_set_voltage_limit = charger.charger_voltage_limit;
-	charger_config->msg_set_power_limit = charger.charger_current_limit * charger.charger_voltage_limit;
+	charger_config->msg_set_power_limit = charger.charger_current_limit
+			* charger.charger_voltage_limit;
 	charger_config->msg_set_time_out = 60;
 	charger_config->msg_set_enabled = charger.enable_charger;
 	return 1;
@@ -120,10 +125,23 @@ uint8_t can1_ams_temperatures_tx_callback(ams_temperatures_t *ams_temperatures) 
 
 uint8_t can1_ams_cell_voltages_tx_callback(
 		ams_cell_voltages_t *ams_cell_voltages) {
-	return xQueuePeek(cell_voltages_queue, &ams_cell_voltages->v1s1, 0);
+	double *cell_voltages;
+	if (xQueuePeek(cell_voltages_queue, &cell_voltages, 0)) {
+		memcpy(&ams_cell_voltages->v1s1, cell_voltages, sizeof(double) * 126);
+		return 0;
+	} else {
+		return 1;
+	}
 }
 
 uint8_t can1_ams_cell_temperatures_tx_callback(
 		ams_cell_temperatures_t *ams_cell_temperatures) {
-	return xQueuePeek(cell_temperatures_queue, &ams_cell_temperatures->t1s1, 0);
+	double *cell_temperatures;
+	if (xQueuePeek(cell_temperatures_queue, &cell_temperatures, 0)) {
+		memcpy(&ams_cell_temperatures->t1s1, cell_temperatures,
+				sizeof(double) * 60);
+		return 0;
+	} else {
+		return 1;
+	}
 }

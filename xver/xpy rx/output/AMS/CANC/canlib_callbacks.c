@@ -67,7 +67,16 @@ __weak void can2_amk1_setpoints_1_rx_callback(amk1_setpoints_1_t* amk1_setpoints
  * @Param  A pointer to the message which was received
  * @Retval None
  */
-__weak void can2_ivt_msg_result_i_rx_callback(ivt_msg_result_i_t* ivt_msg_result_i) {
+__weak void can2_ivt_msg_result_u3_rx_callback(ivt_msg_result_u3_t* ivt_msg_result_u3) {
+
+}
+
+/*
+ * @Brief  
+ * @Param  A pointer to the message which was received
+ * @Retval None
+ */
+__weak void can2_ivt_msg_result_u2_rx_callback(ivt_msg_result_u2_t* ivt_msg_result_u2) {
 
 }
 
@@ -85,7 +94,7 @@ __weak void can2_ivt_msg_result_u1_rx_callback(ivt_msg_result_u1_t* ivt_msg_resu
  * @Param  A pointer to the message which was received
  * @Retval None
  */
-__weak void can2_ivt_msg_result_u3_rx_callback(ivt_msg_result_u3_t* ivt_msg_result_u3) {
+__weak void can2_ivt_msg_result_i_rx_callback(ivt_msg_result_i_t* ivt_msg_result_i) {
 
 }
 
@@ -155,9 +164,18 @@ __weak uint8_t can1_ams_cell_temperatures_tx_callback(ams_cell_temperatures_t* a
 /*
  * @Brief  
  * @Param  A pointer to a message which should be sent
- * @Retval Return 1 if the data entered in ivt_msg_result_i should be sent
+ * @Retval Return 1 if the data entered in ivt_msg_result_u3 should be sent
  */
-__weak uint8_t can2_ivt_msg_result_i_tx_callback(ivt_msg_result_i_t* ivt_msg_result_i) {
+__weak uint8_t can2_ivt_msg_result_u3_tx_callback(ivt_msg_result_u3_t* ivt_msg_result_u3) {
+
+}
+
+/*
+ * @Brief  
+ * @Param  A pointer to a message which should be sent
+ * @Retval Return 1 if the data entered in ivt_msg_result_u2 should be sent
+ */
+__weak uint8_t can2_ivt_msg_result_u2_tx_callback(ivt_msg_result_u2_t* ivt_msg_result_u2) {
 
 }
 
@@ -173,9 +191,9 @@ __weak uint8_t can2_ivt_msg_result_u1_tx_callback(ivt_msg_result_u1_t* ivt_msg_r
 /*
  * @Brief  
  * @Param  A pointer to a message which should be sent
- * @Retval Return 1 if the data entered in ivt_msg_result_u3 should be sent
+ * @Retval Return 1 if the data entered in ivt_msg_result_i should be sent
  */
-__weak uint8_t can2_ivt_msg_result_u3_tx_callback(ivt_msg_result_u3_t* ivt_msg_result_u3) {
+__weak uint8_t can2_ivt_msg_result_i_tx_callback(ivt_msg_result_i_t* ivt_msg_result_i) {
 
 }
 

@@ -7,18 +7,7 @@ class Signal:
     def __init__(self, signal):
         # String descriptors
         self.name = signal.name.lower()
-        self.name = ""
-        Ks = []
-        for token in signal.name.split("_"):
-            Ls = []
-            for part in regex.findall('[A-Z]?[a-z0-9]*', token):
-                if part:
-                    Ls += [part.lower()]
-            ls = "_".join(Ls)
-            if ls:
-                Ks += [ls]
-        self.name = "_".join(Ks)
-
+        self.name = regex.sub(r"([a-z0-9])([A-Z])", r"\1_\2", signal.name).lower()
         self.comment = signal.comment
         self.is_multiplexer = signal.is_multiplexer
 

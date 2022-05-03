@@ -110,7 +110,7 @@ void Error_Handler(void);
 
 #define TICK2HZ (configTICK_RATE_HZ) // Specific for using a STM32F446RE with STm32F407VG code ...
 
-#define SIMULATION
+//#define SIMULATION
 
 #define STREAM_DATA
 
@@ -119,6 +119,7 @@ error_t __error;
 void __raise_ams_error(error_t error);
 
 void __raise_imd_error(error_t error);
+
 
 /* USER CODE END Private defines */
 

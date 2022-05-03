@@ -1,5 +1,5 @@
 (error -> main) : [!(error||ams_error||imd_error)] {} {}
-(main -> error) : [error||ams_error||imd_error] {} {}
+(main -> error) : [after(5)&&(error||ams_error||imd_error)] {} {}
 (0 -> main) : [] {} {}
 (error -> error) : [] {} {
     (0 -> error_detected) : [] {} {}
@@ -11,9 +11,9 @@
     (precharge_charge -> charge) : [precharge_charge_complete] {precharge_charge_complete = 0;} {}
     (charge -> idle) : [charge_complete] {charge_complete = 0;} {}
     (drive -> idle) : [drive_complete] {drive_complete = 0;} {}
-    (idle -> precharge_drive) : [SC&&drive] {} {}
-    (idle -> precharge_charge) : [SC&&charge] {enable_charger = 1;} {}
-    (idle -> balance) : [!SC&&balance&&(cell_voltages_variance_f64 > 0.01)] {} {}
+    (idle -> precharge_drive) : [SC&&drive&&(2.95 < minimum_cell_voltage_f64)] {} {}
+    (idle -> precharge_charge) : [SC&&charge&&(maximum_cell_voltage_f64 < 4.05)] {enable_charger = 1;} {}
+    (idle -> balance) : [!SC&&balance&&(cell_voltages_variance_f64 > 0.01)&&(3.4 < minimum_cell_voltage_f64)] {} {}
     (0 -> idle) : [] {} {}
     (balance -> idle) : [SC||(!balance)||(cell_voltages_variance_f64 < 0.005)] {end_cell_balancing();} {}
     (precharge_drive -> precharge_drive) : [] {} {

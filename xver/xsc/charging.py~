@@ -27,7 +27,7 @@ t = []
 v = []
 T = 0
 
-with open("s2.csv", "r") as record:
+with open("s3.csv", "r") as record:
     content = record.read()
     events = []
     for line in content.split('\n')[start:end]:
@@ -44,7 +44,7 @@ with open("s2.csv", "r") as record:
     k = 0
     h = 0
     t = []
-    v = [[] for i in range(126)]
+    v = []
     _v = [ 0 for i in range(126)]
     __tr = lambda x: float(x) / 10000
     for cv in cell_voltages:
@@ -61,14 +61,18 @@ with open("s2.csv", "r") as record:
             h = h + 1
             if h < 100:
                 continue
+            __v = 0
             for j in range(126):
-                v[j].append(_v[j])
+                __v += _v[j]
+            v.append(__v)
             t += [ s * makeHr(cv[1]) / 1000 ]
 
-for g in v:
-    plt.plot(t, g)
-plt.xlabel("Time [s]")
-plt.ylabel("Cell voltages")
+fig, ax1 = plt.subplots()
+ax1.plot(t, v)
+ax1.xlabel("Time [s]")
+ax1.ylabel("Accumulator voltage [V]")
+ax2 = ax1.twinx()
+ax2.ylabel("SOH")
 plt.show()
         
 

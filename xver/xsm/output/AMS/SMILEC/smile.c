@@ -622,18 +622,18 @@ ams_state_t ams_main_charge_function() {
 }
 
 ams_state_t ams_main_idle_function() {
-   if(ams_inputs.SC&&ams_inputs.drive) {
+   if(ams_inputs.SC&&ams_inputs.drive&&(2.95<ams_inputs.minimum_cell_voltage)) {
        timer_r2 = 0;
        return STATE_AMS_MAIN_PRECHARGE_DRIVE;
    }
 
-   if(ams_inputs.SC&&ams_inputs.charge) {
+   if(ams_inputs.SC&&ams_inputs.charge&&(ams_inputs.maximum_cell_voltage<4.05)) {
        ams_outputs.enable_charger=1;
        timer_r2 = 0;
        return STATE_AMS_MAIN_PRECHARGE_CHARGE;
    }
 
-   if(!ams_inputs.SC&&ams_inputs.balance&&(ams_inputs.cell_voltages_variance>0.01)) {
+   if(!ams_inputs.SC&&ams_inputs.balance&&(ams_inputs.cell_voltages_variance>0.01)&&(3.4<ams_inputs.minimum_cell_voltage)) {
        timer_r2 = 0;
        return STATE_AMS_MAIN_BALANCE;
    }
@@ -746,7 +746,7 @@ ams_state_t ams_main_function() {
            break;
    }
 
-   if(ams_outputs.error||ams_inputs.ams_error||ams_inputs.imd_error) {
+   if((timer_r1 > 5)&&(ams_outputs.error||ams_inputs.ams_error||ams_inputs.imd_error)) {
        timer_r1 = 0;
        return STATE_AMS_ERROR;
    }

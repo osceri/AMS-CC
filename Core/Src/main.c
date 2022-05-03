@@ -90,35 +90,35 @@ void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN 0 */
 
 const task_info SM_task_info = { { .name = "SM_task", .stack_size = 1024 * 4,
-		.priority = (osPriority_t) osPriorityBelowNormal, }, .periodicity = 0.2,
+		.priority = (osPriority_t) osPriorityBelowNormal, }, .periodicity = 0.1,
 		.offset = 0 * 0.000, .execution_time = 0.010, };
 
 const task_info COOL_task_info = { { .name = "COOL_task", .stack_size = 160 * 4,
-		.priority = (osPriority_t) osPriorityNormal5, }, .periodicity = 0.2,
+		.priority = (osPriority_t) osPriorityNormal5, }, .periodicity = 0.1,
 		.offset = 0 * 0.220, .execution_time = 0.001, };
 
 const task_info CSE_task_info = { { .name = "CSE_task", .stack_size = 1024 * 4,
-		.priority = (osPriority_t) osPriorityNormal4, }, .periodicity = 0.2,
+		.priority = (osPriority_t) osPriorityNormal4, }, .periodicity = 0.1,
 		.offset = 0 * 0.170, .execution_time = 0.035, };
 
 const task_info CAN_task_info = { { .name = "CAN_task", .stack_size = 512 * 4,
-		.priority = (osPriority_t) osPriorityNormal3, },
-		.periodicity = 0.2, .offset = 0 * 0.140, .execution_time = 0.020, };
+		.priority = (osPriority_t) osPriorityNormal3, }, .periodicity = 0.1,
+		.offset = 0 * 0.140, .execution_time = 0.020, };
 
 const task_info COM_task_info = { { .name = "COM_task", .stack_size = 2048 * 4,
-		.priority = (osPriority_t) osPriorityNormal2, }, .periodicity = 0.2,
+		.priority = (osPriority_t) osPriorityNormal2, }, .periodicity = 0.1,
 		.offset = 0 * 0.060, .execution_time = 0.040, };
 
 const task_info SIM_task_info = { { .name = "SIM_task", .stack_size = 3000 * 4,
-		.priority = (osPriority_t) osPriorityNormal1, }, .periodicity = 0.2,
+		.priority = (osPriority_t) osPriorityNormal1, }, .periodicity = 0.1,
 		.offset = 0 * 0.230, .execution_time = 0.1, };
 
 const task_info error_handler_task_info = { { .name = "error_handler_task",
 		.stack_size = 128 * 4, .priority = (osPriority_t) osPriorityLow1, },
-		.periodicity = 0.2, .offset = 5, .execution_time = 0.001, };
+		.periodicity = 0.1, .offset = 5, .execution_time = 0.001, };
 
 const task_info IWDG_task_info = { { .name = "IWDG_task", .stack_size = 160 * 4,
-		.priority = (osPriority_t) osPriorityLow, }, .periodicity = 0.2,
+		.priority = (osPriority_t) osPriorityLow, }, .periodicity = 0.1,
 		.offset = 0 * 0.010, .execution_time = 0.001, };
 
 const queue_info IMD_queue_info = { .element_count = 1, .element_size =
@@ -265,53 +265,51 @@ int main() {
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_Config(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ * @brief System Clock Configuration
+ * @retval None
+ */
+void SystemClock_Config(void) {
+	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
 
-  /** Configure the main internal regulator output voltage
-  */
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 128;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+	/** Configure the main internal regulator output voltage
+	 */
+	__HAL_RCC_PWR_CLK_ENABLE();
+	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+	/** Initializes the RCC Oscillators according to the specified parameters
+	 * in the RCC_OscInitTypeDef structure.
+	 */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI
+			| RCC_OSCILLATORTYPE_LSI;
+	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+	RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+	RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+	RCC_OscInitStruct.PLL.PLLM = 8;
+	RCC_OscInitStruct.PLL.PLLN = 128;
+	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+	RCC_OscInitStruct.PLL.PLLQ = 4;
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+		Error_Handler();
+	}
+	/** Initializes the CPU, AHB and APB buses clocks
+	 */
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
+			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
+		Error_Handler();
+	}
 }
 
 /* USER CODE BEGIN 4 */
@@ -368,6 +366,19 @@ void __raise_ams_error(error_t error) {
 	xQueueOverwrite(error_queue, &error);
 }
 
+void __raise_ams_error_isr(error_t error) {
+	set_ams_error_ext(1);
+	__error = error;
+#ifdef STREAM_DATA
+	SEGGER_SYSVIEW_PrintfHost("error %i", error);
+#endif
+
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	xQueueOverwriteFromISR(error_queue, &error,
+			&xHigherPriorityTaskWoken);
+	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+}
+
 void __raise_imd_error(error_t error) {
 	set_imd_error_ext(1);
 	__error = error;
@@ -375,6 +386,20 @@ void __raise_imd_error(error_t error) {
 	SEGGER_SYSVIEW_PrintfHost("error %i", error);
 #endif
 	xQueueOverwrite(error_queue, &error);
+}
+
+
+void __raise_imd_error_isr(error_t error) {
+	set_imd_error_ext(1);
+	__error = error;
+#ifdef STREAM_DATA
+	SEGGER_SYSVIEW_PrintfHost("error %i", error);
+#endif
+
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	xQueueOverwriteFromISR(error_queue, &error,
+			&xHigherPriorityTaskWoken);
+	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
 
 /* ENTER TASKS */
@@ -471,7 +496,6 @@ void start_SM_task(void *argument) {
 		charger.charger_voltage_limit = 4.15 * 126;	// sought cell voltage times count of cells
 		charger.enable_charger = ams_outputs.enable_charger;
 
-
 		set_air_minus_ext(ams_outputs.close_air_minus);
 		set_air_plus_ext(ams_outputs.close_air_plus);
 		set_precharge_ext(ams_outputs.close_precharge);
@@ -481,7 +505,6 @@ void start_SM_task(void *argument) {
 		osDelayUntil(next_tick);
 	}
 }
-
 
 void start_COM_task(void *argument) {
 	/* Set up task-specific timing parameters */
@@ -580,19 +603,17 @@ void start_COM_task(void *argument) {
 			__raise_ams_error(accumulator_current_error);
 		}
 
-
-		 #ifdef STREAM_DATA
-		 SEGGER_SYSVIEW_PrintfHost("cell_voltages %i %i %i %i %i %i %i %i", __k,
-		 (uint16_t) (10000 * cell_voltages[__k]),
-		 (uint16_t) (10000 * cell_voltages[__k + 1]),
-		 (uint16_t) (10000 * cell_voltages[__k + 2]),
-		 (uint16_t) (10000 * cell_voltages[__k + 3]),
-		 (uint16_t) (10000 * cell_voltages[__k + 4]),
-		 (uint16_t) (10000 * cell_voltages[__k + 5]),
-		 (uint16_t) (10000 * cell_voltages[__k + 6]));
-		 __k = (__k + 7) % 126;
-		 #endif
-
+#ifdef STREAM_DATA
+		SEGGER_SYSVIEW_PrintfHost("cell_voltages %i %i %i %i %i %i %i %i", __k,
+				(uint16_t) (10000 * cell_voltages[__k]),
+				(uint16_t) (10000 * cell_voltages[__k + 1]),
+				(uint16_t) (10000 * cell_voltages[__k + 2]),
+				(uint16_t) (10000 * cell_voltages[__k + 3]),
+				(uint16_t) (10000 * cell_voltages[__k + 4]),
+				(uint16_t) (10000 * cell_voltages[__k + 5]),
+				(uint16_t) (10000 * cell_voltages[__k + 6]));
+		__k = (__k + 7) % 126;
+#endif
 
 		/* Wait until next period */
 		while (next_tick < osKernelGetTickCount()) {
@@ -655,6 +676,9 @@ void start_CSE_task(void *argument) {
 
 	__wait_for_data(WAIT_FOR_ALL);
 
+	CSE_DW.x[1] = 0.40773275430377137 * 23840.700984295119;
+	CSE_DW.x[2] = 23840.700984295119;
+
 	for (;;) {
 		/* Enter periodic behaviour */
 
@@ -673,9 +697,13 @@ void start_CSE_task(void *argument) {
 
 			CSE_U.current = accumulator_current;
 			CSE_U.y = mean_cell_voltage;
-
 			CSE_step();
 
+#ifdef STREAM_DATA
+			int32_t int_soc = 1000 * CSE_Y.soc;
+			int32_t int_cap = CSE_Y.capacity;
+			SEGGER_SYSVIEW_PrintfHost("CSE %i %i", int_soc, int_cap);
+#endif
 
 		}
 
@@ -755,6 +783,26 @@ void start_error_handler_task(void *argument) {
 
 	for (;;) {
 		/* Enter periodic behaviour */
+		/*
+		 if (!get_imd_ok_ext()) {
+		 __raise_imd_error(ERROR_IMD);
+		 }
+		 uint8_t get;
+		 uint8_t set;
+
+		 if (get_precharge_ext() != get_set_precharge_ext()) {
+		 get = get_precharge_ext();
+		 set = get_set_precharge_ext();
+
+		 __raise_ams_error(ERROR_PRECHARGE);
+		 }
+		 if (get_air_minus_ext() != get_set_air_minus_ext()) {
+		 __raise_ams_error(ERROR_AIR_MINUS);
+		 }
+		 if (get_air_plus_ext() != get_set_air_plus_ext()) {
+		 __raise_ams_error(ERROR_AIR_PLUS);
+		 }
+		 */
 		if (xQueueReceive(error_queue, &error, 0)) {
 			switch (error) {
 			case ERROR_IMD:
@@ -817,8 +865,8 @@ void start_SIM_task(void *argument) {
 	uint16_t k = 0;
 
 	uint8_t SC = 1;
-	uint8_t start_drive = 0;
-	uint8_t start_charge = 1;
+	uint8_t start_drive = 1;
+	uint8_t start_charge = 0;
 	uint8_t start_balance = 0;
 
 	SIM0_P.Ts = SIM_task_info.periodicity;
@@ -827,9 +875,9 @@ void start_SIM_task(void *argument) {
 	SIM0_U.charge = start_charge ^ start_balance;
 	SIM0_U.drive_current = 0;
 
-	for(int i = 0; i < 126; i++) {
+	for (int i = 0; i < 126; i++) {
 		float m = fabsf(cos(i) + cos(i + 1) + cos(i + 2) + cos(i + 3)) / 4;
-	    SIM0_DW.Memory_PreviousInput[i] = SIM0_P.cQur[0] * (1 - 0.4 * m);
+		SIM0_DW.Memory_PreviousInput[i] = SIM0_P.cQur[0] * (1 - 0.4 * m);
 	}
 
 	/* Wait until offset */
@@ -839,7 +887,30 @@ void start_SIM_task(void *argument) {
 	for (;;) {
 		/* Enter periodic behaviour */
 
+		double mean_soc = 0;
+		double mean_cap = 0;
+		for (int i = 0; i < 126; i++) {
+			mean_soc += SIM0_Y.cell_socs[i];
+			mean_cap += SIM0_Y.cell_capacities[i];
+		}
+		mean_soc /= 126;
+		mean_cap /= 126;
+
+		if (mean_soc < 0.4) {
+			SIM0_U.drive_current = 15;
+		}
+		if (mean_soc > 0.7) {
+			SIM0_U.drive_current = -15;
+		}
+
+#ifdef STREAM_DATA
+		int32_t int_soc = 1000 * mean_soc;
+		int32_t int_cap = mean_cap;
+		SEGGER_SYSVIEW_PrintfHost("CST %i %i", int_soc, int_cap);
+#endif
+
 		SIM0_step();
+
 		if ((k % 5) == 0) {
 			can1_dbu_status_1_transmit();
 		}
@@ -871,38 +942,36 @@ void start_SIM_task(void *argument) {
 /* USER CODE END 4 */
 
 /**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM5 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  /* USER CODE BEGIN Callback 0 */
+ * @brief  Period elapsed callback in non blocking mode
+ * @note   This function is called  when TIM5 interrupt took place, inside
+ * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+ * a global variable "uwTick" used as application time base.
+ * @param  htim : TIM handle
+ * @retval None
+ */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	/* USER CODE BEGIN Callback 0 */
 
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM5) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
+	/* USER CODE END Callback 0 */
+	if (htim->Instance == TIM5) {
+		HAL_IncTick();
+	}
+	/* USER CODE BEGIN Callback 1 */
 
-  /* USER CODE END Callback 1 */
+	/* USER CODE END Callback 1 */
 }
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
-void Error_Handler(void)
-{
-  /* USER CODE BEGIN Error_Handler_Debug */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
+void Error_Handler(void) {
+	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1) {
 	}
-  /* USER CODE END Error_Handler_Debug */
+	/* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT

@@ -49,7 +49,13 @@ void can1_ams_cell_temperatures_transmit();
  * @Brief  
  * @Retval None
  */
-void can2_ivt_msg_result_i_transmit();
+void can2_ivt_msg_result_u3_transmit();
+
+/*
+ * @Brief  
+ * @Retval None
+ */
+void can2_ivt_msg_result_u2_transmit();
 
 /*
  * @Brief  
@@ -61,7 +67,7 @@ void can2_ivt_msg_result_u1_transmit();
  * @Brief  
  * @Retval None
  */
-void can2_ivt_msg_result_u3_transmit();
+void can2_ivt_msg_result_i_transmit();
 
 /*
  * @Brief  
@@ -117,7 +123,13 @@ void can2_amk1_setpoints_1_receive();
  * @Brief  
  * @Retval None
  */
-void can2_ivt_msg_result_i_receive();
+void can2_ivt_msg_result_u3_receive();
+
+/*
+ * @Brief  
+ * @Retval None
+ */
+void can2_ivt_msg_result_u2_receive();
 
 /*
  * @Brief  
@@ -129,7 +141,7 @@ void can2_ivt_msg_result_u1_receive();
  * @Brief  
  * @Retval None
  */
-void can2_ivt_msg_result_u3_receive();
+void can2_ivt_msg_result_i_receive();
 
 /*
  * @Brief  

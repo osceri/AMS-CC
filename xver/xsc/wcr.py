@@ -20,7 +20,7 @@ def makeHr(x):
 
 offset = 2500
 
-with open("record.csv", "r") as record:
+with open("a5.csv", "r") as record:
     content = record.read()
     events = []
     for line in content.split('\n')[offset:]:
@@ -31,7 +31,7 @@ with open("record.csv", "r") as record:
             pass
 
 
-    s = 1000*0.2 * 200/320
+    s = 1000
 
     __tasks = list(set((task_name, task_priority) for task_name, task_priority in regex.findall('"Task Info","(\w*) \(\w*\): Priority = (\w*)"', content)))
 
